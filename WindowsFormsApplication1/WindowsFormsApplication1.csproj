@@ -253,7 +253,15 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF not exist inbox (mkdir inbox)
-IF not exist outbox (mkdir outbox)</PostBuildEvent>
+IF not exist outbox (mkdir outbox)
+IF not exist backup (mkdir backup)
+IF not exist fakebox (mkdir fakebox)
+IF not exist printedResults (mkdir printedResults)
+IF not exist htmlResults (mkdir htmlResults)
+IF not exist mergedResults (mkdir mergedResults)
+IF not exist logos (mkdir logos)
+
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
