@@ -216,7 +216,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="backup\README.txt" />
     <Content Include="fakebox\README.txt" />
     <Content Include="inbox\README.txt" />
     <Content Include="logos\logo_ridsport_top.png">
@@ -249,7 +248,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="backup\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF not exist inbox (mkdir inbox)
