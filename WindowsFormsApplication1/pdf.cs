@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PdfSharp.Drawing;
+﻿using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using System;
 using System.IO;
 
 namespace WindowsFormsApplication1
 {
 
-    public static class pdf
+  public static class pdf
     {
 
         private static void MergeMultiplePDFIntoSinglePDF(string outputFilePath, string[] pdfFiles)
@@ -55,8 +51,9 @@ namespace WindowsFormsApplication1
 
         public static void Merge(string folder)
         {
-            string[] pdfs = Directory.GetFiles(folder);
-            MergeMultiplePDFIntoSinglePDF(@"C:\temp\merged.pdf", pdfs);
+            string[] pdfs = Directory.GetFiles(folder,"*.pdf");
+            
+            MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresults,"CombinedResults.pdf"), pdfs);
         }
     }
 }

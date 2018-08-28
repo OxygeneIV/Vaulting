@@ -11,7 +11,13 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net.NetworkInformation;
 using ClosedXML.Excel;
+//using RasterEdge.Imaging.Basic;
+//using RasterEdge.XDoc.Excel;
+
+//using Spire.Xls;
+
 
 namespace WindowsFormsApplication1
 {
@@ -30,8 +36,10 @@ namespace WindowsFormsApplication1
 
 
         private static string sortedresultsfile;
-        private static string printedresults;
-        private static string workingDirectory;
+       public static string printedresults;
+       public static string mergedresults;
+      public static string publishresults;
+    private static string workingDirectory;
         private static string logo;
         private static string logovoid;
         private static string preliminaryResults;
@@ -99,10 +107,16 @@ namespace WindowsFormsApplication1
                 printedresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
                 foldersToCreate.Add(printedresults);
 
+                 mergedresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
+                 foldersToCreate.Add(mergedresults);
 
-                foreach (var folder in foldersToCreate)
+              publishresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["publishresults"]);
+              foldersToCreate.Add(publishresults);
+
+              foreach (var folder in foldersToCreate)
                 {
-                    Directory.CreateDirectory(folder);
+                    var dirinfo = Directory.CreateDirectory(folder);
+     
                 }
 
                 // Files
@@ -157,8 +171,9 @@ namespace WindowsFormsApplication1
         {
             if(!File.Exists(startlistfile))
             {
-                showMessageBox("No startlist found, expecting " + startlistfile);
-                return new List<Klass>();
+               UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
+              showMessageBox("No startlist found, expecting " + startlistfile);
+              return new List<Klass>();
             }
 
             // Klasser
@@ -173,7 +188,7 @@ namespace WindowsFormsApplication1
                 List<List<string>> cellvals = new List<List<string>>();
                 Dictionary<int, List<string>> cellvalues = new Dictionary<int, List<string>>();
                 var dim = ws.Dimension;
-
+                
                 for (var rowNum = 1; rowNum <= ws.Dimension.End.Row; rowNum++)
                 {
                     object[,]  dict;   
@@ -219,7 +234,8 @@ namespace WindowsFormsApplication1
 
 
             }
-            return classes;
+          UpdateMessageTextBox($"Returning {classes.Count} classes");
+          return classes;
         }
 
         // read deltagare from startlist
@@ -227,7 +243,8 @@ namespace WindowsFormsApplication1
         {
             if (!File.Exists(startlistfile))
             {
-                showMessageBox("No startlist found, expecting " + startlistfile);
+              UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
+        showMessageBox("No startlist found, expecting " + startlistfile);
                 return new List<Deltagare>();
             }
 
@@ -282,7 +299,8 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            return deltagare2;
+          UpdateMessageTextBox($"Returning {deltagare2.Count} vaulters" );
+      return deltagare2;
         }
 
 
@@ -425,27 +443,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarMax(files.Count());
 
             int fNumber = 0;
-            //foreach (var f in files)
-            //{
-            //    fNumber++;
-            //    UpdateProgressBarLabel("Re-saving for compatibility issues : " + f.Name);
-            //    var MyApp = new Excel.Application();
-            //    MyApp.Visible = false;
-            //    var workbooks = MyApp.Workbooks;
-            //    var MyBook = workbooks.Open(f.FullName);
-            //    MyBook.Close(true);
-            //    workbooks.Close();
-            //    MyApp.Quit();
-
-            //    Marshal.ReleaseComObject(MyBook);
-            //    Marshal.ReleaseComObject(workbooks);
-            //    Marshal.ReleaseComObject(MyApp);
-            //    MyBook = null;
-            //    workbooks = null;
-            //    MyApp = null;
-            //    UpdateProgressBarHandler(fNumber);
-            //}
-
+           
 
             UpdateProgressBarHandler(0);
             UpdateProgressBarLabel("");
@@ -515,71 +513,7 @@ namespace WindowsFormsApplication1
             }
 
 
-            //foreach (var f in files)
-            //    {
-            //    //    rownumber++;
-
-
-            //    //var finfo = new FileInfo(f.FullName);
-            //    //var finfo2 = File.Open(f.FullName, FileMode.Open, FileAccess.ReadWrite);
-
-            //    using (var p = new ExcelPackage(finfo))
-            //    {
-            //        try
-            //        {
-            //            //ExcelWorkbook workBook = p.Workbook;
-            //            //ExcelWorksheets wss = p.Workbook.Worksheets;
-            //            //int g = wss.Count;
-
-            //            ExcelWorksheet ws =
-            //                p.Workbook.Worksheets.SingleOrDefault(sh => sh.Hidden == eWorkSheetHidden.Visible);
-
-
-            //            //ws.Name = "asatro";
-            //            bool omd = ws.Name.ToLower().EndsWith(" omd");
-            //            if (omd)
-            //            {
-
-            //            }
-            //            else
-            //            {
-            //                var rand = Math.Round(new Random().NextDouble() * 10, 3);
-            //                //ws.SetValue(3,4,"hej");
-
-            //                //var f3 = ws.GetValue(3, 4);
-
-            //                //ws.Cells[3,4].Value = "4,323";// rand;
-            //                //var val = ws.Cells["result"].Value;
-
-            //                //ws.Cells["result"].Value = "4,323";// rand;
-            //                //List<string> d = new List<string>();
-            //                //var res = rand;
-            //                //var klassName = ws.Cells["klass"].Value.ToString();
-            //                //var bord = ws.Cells["bord"].Value.ToString();
-            //                //var moment = ws.Cells["moment"].Value.ToString();
-            //                //var id = ws.Cells["id"].Value.ToString();
-            //                //d.AddRange(new List<string> { klassName, f.Name, id, moment, bord, rand.ToString() });
-            //                //data.Add(rownumber, d);
-            //            }
-
-            //            //ws.Dispose();
-            //            //workBook.Dispose();
-            //            //       // p.Save();
-
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            var s = e.Message;
-            //            showMessageBox("Exception :" + s);
-            //        }
-            //        p.Compatibility.
-            //        p.Save();
-            //        //p.Dispose();
-            //    }
-
-            //        UpdateProgressBarHandler(rownumber);
-            //        UpdateProgressBarLabel("Faked " + f.Name);
-            //    }
+         
 
             using (var package = new ExcelPackage(file))
             {
@@ -650,15 +584,16 @@ namespace WindowsFormsApplication1
             }
         }
 
+        
 
-        private void UpdateMessageTextBox(string text)
+        public void UpdateMessageTextBox(string text)
         {
             if (this.textBox1.InvokeRequired)
                 this.BeginInvoke(new UpdateMessageTextBoxCallback(this.UpdateMessageTextBox), new object[] { text });
             else
             {
                 // change your text
-                this.textBox1.AppendText(text + (char)13);
+              this.textBox1.AppendText(text + System.Environment.NewLine);// (char)13);
             }
         }
 
@@ -802,28 +737,43 @@ namespace WindowsFormsApplication1
             return Process.GetProcessById(id);
         }
 
-        public Excel._Application printResultsExcelHandler(string className,string filename)
+
+    //  public static void PrintToHtml(string className,string filename)
+    //  {
+
+
+    //  XLSXDocument docx = new XLSXDocument(@"C:\demoInput\demo.docx");
+
+    //    //convert to html5 files
+    //    docx.ConvertToVectorImages(ContextType.HTML, @"C:\htmlOutput\", "test", RelativeType.HTML);
+
+    //    //convert to svg files
+    //    //docx.ConvertToVectorImages(ContextType.SVG, @"C:\svgOutput\", "test", RelativeType.SVG);
+    //}
+
+
+    public Excel._Application printResultsExcelHandler(string className,string filename)
         {
             Excel.Application MyApp = null;
             Excel.Workbook MyBook = null;
             Excel.Workbooks workbooks = null;
             Excel.Worksheet MySheet = null;
-            Image prel = new Bitmap(preliminaryResults);
+            //Image prel = new Bitmap(preliminaryResults);
 
             try
             {
                 MyApp = new Excel.Application
                 {
                     Visible = false,
+                    ScreenUpdating = false
+                    
                     //DisplayAlerts = true
                 };
                 workbooks = MyApp.Workbooks;
-                MyBook = workbooks.Open(sortedresultsfile);
+                MyBook = workbooks.Open(sortedresultsfile,ReadOnly:true);
                 MySheet = MyBook.Sheets[className];
-                MySheet.Activate();
+                //MySheet.Activate();
                 
-                
-
                 if (checkBox1.Checked)
                 {
                     MySheet.PageSetup.RightHeaderPicture.Filename = preliminaryResults;
@@ -833,22 +783,10 @@ namespace WindowsFormsApplication1
                     MySheet.PageSetup.RightHeaderPicture.Filename = logovoid;
                 }
 
-                MyApp.Visible = true;
-
-              
-                //MyBook.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, outputLocation);
-
+                //MyApp.Visible = true;
                 string fullpath = Path.Combine(printedresults, filename);
-
-               // MySheet.SaveAs(fullpath+".xlsx");
-
-                // MySheet.SaveAs(fullpath + ".pdf");
                 MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, fullpath+".pdf");
-                
 
-
-
-                //var b = MyApp.Dialogs[Excel.XlBuiltInDialog.xlDialogSaveAs].Show(fullpath);
                 MyApp.DisplayAlerts = false;
                 MyBook.Close();
                 MyApp.DisplayAlerts = true;
@@ -856,7 +794,8 @@ namespace WindowsFormsApplication1
             }
             catch(Exception e)
             {
-                showMessageBox(e.Message);
+              this.UpdateMessageTextBox($"Save to PDF failed for {className} : {e.Message}");
+              showMessageBox(e.Message);
             }
             finally
             {
@@ -877,12 +816,16 @@ namespace WindowsFormsApplication1
         // Export Results for class
         private void printResults(string className, string description)
         {
+            
+            this.UpdateMessageTextBox($"Save to PDF :  {className}");
             printResultsExcelHandler(className, description);
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-        }
+
+           // PrintToHtml(className, description);
+    }
 
         // Export Results for selected class
         private void button2_Click_1(object sender, EventArgs e)
@@ -939,8 +882,14 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
+            UpdateMessageTextBox("Merging PDFs...");
             pdf.Merge(printedresults);
-        }
+            UpdateMessageTextBox("Publishing results...");
+            PDFtoHTML.GenerateHTML();
+            UpdateMessageTextBox("Merge & Publish done...");
+    }
+
+
     }
     public static class Extension
     {
