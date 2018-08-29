@@ -69,7 +69,7 @@ namespace WindowsFormsApplication1
 
     public static void GenerateHTML()
     {
-      var folder = Form1.printedresults;
+      var folder = Form1.printedresultsFolder;
       var files = Directory.GetFiles(folder, "*.pdf").ToList();
 
       Dictionary<string,string> pdfLinks = new Dictionary<string, string>();
@@ -100,7 +100,7 @@ namespace WindowsFormsApplication1
 
         var klasshtml = klassHtml(iframe);
 
-        var localHtml = Path.Combine(Form1.mergedresults, "klass.html");
+        var localHtml = Path.Combine(Form1.mergedresultsFolder, "klass.html");
         File.WriteAllText(localHtml, klasshtml);
         klasshtmlfiles.Add(remoteHTMLFile);
         // Create folder and klass.html
@@ -144,7 +144,7 @@ namespace WindowsFormsApplication1
 
       index = index.Replace("DATA", text);
 
-      var index_html = Path.Combine(Form1.mergedresults, "index.html");
+      var index_html = Path.Combine(Form1.mergedresultsFolder, "index.html");
 
       File.WriteAllText(index_html,index,Encoding.Unicode);
 

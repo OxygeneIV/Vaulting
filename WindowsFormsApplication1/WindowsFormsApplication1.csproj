@@ -240,6 +240,15 @@
     <Content Include="logos\logo_ridsport_top_80.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="logos\logo_ridsport_top_mini.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logos\PreliminaryResults.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="logos\void.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="logos\voltige-sm-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

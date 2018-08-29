@@ -53,7 +53,7 @@ namespace WindowsFormsApplication1
         {
             string[] pdfs = Directory.GetFiles(folder,"*.pdf");
             
-            MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresults,"CombinedResults.pdf"), pdfs);
+            MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresultsFolder,"CombinedResults.pdf"), pdfs);
         }
     }
 }

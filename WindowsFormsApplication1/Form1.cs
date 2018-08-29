@@ -13,10 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using ClosedXML.Excel;
-//using RasterEdge.Imaging.Basic;
-//using RasterEdge.XDoc.Excel;
 
-//using Spire.Xls;
 
 
 namespace WindowsFormsApplication1
@@ -26,7 +23,9 @@ namespace WindowsFormsApplication1
     {
         private static string root;
         private static string resultfile;
-        private static string startlistfile;
+      private static string horseresultfile;
+
+    private static string startlistfile;
         private static string inbox;
         private static string outbox;
         private static string fakebox;
@@ -35,11 +34,13 @@ namespace WindowsFormsApplication1
         private static bool competitionstarted;
 
 
-        private static string sortedresultsfile;
-       public static string printedresults;
-       public static string mergedresults;
-      public static string publishresults;
+        public static string sortedresultsfile;
+       public static string printedresultsFolder;
+       public static string mergedresultsFolder;
+      public static string horseResultsFolder;
+
     private static string workingDirectory;
+
         private static string logo;
         private static string logovoid;
         private static string preliminaryResults;
@@ -104,14 +105,15 @@ namespace WindowsFormsApplication1
                 outbox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
                 foldersToCreate.Add(outbox);
 
-                printedresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
-                foldersToCreate.Add(printedresults);
+                printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
+                foldersToCreate.Add(printedresultsFolder);
 
-                 mergedresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
-                 foldersToCreate.Add(mergedresults);
+                 mergedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
+                 foldersToCreate.Add(mergedresultsFolder);
 
-              publishresults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["publishresults"]);
-              foldersToCreate.Add(publishresults);
+              horseResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["horseresultsfolder"]);
+              foldersToCreate.Add(horseResultsFolder);
+       
 
               foreach (var folder in foldersToCreate)
                 {
@@ -121,11 +123,13 @@ namespace WindowsFormsApplication1
 
                 // Files
                 resultfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["results"]);
+                horseresultfile = Path.Combine(horseResultsFolder, ConfigurationManager.AppSettings["horseresults"]);
                 startlistfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["startlist"]);
                 sortedresultsfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["sortedresults"]);
                 logo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
                 preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
                 logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
+
 
                 fakefile = Path.Combine(fakebox, "fakedresults.xlsx");
 
@@ -153,14 +157,10 @@ namespace WindowsFormsApplication1
                     File.Copy(preliminaryResultsFile, preliminaryResults);
                 }
 
-
-
-
-
             }
             catch (Exception e)
             {
-                showMessageBox(e.Message);
+                UpdateMessageTextBox(e.Message);
                 Application.Exit();
             }
         }
@@ -171,8 +171,7 @@ namespace WindowsFormsApplication1
         {
             if(!File.Exists(startlistfile))
             {
-               UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
-              showMessageBox("No startlist found, expecting " + startlistfile);
+              UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
               return new List<Klass>();
             }
 
@@ -203,13 +202,6 @@ namespace WindowsFormsApplication1
 
                         tmplist.Add(dict[0, i] == null ? "" : (Convert.ToString(dict[0, i])).Trim());
                     }
-                   
-                    //var f = dict[0, 2];
-
-                    //var ws0 = (object[,])ws.Cells;
-
-
-                    var count = row.Count();
 
                     string text = row.ElementAt(0).Text;
                     bool allEmpty = text == "";
@@ -219,22 +211,13 @@ namespace WindowsFormsApplication1
                     rows.Add(row);
                     truerows.Add(trueRow);
                     cellvals.Add(tmplist);
-
-
-                }
-
-                 
+                }                
                 classes = cellvals.Select(r => Klass.RowToClass(r)).ToList();
-
+         
                 // Remove .2-classes SM & NM
                 classes.RemoveAll(c => c.Name.EndsWith(".2"));
-
-                //classes = rows.Select(r => Klass.RowToClass(r)).ToList();
-                //classes = truerows.Select(r => Klass.RowToClass(r)).ToList();
-
-
             }
-          UpdateMessageTextBox($"Returning {classes.Count} classes");
+          UpdateMessageTextBox($"Found {classes.Count} classes");
           return classes;
         }
 
@@ -243,8 +226,7 @@ namespace WindowsFormsApplication1
         {
             if (!File.Exists(startlistfile))
             {
-              UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
-        showMessageBox("No startlist found, expecting " + startlistfile);
+                UpdateMessageTextBox($"No startlist found, expecting " + startlistfile);
                 return new List<Deltagare>();
             }
 
@@ -299,8 +281,8 @@ namespace WindowsFormsApplication1
                 }
             }
 
-          UpdateMessageTextBox($"Returning {deltagare2.Count} vaulters" );
-      return deltagare2;
+             UpdateMessageTextBox($"Found {deltagare2.Count} vaulters" );
+             return deltagare2;
         }
 
 
@@ -404,12 +386,6 @@ namespace WindowsFormsApplication1
             dataGridView3.Update();
             dataGridView3.Refresh();
             dataGridView3.AutoResizeColumns();
-        }
-
-
-        private void SetFakedResult()
-        {
-
         }
 
         /// <summary>
@@ -530,7 +506,7 @@ namespace WindowsFormsApplication1
                         }
                         else if (i == 5)
                         {
-                            worksheet.Cells[row, i + 1].Value = float.Parse(kvp.Value[i]);
+                            worksheet.Cells[row, i + 1].Value = float.Parse(kvp.Value[i],CultureInfo.InvariantCulture);
                         }
                         else
                         {
@@ -726,32 +702,6 @@ namespace WindowsFormsApplication1
         }
 
 
-
-        [DllImport("user32.dll")]
-        static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
-
-        Process GetExcelProcess(Excel.Application excelApp)
-        {
-            int id;
-            GetWindowThreadProcessId(excelApp.Hwnd, out id);
-            return Process.GetProcessById(id);
-        }
-
-
-    //  public static void PrintToHtml(string className,string filename)
-    //  {
-
-
-    //  XLSXDocument docx = new XLSXDocument(@"C:\demoInput\demo.docx");
-
-    //    //convert to html5 files
-    //    docx.ConvertToVectorImages(ContextType.HTML, @"C:\htmlOutput\", "test", RelativeType.HTML);
-
-    //    //convert to svg files
-    //    //docx.ConvertToVectorImages(ContextType.SVG, @"C:\svgOutput\", "test", RelativeType.SVG);
-    //}
-
-
     public Excel._Application printResultsExcelHandler(string className,string filename)
         {
             Excel.Application MyApp = null;
@@ -784,7 +734,7 @@ namespace WindowsFormsApplication1
                 }
 
                 //MyApp.Visible = true;
-                string fullpath = Path.Combine(printedresults, filename);
+                string fullpath = Path.Combine(printedresultsFolder, filename);
                 MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, fullpath+".pdf");
 
                 MyApp.DisplayAlerts = false;
@@ -892,7 +842,7 @@ namespace WindowsFormsApplication1
           try
           {
             UpdateMessageTextBox("Merging PDFs...");
-            pdf.Merge(printedresults);
+            pdf.Merge(printedresultsFolder);
             UpdateMessageTextBox("Merging PDFs done...");
           }
           catch (Exception ee)
@@ -914,20 +864,278 @@ namespace WindowsFormsApplication1
           }
     }
 
-    //private void buttonPopulateSheetsWithVaulters_Click(object sender, EventArgs e)
-    //{
 
-    //}
+      public class Horse : IComparable<Horse>
+      {
+        public class HorsePoint
+        {
+          public float thePoint;
+          public string vaulter;
+          public string klass;
+        }
 
-    //private void buttonCreateResultSheets_Click(object sender, EventArgs e)
-    //{
+      public string Name;
+        public float Max
+        {
+          get
+          {
+            return Points.Count > 0 ? Points.Max() : (float)0.0;
+          }
+        }
 
-    //}
+        public Horse()
+        {
+          Points = new List<float>();
+        }
 
-    //private void btnReadResultsFromInbox_Click(object sender, EventArgs e)
-    //{
 
-    //}
+        public float Average
+        {
+          get
+          {
+            return Points.Count > 0 ? Points.Average() : (float)0.0;
+          }
+        }
+
+        public List<float> Points;
+
+
+        public int CompareTo(Horse other)
+        {
+          if (this.Average < other.Average) return 1;
+          else if (this.Average > other.Average) return -1;
+          else return 0;
+        }
+      }
+
+    public void CalculateHorsePoints()
+    {
+      var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s=>s.Trim());
+
+      UpdateMessageTextBox($"Starting horse point calculation");
+      var resultfile = Form1.sortedresultsfile;
+      var horsefile = horseresultfile;
+
+      if (!File.Exists(resultfile))
+      {
+        UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
+        return;
+      }
+
+      FileInfo resultat = new FileInfo(resultfile);
+      FileInfo horsefileInfo = new FileInfo(horsefile);
+
+      List<string> horses = new List<string>();
+
+      List<Horse> definedHorses = new List<Horse>();
+      List<Horse> definedHorsesTeam = new List<Horse>();
+      List<Horse> definedHorsesInd = new List<Horse>();
+
+      var classes = readClasses();
+
+      using (ExcelPackage results = new ExcelPackage(resultat))
+      {
+        try
+        {
+          foreach (var cl in classes)
+          {
+            UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
+            int startRow = 7;
+            ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
+            var maxrow = ws.Dimension.End.Row;
+
+            int ekipages = (maxrow - startRow + 1) / 4;
+
+            for (int ekipage = 0; ekipage < ekipages; ekipage++)
+            {
+              var currentStartRow = startRow + (ekipage * 4);
+              var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
+              horses.Add(horsename);
+
+              if (!definedHorses.Any(h => h.Name == horsename))
+              {
+                Horse h1 = new Horse();
+                h1.Name = horsename;
+                definedHorses.Add(h1);
+              }
+
+              
+              // TEAM
+              if (teamclasses.Contains(ws.Name)) 
+              {
+                if (!definedHorsesTeam.Any(h => h.Name == horsename))
+                {
+                  Horse h1 = new Horse();
+                  h1.Name = horsename;
+                  definedHorsesTeam.Add(h1);
+                }
+              }
+              // IND
+              else
+              {
+                if (!definedHorsesInd.Any(h => h.Name == horsename))
+                {
+                  Horse h1 = new Horse();
+                  h1.Name = horsename;
+                  definedHorsesInd.Add(h1);
+                }
+              }
+
+              var curhorse = definedHorses.Single(h => h.Name == horsename);
+
+              for (int arow = 0; arow < 4; arow++)
+              {
+                var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
+                if (momenttext.Length > 1) // we may have points
+                {
+                  var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
+                  if (point > 0)
+                  {
+                    curhorse.Points.Add(point);
+
+                    // TEAM
+                    if (teamclasses.Contains(ws.Name))
+                    {
+                      var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
+                      curhorse1.Points.Add(point);
+
+                    }
+                    // IND
+                    else
+                    {
+                      var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
+                      curhorse2.Points.Add(point);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+        }
+        catch (Exception ex)
+        {
+          var str = ex.Message;
+          UpdateMessageTextBox(str);
+        }
+        finally
+        {
+
+        }
+      }
+
+      UpdateMessageTextBox($"Getting horse points from all classes done");
+      var all = horses.Distinct().ToList();
+      all.RemoveAll(s => s == "A4");
+      definedHorses.RemoveAll(h => h.Name == "A4");
+      definedHorsesTeam.RemoveAll(h => h.Name == "A4");
+      definedHorsesInd.RemoveAll(h => h.Name == "A4");
+
+      definedHorses.Sort();
+      definedHorsesTeam.Sort();
+      definedHorsesInd.Sort();
+
+      File.Delete(horsefileInfo.FullName);
+
+      using (ExcelPackage results = new ExcelPackage(horsefileInfo))
+      {
+        try
+        {
+          var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
+          var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
+          var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
+          sheet.Cells.Style.Numberformat.Format = @"0.000";
+          sheet.Cells[1, 1].Value = "Häst";
+          sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
+          sheet.Cells[1, 2].Value = "Medelpoäng";
+          sheet.Cells[1, 4].Value = "Samtliga poäng";
+
+          sheet2.Cells.Style.Numberformat.Format = @"0.000";
+          sheet2.Cells[1, 1].Value = "Häst";
+          sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
+          sheet2.Cells[1, 2].Value = "Medelpoäng";
+          sheet2.Cells[1, 4].Value = "Samtliga poäng";
+
+          sheet3.Cells.Style.Numberformat.Format = @"0.000";
+          sheet3.Cells[1, 1].Value = "Häst";
+          sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
+          sheet3.Cells[1, 2].Value = "Medelpoäng";
+          sheet3.Cells[1, 4].Value = "Samtliga poäng";
+
+          int row = 1;
+
+          foreach (Horse h in definedHorses)
+          {
+            row = row + 1;
+            sheet.Cells[row, 1].Value = h.Name;
+            sheet.Cells[row, 3].Value = h.Max;
+            sheet.Cells[row, 2].Value = h.Average;
+            for (int i = 0; i < h.Points.Count; i++)
+            {
+              sheet.Cells[row, 4 + i].Value = h.Points[i];
+            }
+
+          }
+          sheet.Cells.AutoFitColumns();
+
+          row = 1;
+          foreach (Horse h in definedHorsesTeam)
+          {
+            row = row + 1;
+            sheet2.Cells[row, 1].Value = h.Name;
+            sheet2.Cells[row, 3].Value = h.Max;
+            sheet2.Cells[row, 2].Value = h.Average;
+            for (int i = 0; i < h.Points.Count; i++)
+            {
+              sheet2.Cells[row, 4 + i].Value = h.Points[i];
+            }
+
+          }
+          sheet2.Cells.AutoFitColumns();
+
+          row = 1;
+          foreach (Horse h in definedHorsesInd)
+          {
+            row = row + 1;
+            sheet3.Cells[row, 1].Value = h.Name;
+            sheet3.Cells[row, 3].Value = h.Max;
+            sheet3.Cells[row, 2].Value = h.Average;
+            for (int i = 0; i < h.Points.Count; i++)
+            {
+              sheet3.Cells[row, 4 + i].Value = h.Points[i];
+            }
+
+          }
+          sheet3.Cells.AutoFitColumns();
+          UpdateMessageTextBox($"{horsefile} created ! ");
+        }
+        catch (Exception ex)
+        {
+          UpdateMessageTextBox($"Horse point Error! ");
+          UpdateMessageTextBox(ex.Message);
+        }
+        finally
+        {
+          results.Save();
+          UpdateMessageTextBox($"{horsefile} saves ! ");
+        }
+      }
+    
+    }
+
+    private void button3_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        CalculateHorsePoints();
+      }
+      catch (Exception ee)
+      {
+        UpdateMessageTextBox("Error in Horse point calc!");
+        UpdateMessageTextBox(ee.Message);
+
+      }
+    }
   }
   public static class Extension
     {
