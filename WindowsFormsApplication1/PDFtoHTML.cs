@@ -43,8 +43,8 @@ namespace WindowsFormsApplication1
         var leftfilename  = Path.GetFileName(left);
         var rightfilename = Path.GetFileName(right);
 
-        var leftSplit = leftfilename.Split('_').First();
-        var rightSplit = rightfilename.Split('_').First();
+        var leftSplit = leftfilename.Split(' ').First();
+        var rightSplit = rightfilename.Split(' ').First();
 
         var leftfloat = double.Parse(leftSplit, CultureInfo.InvariantCulture.NumberFormat);
         var rightfloat = float.Parse(rightSplit, CultureInfo.InvariantCulture.NumberFormat);

@@ -816,15 +816,22 @@ namespace WindowsFormsApplication1
         // Export Results for class
         private void printResults(string className, string description)
         {
-            
-            this.UpdateMessageTextBox($"Save to PDF :  {className}");
+          try
+          {
+            UpdateMessageTextBox($"Saving class '{className}' to PDF");
             printResultsExcelHandler(className, description);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+      }
+          catch (Exception ee)
+          {
+            UpdateMessageTextBox($"Saving class {className} to PDF failed...");
+            UpdateMessageTextBox(ee.Message);
+      }
 
-           // PrintToHtml(className, description);
+          GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
     }
 
         // Export Results for selected class
@@ -841,8 +848,8 @@ namespace WindowsFormsApplication1
         {
             var allClasses = readClasses();
             foreach (var cl in allClasses)
-            {
-                printResults(cl.Name, cl.Name+"_"+cl.Description);
+            {   
+                printResults(cl.Name, cl.Name+" "+cl.Description);
             }
         }
 
@@ -882,16 +889,47 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
+          try
+          {
             UpdateMessageTextBox("Merging PDFs...");
             pdf.Merge(printedresults);
+            UpdateMessageTextBox("Merging PDFs done...");
+          }
+          catch (Exception ee)
+          {
+            UpdateMessageTextBox("Failed to Merge PDFs ...");
+            UpdateMessageTextBox(ee.Message);
+          }
+
+          try
+          {
             UpdateMessageTextBox("Publishing results...");
             PDFtoHTML.GenerateHTML();
-            UpdateMessageTextBox("Merge & Publish done...");
+            UpdateMessageTextBox("Publish done...");
+          }
+          catch(Exception ee)
+          {
+            UpdateMessageTextBox("Failed to Publish ...");
+            UpdateMessageTextBox(ee.Message);
+          }
     }
 
+    //private void buttonPopulateSheetsWithVaulters_Click(object sender, EventArgs e)
+    //{
 
-    }
-    public static class Extension
+    //}
+
+    //private void buttonCreateResultSheets_Click(object sender, EventArgs e)
+    //{
+
+    //}
+
+    //private void btnReadResultsFromInbox_Click(object sender, EventArgs e)
+    //{
+
+    //}
+  }
+  public static class Extension
     {
         public static bool IsNumeric(this string s)
         {
