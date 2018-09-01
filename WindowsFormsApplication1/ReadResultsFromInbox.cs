@@ -139,6 +139,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
+            var horseFileName = Path.Combine(horseResultsFolder, "horsepoints.csv");
             FileInfo resultat = new FileInfo(resultfile);
             using (ExcelPackage results = new ExcelPackage(resultat))
             {
@@ -179,29 +180,28 @@ namespace WindowsFormsApplication1
                                      string theCurrentClass = null;
 
 
-                                  var refsplit = refid.Split('_'); 
+                                  var refsplit = refid.Split('_');
 
 
                                   // Horse analysis
                                   // SM & NM HorsePointStoring
-                                  //try
-                                  //{
-                                  //  var table = refsplit.Last().Trim();
-                                  //  if (table.ToLower() == "a")
-                                  //  {
-                                  //    var datumcell = ws.Cells["datum"];
-                                  //    var horsecell = datumcell.Offset(4, 0);
-                                  //    var horsepoints = Path.Combine(horseResultsFolder, "horsepoints.csv");
-                                  //    File.AppendText($"{},{}")
-                                  //  }
-                                  //}
-                                  //catch (Exception g)
-                                  //{
-                                  //  UpdateMessageTextBox($"Failed to add horse point for {f.Name}");
-                                  //}
+                                  string horsename = null;
+                                  try
+                                  {
+                                    var table = refsplit.Last().Trim();
+                                    if (table.ToLower() == "a")
+                                    {
+                                      var datumcell = ws.Cells["datum"];
+                                      var horsecell = datumcell.Offset(5, 0);
+                                      horsename = horsecell.GetValue<string>().Trim();                                                    }
+                                  }
+                                  catch (Exception g)
+                                  {
+                                    UpdateMessageTextBox($"Failed to add horse point for {f.Name} , {g.Message}");
+                                  }
 
-                                 
-                                 
+
+
                                 // SM & NM
                                 if (refid.Contains(".2")) // add results to 0 and 1
                                     {
@@ -216,6 +216,12 @@ namespace WindowsFormsApplication1
                                         var one = refid.Replace(".2", ".1");
                                         results.Workbook.Worksheets[klassMain+".1"].Cells[one].Value = res;
 
+                                      if (horsename != null)
+                                      {
+                                        File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
+                                        File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain+".1"};{res}{Environment.NewLine}");
+                                       }
+
                                     }
                                     else
                                     {
@@ -223,7 +229,11 @@ namespace WindowsFormsApplication1
                                         var klassMain = refsplit[3].Trim();
 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
-                                    }
+                                        if (horsename != null)
+                                        {
+                                          File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
+                                        }
+                                     }
 
 
 
@@ -257,10 +267,11 @@ namespace WindowsFormsApplication1
                     results.Save();
                     //var calcOptions = new ExcelCalculationOption();                    
                     //results.Workbook.Calculate();
-                    UpdateMessageTextBox("Save completed");
+                    UpdateMessageTextBox("Save completed, wait for calculation");
                 }
             }
 
+            UpdateMessageTextBox("Import of results, calculating points...");
             var MyApp = new Microsoft.Office.Interop.Excel.Application();
             MyApp.Visible = true;
             var workbooks = MyApp.Workbooks;
@@ -269,7 +280,7 @@ namespace WindowsFormsApplication1
             MyBook.Close(true);
             workbooks.Close();
             MyApp.Quit();
-
+            UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
             Marshal.ReleaseComObject(MyBook);
             Marshal.ReleaseComObject(workbooks);
             Marshal.ReleaseComObject(MyApp);

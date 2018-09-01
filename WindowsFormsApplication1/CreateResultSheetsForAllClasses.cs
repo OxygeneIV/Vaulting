@@ -144,6 +144,7 @@ namespace WindowsFormsApplication1
                         classCount++;
 
                         var ws = results.Workbook.Worksheets;
+                        ws.First().Select();
 
                         //UV, use special templates
                         reference = klass.ResultTemplate;
@@ -251,6 +252,7 @@ namespace WindowsFormsApplication1
 
                         classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
                         UpdateProgressBarLabel("Added result sheet for class " + className);
+         
                     }
                     catch (Exception e)
                     {

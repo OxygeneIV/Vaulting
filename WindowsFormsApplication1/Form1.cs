@@ -73,7 +73,7 @@ namespace WindowsFormsApplication1
                 fake = bool.Parse(ConfigurationManager.AppSettings["fake"]);
                 showmessageboxes = bool.Parse(ConfigurationManager.AppSettings["showmessageboxes"]);
                 competitionstarted = bool.Parse(ConfigurationManager.AppSettings["competitionstarted"]);
-
+              
                 workingDirectory = string.IsNullOrEmpty(root) ? Application.StartupPath : root;
 
                 if (!Directory.Exists(workingDirectory))
@@ -81,7 +81,9 @@ namespace WindowsFormsApplication1
                     throw new Exception("Failed to find working directory " + workingDirectory + "\n" + " App.Config 'root' set to " + root);
                 }
 
-                if (!fake)
+              this.Text = $"Voltigeresultat - {workingDirectory}";
+
+              if (!fake)
                     buttonFakeResults.Enabled = false;
 
                 if(competitionstarted)

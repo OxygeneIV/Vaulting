@@ -161,6 +161,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
             UpdateProgressBarLabel("Starting Sort!!");
+            UpdateMessageTextBox("Starting Sort of results...");
             File.Copy(resultfile, sortedresultsfile);
 
             var MyApp = new Microsoft.Office.Interop.Excel.Application();
@@ -176,9 +177,10 @@ namespace WindowsFormsApplication1
                 counter++;
                 string className = klass.Name;
                 var MySheet = MyBook.Sheets[className];
-
+                
                 MySheet.Activate();
-                var lastRow = MySheet.Cells.SpecialCells(Microsoft.Office.Interop.Excel.XlCellType.xlCellTypeLastCell).Row;
+              UpdateMessageTextBox($"Sorting {className}");
+        var lastRow = MySheet.Cells.SpecialCells(Microsoft.Office.Interop.Excel.XlCellType.xlCellTypeLastCell).Row;
                 Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
                 newRng.Sort(
                             newRng.Columns[1, Type.Missing], Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
@@ -207,6 +209,7 @@ namespace WindowsFormsApplication1
             MyApp = null;
 
             UpdateProgressBarLabel("Sorting completed");
-        }
+            UpdateMessageTextBox($"Sorting completed");
+    }
     }
 }
