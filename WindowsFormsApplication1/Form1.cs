@@ -281,7 +281,10 @@ namespace WindowsFormsApplication1
                 }
             }
 
-             UpdateMessageTextBox($"Found {deltagare2.Count} vaulters" );
+          var distinctIds = deltagare2.Select(d => d.Id).Distinct().Count();
+          var duplicates = deltagare2.Count - distinctIds;
+
+             UpdateMessageTextBox($"Found {deltagare2.Count} vaulters, {duplicates} duplicate IDs" );
              return deltagare2;
         }
 

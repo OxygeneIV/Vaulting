@@ -167,35 +167,66 @@ namespace WindowsFormsApplication1
                                 else
                                 {
                                     var res = ws.Cells["result"].GetValue<float>();
-                                    var klassName = ws.Cells["klass"].Value.ToString();
-                                    var bord = ws.Cells["bord"].Value.ToString();
-                                    var moment = ws.Cells["moment"].Value.ToString();
+                                    //var klassName = ws.Cells["klass"].Value.ToString();
+                                    //var bord = ws.Cells["bord"].Value.ToString();
+                                    //var moment = ws.Cells["moment"].Value.ToString();
                                     var id = ws.Cells["id"].Value.ToString();
 
                                     // ID
                                     //string refid = id + "_" + klassName + "_" + moment.Replace(' ', '_') + "_" + bord;
                                     string refid = id;
 
-                                    // SM & NM
-                                    if (refid.Contains(".2")) // add results to 0 and 1
+                                     string theCurrentClass = null;
+
+
+                                  var refsplit = refid.Split('_'); 
+
+
+                                  // Horse analysis
+                                  // SM & NM HorsePointStoring
+                                  //try
+                                  //{
+                                  //  var table = refsplit.Last().Trim();
+                                  //  if (table.ToLower() == "a")
+                                  //  {
+                                  //    var datumcell = ws.Cells["datum"];
+                                  //    var horsecell = datumcell.Offset(4, 0);
+                                  //    var horsepoints = Path.Combine(horseResultsFolder, "horsepoints.csv");
+                                  //    File.AppendText($"{},{}")
+                                  //  }
+                                  //}
+                                  //catch (Exception g)
+                                  //{
+                                  //  UpdateMessageTextBox($"Failed to add horse point for {f.Name}");
+                                  //}
+
+                                 
+                                 
+                                // SM & NM
+                                if (refid.Contains(".2")) // add results to 0 and 1
                                     {
                                         // 0
-                                        var refsplit = refid.Split('_');
+                                        //var refsplit = refid.Split('_');
+                                        
                                         var klassMain = refsplit[3].Trim().Split('.').First();
-
+                                        
                                         var zero = refid.Replace(".2", "");
                                         results.Workbook.Worksheets[klassMain].Cells[zero].Value = res;
 
                                         var one = refid.Replace(".2", ".1");
                                         results.Workbook.Worksheets[klassMain+".1"].Cells[one].Value = res;
+
                                     }
                                     else
                                     {
-                                        var refsplit = refid.Split('_');
+                                        //var refsplit = refid.Split('_');
                                         var klassMain = refsplit[3].Trim();
 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
                                     }
+
+
+
                                 }
                             }
                             var toFile = Path.Combine(outbox, f.Name);

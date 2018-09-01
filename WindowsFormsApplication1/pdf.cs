@@ -2,7 +2,9 @@
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System;
+using System.Collections;
 using System.IO;
+using System.Linq;
 
 namespace WindowsFormsApplication1
 {
@@ -51,8 +53,16 @@ namespace WindowsFormsApplication1
 
         public static void Merge(string folder)
         {
-            string[] pdfs = Directory.GetFiles(folder,"*.pdf");
-            
+            //string[] pdfs = Directory.GetFiles(folder,"*.pdf");
+
+          var files = Directory.GetFiles(folder, "*.pdf").ToList();
+
+          // Adjust the order for SM
+          files.Sort(new PDFtoHTML.Comparer());
+
+          string[] pdfs = files.ToArray();
+
+
             MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresultsFolder,"CombinedResults.pdf"), pdfs);
         }
     }

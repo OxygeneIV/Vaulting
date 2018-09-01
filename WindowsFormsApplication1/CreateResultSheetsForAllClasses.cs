@@ -250,18 +250,18 @@ namespace WindowsFormsApplication1
 
 
                         classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
+                        UpdateProgressBarLabel("Added result sheet for class " + className);
                     }
                     catch (Exception e)
                     {
-                        showMessageBox("Failed to clone template sheet : " + e.Message);
-                        UpdateProgressBarLabel("Failed to clone template sheet : " + e.Message);
+                        UpdateMessageTextBox($"Failed to clone template sheet {reference} to class {className}: " + e.Message);                        
+                        UpdateProgressBarLabel($"Failed to clone template sheet {reference}: " + e.Message);
                     }
 
-                   
-
                     UpdateProgressBarHandler(classCount);
-                    UpdateProgressBarLabel("Added result sheet for class " + className);
-                }
+
+
+        }
 
                 results.Save();
             }
