@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -272,6 +273,14 @@ namespace WindowsFormsApplication1
             }
 
             UpdateMessageTextBox("Import of results, calculating points...");
+       
+            bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
+          if (!docalc)
+          {
+            UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
+            return;
+          }
+    
             var MyApp = new Microsoft.Office.Interop.Excel.Application();
             MyApp.Visible = true;
             var workbooks = MyApp.Workbooks;

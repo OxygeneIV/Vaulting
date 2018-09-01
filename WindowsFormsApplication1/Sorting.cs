@@ -166,6 +166,7 @@ namespace WindowsFormsApplication1
 
             var MyApp = new Microsoft.Office.Interop.Excel.Application();
             MyApp.Visible = true;
+            MyApp.Visible = false;
             var workbooks = MyApp.Workbooks;
             var MyBook = workbooks.Open(sortedresultsfile);
             
