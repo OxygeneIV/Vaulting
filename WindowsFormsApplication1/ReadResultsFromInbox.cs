@@ -140,7 +140,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
-            var horseFileName = Path.Combine(horseResultsFolder, "horsepoints.csv");
+          var horseFileName = Form1.horseresultfile;
             FileInfo resultat = new FileInfo(resultfile);
             using (ExcelPackage results = new ExcelPackage(resultat))
             {
@@ -261,7 +261,7 @@ namespace WindowsFormsApplication1
                 }
                 finally
                 {
-                    UpdateMessageTextBox("Completed import of results, calculate..");
+                    UpdateMessageTextBox("Completed import of results");
                     //var calcOptions = new ExcelCalculationOption();                    
                     //results.Workbook.Calculate(new ExcelCalculationOption());
                     UpdateMessageTextBox("Completed import of results, saving...");

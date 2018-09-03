@@ -98,10 +98,10 @@ namespace WindowsFormsApplication1
             UpdateProgressBarLabel("");
 
             FileInfo resultat = new FileInfo(resultfile);
-            Image im = new Bitmap(ridsportlogo);
-            Image imVoid = new Bitmap(logovoid);
+            //Image im = new Bitmap(ridsportlogo);
+            //Image imVoid = new Bitmap(logovoid);
 
-            Image prel = new Bitmap(preliminaryResults);
+            //Image prel = new Bitmap(preliminaryResults);
             string reference = "ResultTemplate";
             int classCount = 0;
             int maxcount = classes.Count;

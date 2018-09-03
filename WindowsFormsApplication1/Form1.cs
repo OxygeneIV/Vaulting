@@ -9,9 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Diagnostics;
 using System.Globalization;
-using System.Net.NetworkInformation;
 using ClosedXML.Excel;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
@@ -25,9 +23,9 @@ namespace WindowsFormsApplication1
     {
         private static string root;
         private static string resultfile;
-      private static string horseresultfile;
+        private static string horseresultfile;
 
-    private static string startlistfile;
+        private static string startlistfile;
         private static string inbox;
         private static string outbox;
         private static string fakebox;
@@ -37,15 +35,15 @@ namespace WindowsFormsApplication1
 
 
         public static string sortedresultsfile;
-       public static string printedresultsFolder;
-       public static string mergedresultsFolder;
-      public static string horseResultsFolder;
-      public static string logosfolder;
-    private static string workingDirectory;
+        public static string printedresultsFolder;
+        public static string mergedresultsFolder;
+        public static string horseResultsFolder;
+        public static string logosfolder;
+        private static string workingDirectory;
 
-        private static string ridsportlogo;
-        private static string logovoid;
-        private static string preliminaryResults;
+        //private static string ridsportlogo;
+        //private static string logovoid;
+        //private static string preliminaryResults;
         private static bool fake;
         private static string fakefile;
 
@@ -109,8 +107,8 @@ namespace WindowsFormsApplication1
                 outbox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
                 foldersToCreate.Add(outbox);
 
-                logosfolder = Path.Combine(workingDirectory, "logos");
-                foldersToCreate.Add(logosfolder);
+                logosfolder = Path.Combine(Application.StartupPath, "logos");
+                //foldersToCreate.Add(logosfolder);
 
                 printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
                 foldersToCreate.Add(printedresultsFolder);
@@ -118,8 +116,8 @@ namespace WindowsFormsApplication1
                  mergedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
                  foldersToCreate.Add(mergedresultsFolder);
 
-              horseResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["horseresultsfolder"]);
-              foldersToCreate.Add(horseResultsFolder);
+                horseResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["horseresultsfolder"]);
+                foldersToCreate.Add(horseResultsFolder);
        
 
               foreach (var folder in foldersToCreate)
@@ -133,9 +131,9 @@ namespace WindowsFormsApplication1
                 horseresultfile = Path.Combine(horseResultsFolder, ConfigurationManager.AppSettings["horseresults"]);
                 startlistfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["startlist"]);
                 sortedresultsfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["sortedresults"]);
-                ridsportlogo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
-                preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
-                logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
+                //ridsportlogo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
+                //preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
+                //logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
 
 
                 fakefile = Path.Combine(fakebox, "fakedresults.xlsx");
@@ -147,22 +145,22 @@ namespace WindowsFormsApplication1
                     File.Copy(ff, resultfile);
                 }
 
-                if (!File.Exists(ridsportlogo))
-                {
-                    var logoFile = Path.Combine(Application.StartupPath,"logos", ConfigurationManager.AppSettings["logo"]);
-                    File.Copy(logoFile, ridsportlogo);
-                }
-                if (!File.Exists(logovoid))
-                {
-                    var logoFile = Path.Combine(Application.StartupPath, "logos", ConfigurationManager.AppSettings["logovoid"]);
-                    File.Copy(logoFile, logovoid);
-                }
+                //if (!File.Exists(ridsportlogo))
+                //{
+                //    var logoFile = Path.Combine(Application.StartupPath,"logos", ConfigurationManager.AppSettings["logo"]);
+                //    File.Copy(logoFile, ridsportlogo);
+                //}
+                //if (!File.Exists(logovoid))
+                //{
+                //    var logoFile = Path.Combine(Application.StartupPath, "logos", ConfigurationManager.AppSettings["logovoid"]);
+                //    File.Copy(logoFile, logovoid);
+                //}
 
-                if (!File.Exists(preliminaryResults))
-                {
-                    var preliminaryResultsFile = Path.Combine(Application.StartupPath, "logos", ConfigurationManager.AppSettings["prel"]);
-                    File.Copy(preliminaryResultsFile, preliminaryResults);
-                }
+                //if (!File.Exists(preliminaryResults))
+                //{
+                //    var preliminaryResultsFile = Path.Combine(Application.StartupPath, "logos", ConfigurationManager.AppSettings["prel"]);
+                //    File.Copy(preliminaryResultsFile, preliminaryResults);
+                //}
 
             }
             catch (Exception e)
@@ -992,6 +990,176 @@ namespace WindowsFormsApplication1
         }
       }
 
+      public class HPclass
+      {
+        public string Id;
+        public string Name;
+        public string Klass;
+        public float point;
+
+        public bool IsSM => !Klass.Contains(".");
+        public bool IsNM => Klass.Contains(".1");
+
+      public static HPclass Create(string hpline)
+        {
+          var data = hpline.Split(';');
+          var hp = new HPclass
+          {
+            Id = data[0].Trim(), Name = data[1].Trim(), Klass = data[2].Trim(), point = float.Parse(data[3].Trim().Replace(",","."),CultureInfo.InvariantCulture)
+          };
+          return hp;
+        }
+      }
+
+      public void CalculateHorsePoints2()
+      {
+
+      UpdateMessageTextBox($"Analyzing Horse points...");
+
+      var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
+        var horsepoints = Form1.horseresultfile;
+        var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder,"CalculatedHorsePoints.xlsx");
+        var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
+
+
+        var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
+        var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));
+        var allPointsTeam = allHPs.Where(hp => teamclasses.Contains(hp.Klass));
+
+       File.Delete(horsepointsCalculated);
+       File.Copy(horsepointsCalculatedTemplate,horsepointsCalculated,true);
+
+        var allSMPoints = allHPs.Where(hp => hp.IsSM);
+        var allSMPointsInd = allSMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+        var allSMPointsTeam = allSMPoints.Where(hp => teamclasses.Contains(hp.Klass));
+
+        var allNMPoints = allHPs.Where(hp => hp.IsNM);
+        var allNMPointsInd = allNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+        var allNMPointsTeam = allNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
+
+
+      /*
+       * Max SM/NM (Ind+Team)	Mean SM/NM (Ind + Team)	Max SM/NM (Ind)	Mean SM/NM (Ind)	Max SM/NM (Team)	Mean SM/NM (Team)
+       */
+
+        try
+        {
+          var horsepointGroup = from so in allHPs
+            group so by so.Name
+            into AllHorsePoints
+            select new
+            {
+              HorseName = AllHorsePoints.Key,
+              SMNMMax = AllHorsePoints.Max(s => s.point),
+              SMNMAverage = AllHorsePoints.Average(s => s.point),
+              SMNMMaxInd =  allPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
+              SMNMMeanInd = allPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+              SMNMMaxTeam = allPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+              SMNMMeanTeam = allPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+
+              SMMax = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              SMAverage = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+              SMMaxInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              SMMeanInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+              SMMaxTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              SMMeanTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+
+              NMMax = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              NMAverage = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+              NMMaxInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              NMMeanInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+              NMMaxTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+              NMMeanTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+            };
+
+
+          var fileinfo = new FileInfo(horsepointsCalculated);
+          using (var results = new ExcelPackage(fileinfo))
+          {
+            var ws = results.Workbook.Worksheets[1];
+            var row = 2;
+            foreach (var horse in horsepointGroup)
+            {
+
+              ws.Cells[row, 1].Value = horse.HorseName;
+
+            ws.Cells[row, 2].Value = horse.SMNMMax;
+            ws.Cells[row, 3].Value = horse.SMNMAverage;
+            ws.Cells[row, 4].Value = horse.SMNMMaxInd;
+            ws.Cells[row, 5].Value = horse.SMNMMeanInd;
+            ws.Cells[row, 6].Value = horse.SMNMMaxTeam;
+            ws.Cells[row, 7].Value = horse.SMNMMeanTeam;
+
+            ws.Cells[row, 8].Value = horse.SMMax;
+            ws.Cells[row, 9].Value = horse.SMAverage;
+            ws.Cells[row, 10].Value = horse.SMMaxInd;
+            ws.Cells[row, 11].Value = horse.SMMeanInd;
+            ws.Cells[row, 12].Value = horse.SMMaxTeam;
+            ws.Cells[row, 13].Value = horse.SMMeanTeam;
+
+            ws.Cells[row, 14].Value = horse.NMMax;
+            ws.Cells[row, 15].Value = horse.NMAverage;
+            ws.Cells[row, 16].Value = horse.NMMaxInd;
+            ws.Cells[row, 17].Value = horse.NMMeanInd;
+            ws.Cells[row, 18].Value = horse.NMMaxTeam;
+            ws.Cells[row, 19].Value = horse.NMMeanTeam;
+            row++;
+            }
+
+            results.Save();
+
+          }
+          UpdateMessageTextBox($"Horse points analyzed");
+      }
+        catch(Exception e)
+        {
+           UpdateMessageTextBox($"Failed to analyze horse points : {e.Message}");
+        }
+
+      }
+
+
+    //  private void AddHorseExcelSheet(string file,string sheetname, List<HPclass> horsepoints)
+    //  {
+    //    var horsepointGroup = from so in horsepoints
+    //                group so by so.Name into TotaledOrders
+    //      select new
+    //      {
+    //        HorseName = TotaledOrders.Key,
+    //        Average   = TotaledOrders.Average(s => s.point),
+    //        Max       = TotaledOrders.Max(s => s.point),
+    //      };
+
+    //    var maxH  = horsepointGroup.OrderBy(m => m.Max);
+    //    var meanH = horsepointGroup.OrderBy(m => m.Average);
+
+    //    var fileinfo = new FileInfo(file);
+    //    using (var results = new ExcelPackage(fileinfo))
+    //    {
+    //      var ws = results.Workbook.Worksheets.Add(sheetname);
+    //      var row = 1;
+    //      foreach (var max in maxH)
+    //      {
+    //        var namecell = ws.Cells[row, 1];
+    //        var maxcell  = ws.Cells[row, 2];
+    //        namecell.Value = max.HorseName;
+    //        maxcell.Value  = max.Max;
+    //        row++;
+    //      }
+
+    //      row = row + 4;
+    //      foreach (var max in meanH)
+    //      {
+    //        var namecell = ws.Cells[row, 1];
+    //        var maxcell = ws.Cells[row, 2];
+    //        namecell.Value = max.HorseName;
+    //        maxcell.Value = max.Average;
+    //        row++;
+    //      }
+    //    results.Save();
+    //    }
+    //}
+
     public void CalculateHorsePoints()
     {
       var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s=>s.Trim());
@@ -1211,7 +1379,7 @@ namespace WindowsFormsApplication1
     {
       try
       {
-        CalculateHorsePoints();
+        CalculateHorsePoints2();
       }
       catch (Exception ee)
       {

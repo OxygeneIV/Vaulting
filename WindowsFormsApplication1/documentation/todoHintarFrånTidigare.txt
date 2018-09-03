@@ -1,0 +1,26 @@
+Protokoll-check:
+Lina Müller , Caramba, Christine Müller, miniorer  DONE
+
+
+
+Fixa så att alla exceldokument är trusted  på datorerna:
+
+File/Options / Trust Center 
+klicka Trust Center Settings... - knappen
+klicka Trusted Locations  DONE
+
+Klicka "Add new Location"
+Välj root-path + checka "Subfolders trusted" - boxen
+Klicka OK.
+
+Excel : 
+  Se upp med i vilka celler siffrorna matas in, 
+  så att inte några celler med formler skrivs över.
+
+  Använd "komma-tecken" i protokollen.
+
+  
+
+
+  
+

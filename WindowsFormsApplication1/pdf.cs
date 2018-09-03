@@ -2,9 +2,6 @@
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System;
-using System.Collections;
-using System.Drawing;
-using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 

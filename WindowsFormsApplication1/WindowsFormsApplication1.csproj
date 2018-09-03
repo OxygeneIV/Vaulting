@@ -200,7 +200,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="CalculatedHorsePoints_template.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="documentation\InstruktionerResultat.docx" />
+    <None Include="documentation\ProtokollIfyllnad.docx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -224,6 +228,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="documentation\todoHintarFrånTidigare.txt" />
     <Content Include="fakebox\README.txt" />
     <Content Include="inbox\README.txt" />
     <Content Include="logos\datelogo.png">
