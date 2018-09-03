@@ -13,7 +13,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.NetworkInformation;
 using ClosedXML.Excel;
-
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 
 namespace WindowsFormsApplication1
@@ -38,10 +40,10 @@ namespace WindowsFormsApplication1
        public static string printedresultsFolder;
        public static string mergedresultsFolder;
       public static string horseResultsFolder;
-
+      public static string logosfolder;
     private static string workingDirectory;
 
-        private static string logo;
+        private static string ridsportlogo;
         private static string logovoid;
         private static string preliminaryResults;
         private static bool fake;
@@ -107,6 +109,9 @@ namespace WindowsFormsApplication1
                 outbox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
                 foldersToCreate.Add(outbox);
 
+                logosfolder = Path.Combine(workingDirectory, "logos");
+                foldersToCreate.Add(logosfolder);
+
                 printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
                 foldersToCreate.Add(printedresultsFolder);
 
@@ -128,7 +133,7 @@ namespace WindowsFormsApplication1
                 horseresultfile = Path.Combine(horseResultsFolder, ConfigurationManager.AppSettings["horseresults"]);
                 startlistfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["startlist"]);
                 sortedresultsfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["sortedresults"]);
-                logo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
+                ridsportlogo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
                 preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
                 logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
 
@@ -142,10 +147,10 @@ namespace WindowsFormsApplication1
                     File.Copy(ff, resultfile);
                 }
 
-                if (!File.Exists(logo))
+                if (!File.Exists(ridsportlogo))
                 {
                     var logoFile = Path.Combine(Application.StartupPath,"logos", ConfigurationManager.AppSettings["logo"]);
-                    File.Copy(logoFile, logo);
+                    File.Copy(logoFile, ridsportlogo);
                 }
                 if (!File.Exists(logovoid))
                 {
@@ -713,7 +718,9 @@ namespace WindowsFormsApplication1
             Excel.Workbook MyBook = null;
             Excel.Workbooks workbooks = null;
             Excel.Worksheet MySheet = null;
-            //Image prel = new Bitmap(preliminaryResults);
+            bool preliminiaryResults = checkBox1.Checked;
+            string fullpath = Path.Combine(printedresultsFolder, filename);
+            string pdfFullPath = fullpath + ".pdf";
 
             try
             {
@@ -729,18 +736,18 @@ namespace WindowsFormsApplication1
                 MySheet = MyBook.Sheets[className];
                 //MySheet.Activate();
                 
-                if (checkBox1.Checked)
-                {
-                    MySheet.PageSetup.RightHeaderPicture.Filename = preliminaryResults;
-                }
-                else
-                {
-                    MySheet.PageSetup.RightHeaderPicture.Filename = logovoid;
-                }
+                //if (checkBox1.Checked)
+                //{
+                //    MySheet.PageSetup.RightHeaderPicture.Filename = preliminaryResults;
+                //}
+                //else
+                //{
+                //    MySheet.PageSetup.RightHeaderPicture.Filename = logovoid;
+                //}
 
                 //MyApp.Visible = true;
-                string fullpath = Path.Combine(printedresultsFolder, filename);
-                MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, fullpath+".pdf");
+                //string fullpath = Path.Combine(printedresultsFolder, filename);
+                MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
 
                 MyApp.DisplayAlerts = false;
                 MyBook.Close();
@@ -764,7 +771,79 @@ namespace WindowsFormsApplication1
                 MyApp = null;
             }
 
-            return null;
+      // Fix logos 
+
+          try
+          {
+
+            var sponsorlogo = Path.Combine(Form1.logosfolder, "folksam.png");
+            var complogo = Path.Combine(Form1.logosfolder, "smnmlogo2018.png");
+            var preliminary = Path.Combine(Form1.logosfolder, "preliminaryresults.png");
+            var ridsport = Path.Combine(Form1.logosfolder, "logo_ridsport_top.png");
+            var datelogo = Path.Combine(Form1.logosfolder, "datelogo.png");
+
+
+            PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
+
+            for (int i = 0; i < document.Pages.Count; ++i)
+            {
+              PdfPage page = document.Pages[i];
+
+              // Make a layout rectangle.  
+              //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+              //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              //{
+              //  gfx.DrawString($" {now:F} -  Page " + (i + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
+              //}
+              using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              {
+                var xim = XImage.FromFile(ridsport);
+                gfx.ScaleTransform(0.4);
+                gfx.DrawImage(xim, new Point(120, 10));
+              }
+
+              using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              {
+                var xim = XImage.FromFile(complogo);
+                gfx.ScaleTransform(0.15);
+                gfx.DrawImage(xim, new Point(800, 10));
+              }
+
+              using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              {
+                var xim = XImage.FromFile(datelogo);
+                gfx.ScaleTransform(0.3);
+                gfx.DrawImage(xim, new Point(550, 30));
+              }
+
+              using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              {
+                var xim = XImage.FromFile(sponsorlogo);
+                gfx.ScaleTransform(0.3);
+                gfx.DrawImage(xim, new Point(2000, 30));
+              }
+
+              if (preliminiaryResults)
+              {
+                using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                {
+                  var xim = XImage.FromFile(preliminary);
+                  gfx.ScaleTransform(0.5);
+                  gfx.DrawImage(xim, new Point(1300, 140));
+                }
+              }
+            }
+
+            document.Options.CompressContentStreams = true;
+            document.Options.NoCompression = false;
+            document.Save(pdfFullPath);
+          }
+          catch (Exception logoException )
+          {
+            this.UpdateMessageTextBox($"Save to PDF failed for {className} : {logoException.Message}");
+          }
+
+          return null;
         }
 
 

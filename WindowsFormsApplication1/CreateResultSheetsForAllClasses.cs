@@ -98,7 +98,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarLabel("");
 
             FileInfo resultat = new FileInfo(resultfile);
-            Image im = new Bitmap(logo);
+            Image im = new Bitmap(ridsportlogo);
             Image imVoid = new Bitmap(logovoid);
 
             Image prel = new Bitmap(preliminaryResults);
@@ -155,50 +155,15 @@ namespace WindowsFormsApplication1
                         var start = refRange.Start;
                         var end = refRange.End;
                         var cell = classWorksheet.Cells[start.Row,12];
-                        //cell.Value = "7";
-                        //cell.Formula = @"IF(COUNTBLANK(H7:J7)=0;AVERAGE(H7:J7);-0,000001)";
-                        //cell = classWorksheet.Cells[start.Row+1, 12];
-                        //cell.Formula = @"IF(COUNTBLANK(H8:J8)=0;AVERAGE(H8:J8);-0,000001)";
-                        //cell = classWorksheet.Cells[start.Row + 2, 12];
-                        //cell.Formula = @"IF(COUNTBLANK(H9:J9)=0;AVERAGE(H9:J9);-0,000001)";
-                        //cell = classWorksheet.Cells[start.Row + 3, 12];
-                        //cell.Formula = @"IF(COUNTBLANK(H10:J10)=0;AVERAGE(H10:J10);-0,000001)";
 
-                        //classWorksheet.HeaderFooter.differentFirst = false;
-                        //classWorksheet.HeaderFooter.differentOddEven = false;
 
+                            
                             ExcelHeaderFooterText t22 = classWorksheet.HeaderFooter.OddHeader;
                             t22.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
-                            t22.LeftAlignedText = "SM/NM 2018, Laholm/Caprifolen   ";
-                            t22.InsertPicture(im, PictureAlignment.Left);
-                            t22.InsertPicture(imVoid, PictureAlignment.Right);
+                            //t22.LeftAlignedText = "SM/NM 2018, Laholm/Caprifolen   ";
+                            //t22.InsertPicture(im, PictureAlignment.Left);
+                            //t22.InsertPicture(imVoid, PictureAlignment.Right);
                             
-                            //if (checkBox1.Checked)
-                            //    t22.InsertPicture(prel, PictureAlignment.Right);
-
-                            /*
-                        // Header fixing/sheet
-                        ExcelHeaderFooterText t = classWorksheet.HeaderFooter.FirstHeader;
-                        t.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
-                        t.InsertPicture(im, PictureAlignment.Left);
-                        if (checkBox1.Checked)
-                            t.InsertPicture(prel, PictureAlignment.Right); //.RightAlignedText = "&\"Arial,bold\"&30&Kff0000" + "Preliminary results";
-
-
-                        ExcelHeaderFooterText t2 = classWorksheet.HeaderFooter.EvenHeader;
-                        t2.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
-                        t2.InsertPicture(im, PictureAlignment.Left);
-                        if (checkBox1.Checked)
-                            t2.InsertPicture(prel, PictureAlignment.Right); //RightAlignedText = "&\"Arial,bold\"&30&Kff0000" + "Preliminary results";
-
-    */
-
-                        //ExcelHeaderFooterText t32 = classWorksheet.HeaderFooter.OddHeader;
-                        //t32.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
-                        //t32.InsertPicture(im, PictureAlignment.Left);
-                        //if (checkBox1.Checked)
-                        //    t32.InsertPicture(prel, PictureAlignment.Right); //RightAlignedText = "&\"Arial,bold\"&30&Kff0000" + "Preliminary results";
-
 
                         // Type the moments that are defined for the class
                         int counter = 0;
@@ -241,13 +206,6 @@ namespace WindowsFormsApplication1
 
                         ExcelHeaderFooterText t5 = classWorksheet.HeaderFooter.OddFooter;
                         t5.InsertPicture(img, PictureAlignment.Centered);
-
-
-                        //ExcelHeaderFooterText t3 = classWorksheet.HeaderFooter.FirstFooter;
-                        //t3.InsertPicture(img, PictureAlignment.Centered);
-
-                        //ExcelHeaderFooterText t4 = classWorksheet.HeaderFooter.EvenFooter;
-                        //t4.InsertPicture(img, PictureAlignment.Centered);
 
 
                         classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
