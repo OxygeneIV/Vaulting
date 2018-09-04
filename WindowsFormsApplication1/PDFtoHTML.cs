@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -72,11 +73,50 @@ namespace WindowsFormsApplication1
       var folder = Form1.printedresultsFolder;
       var files = Directory.GetFiles(folder, "*.pdf").ToList();
 
+      var singlefile = Path.Combine(Form1.mergedresultsFolder, "All_Results.pdf");
+
+      // Test FTP
+      var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
+      var FTPuser   = ConfigurationManager.AppSettings["ftpuser"];
+      var FTPpwd    = ConfigurationManager.AppSettings["ftppwd"];
+      var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
+      var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
+
+      try
+      {
+        FtpClient clienttest = new FtpClient(FTPserver) {Credentials = new NetworkCredential(FTPuser, FTPpwd)};
+        clienttest.Connect();
+        clienttest.SetWorkingDirectory(remoteworkingfolder);
+        if (clienttest.DirectoryExists("smnmdummyfolder"))
+        {
+          clienttest.DeleteDirectory("smnmdummyfolder");
+        }
+
+        clienttest.CreateDirectory("smnmdummyfolder");
+
+        if (!clienttest.DirectoryExists("smnmdummyfolder"))
+        {
+          clienttest.Disconnect();
+          throw new Exception($"Failed to test create a folder on ftp server");
+        }
+
+        clienttest.Disconnect();
+      }
+      catch(Exception e)
+      {
+        throw new Exception($"Failed to publish {e.Message}");
+      }
+
       Dictionary<string,string> pdfLinks = new Dictionary<string, string>();
       List<string> klasshtmlfiles = new List<string>();
 
       // Adjust the order for SM
       files.Sort(new Comparer());
+
+      if (File.Exists(singlefile))
+      {
+        files.Insert(0, singlefile);
+      }
 
       foreach (var f in files)
       {
@@ -91,7 +131,7 @@ namespace WindowsFormsApplication1
         var remotePdfFile  = HTMLfolder + safeRemotePdfFile;
         var remoteHTMLFile = HTMLfolder + safeRemoteFolderName+".html";
 
-        var remotePdfUrl = "http://privat.bahnhof.se/wb653561/" + remotePdfFile;
+        var remotePdfUrl = remotepdfurl + remotePdfFile;
 
         pdfLinks[remotePdfUrl] = shortFile;
 
@@ -105,12 +145,19 @@ namespace WindowsFormsApplication1
         klasshtmlfiles.Add(remoteHTMLFile);
         // Create folder and klass.html
 
-        FtpClient client1 = new FtpClient("privat.bahnhof.se") { Credentials = new NetworkCredential("wb653561", "foo123") };
-        client1.Connect();
-        client1.UploadFile(f,         remotePdfFile, createRemoteDir: true);
-        client1.UploadFile(localHtml, remoteHTMLFile, createRemoteDir: true);
+        FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+        client.Connect();
+        client.SetWorkingDirectory(remoteworkingfolder);
+        client.UploadFile(f, remotePdfFile, createRemoteDir: true);
+        client.UploadFile(localHtml, remoteHTMLFile, createRemoteDir: true);
+        client.Disconnect();
 
-        client1.Disconnect();
+
+        //FtpClient client1 = new FtpClient("privat.bahnhof.se") { Credentials = new NetworkCredential("wb653561", "foo123") };
+        //client1.Connect();
+
+
+        //client1.Disconnect();
       }
 
       var index = @"
@@ -119,8 +166,11 @@ namespace WindowsFormsApplication1
           <title>SM/NM 2018</title>
         </head>
         <body bgcolor=white>
-               <h1>SM/NM 2018</h1>
+               <h1 align=""center"">SM/NM 2018</h1>
+            <div align=""center"">
             DATA
+           </div>
+
         </body>
       </html>
       ";
@@ -149,10 +199,18 @@ namespace WindowsFormsApplication1
       File.WriteAllText(index_html,index,Encoding.Unicode);
 
       // create an FTP client
-      FtpClient client = new FtpClient("privat.bahnhof.se") {Credentials = new NetworkCredential("wb653561", "foo123")};
-      client.Connect();
-      client.UploadFile(index_html, "index.html");
-      client.Disconnect();
+
+      FtpClient client1 = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+      client1.Connect();
+      client1.SetWorkingDirectory(remoteworkingfolder);
+      client1.UploadFile(index_html, "index.html");
+      client1.Disconnect();
+
+
+      //FtpClient client1 = new FtpClient("privat.bahnhof.se") {Credentials = new NetworkCredential("wb653561", "foo123")};
+      //client1.Connect();
+      //client1.UploadFile(index_html, "index.html");
+      //client1.Disconnect();
       }
   }
 }

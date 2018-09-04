@@ -99,7 +99,7 @@ namespace WindowsFormsApplication1
           string[] pdfs = files.ToArray();
 
 
-            MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresultsFolder,"CombinedResults.pdf"), pdfs);
+            MergeMultiplePDFIntoSinglePDF(Path.Combine( Form1.mergedresultsFolder,"All_Results.pdf"), pdfs);
         }
     }
 }

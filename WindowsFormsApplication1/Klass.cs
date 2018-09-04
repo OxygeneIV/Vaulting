@@ -125,15 +125,12 @@ namespace WindowsFormsApplication1
                 if (string.IsNullOrEmpty(momentText) || string.IsNullOrWhiteSpace(momentText))
                     continue;
 
+
+               // Remove any numbers from moment text
+                momentText = momentText.Replace("1", "").Replace("2", "").Trim();
+
                 Moment moment = new Moment();
-
-                // split
-                //var arr = momentText.Split(',');
-                //int momentType = int.Parse(arr[0]);
-                //string momentLabel = arr[1];
                 moment.Name = momentText;
-                //moment.Type = momentType;
-
                 var submomentsText = r[i + 4];
 
                 //judges

@@ -426,9 +426,6 @@ namespace WindowsFormsApplication1
             UpdateProgressBarLabel("");
             UpdateProgressBarMax(files.Count());
 
-            int fNumber = 0;
-           
-
             UpdateProgressBarHandler(0);
             UpdateProgressBarLabel("");
             UpdateProgressBarMax(files.Count());

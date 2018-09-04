@@ -178,7 +178,6 @@ namespace WindowsFormsApplication1
                                     //string refid = id + "_" + klassName + "_" + moment.Replace(' ', '_') + "_" + bord;
                                     string refid = id;
 
-                                     string theCurrentClass = null;
 
 
                                   var refsplit = refid.Split('_');
@@ -203,11 +202,11 @@ namespace WindowsFormsApplication1
 
 
 
-                                // SM & NM
-                                if (refid.Contains(".2")) // add results to 0 and 1
+                                   // SM & NM
+                                    if (refid.Contains(".2")) // add results to 0 and 1
                                     {
                                         // 0
-                                        //var refsplit = refid.Split('_');
+
                                         
                                         var klassMain = refsplit[3].Trim().Split('.').First();
                                         
@@ -226,7 +225,7 @@ namespace WindowsFormsApplication1
                                     }
                                     else
                                     {
-                                        //var refsplit = refid.Split('_');
+ 
                                         var klassMain = refsplit[3].Trim();
 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
