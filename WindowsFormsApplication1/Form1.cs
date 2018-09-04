@@ -999,6 +999,7 @@ namespace WindowsFormsApplication1
 
         public bool IsSM => !Klass.Contains(".");
         public bool IsNM => Klass.Contains(".1");
+        public bool IsSMNM => Id.Contains(".2"); 
 
       public static HPclass Create(string hpline)
         {
@@ -1023,11 +1024,20 @@ namespace WindowsFormsApplication1
 
 
         var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
-        var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));
-        var allPointsTeam = allHPs.Where(hp => teamclasses.Contains(hp.Klass));
+        
+
+        
+        //var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));
+        //var allPointsTeam = allHPs.Where(hp => teamclasses.Contains(hp.Klass));
+
+
 
        File.Delete(horsepointsCalculated);
        File.Copy(horsepointsCalculatedTemplate,horsepointsCalculated,true);
+
+      var allSMNMPoints = allHPs.Where(hp => !(hp.IsSMNM && hp.IsNM));
+      var allSMNMPointsInd = allSMNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+      var allSMNMPointsTeam = allSMNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
 
         var allSMPoints = allHPs.Where(hp => hp.IsSM);
         var allSMPointsInd = allSMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
@@ -1050,12 +1060,12 @@ namespace WindowsFormsApplication1
             select new
             {
               HorseName = AllHorsePoints.Key,
-              SMNMMax = AllHorsePoints.Max(s => s.point),
-              SMNMAverage = AllHorsePoints.Average(s => s.point),
-              SMNMMaxInd =  allPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
-              SMNMMeanInd = allPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
-              SMNMMaxTeam = allPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
-              SMNMMeanTeam = allPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+              SMNMMax     = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point),
+              SMNMAverage = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point),
+              SMNMMaxInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
+              SMNMMeanInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+              SMNMMaxTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
+              SMNMMeanTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
 
               SMMax = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
               SMAverage = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
