@@ -1015,13 +1015,15 @@ namespace WindowsFormsApplication1
       UpdateMessageTextBox($"Analyzing Horse points...");
 
       var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
-        var horsepoints = Form1.horseresultfile;
+        var horsepointclasses = ConfigurationManager.AppSettings["horsepointclasses"].Split(',').Select(s => s.Trim());
+      var horsepoints = Form1.horseresultfile;
         var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder,"CalculatedHorsePoints.xlsx");
         var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
 
 
         var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
-        
+        var removedhorsepoints = allHPs.RemoveAll(hp => !horsepointclasses.Contains(hp.Klass));
+        UpdateMessageTextBox($"Removed {removedhorsepoints} from calculation");
 
         
         //var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));

@@ -136,7 +136,7 @@ namespace WindowsFormsApplication1
         pdfLinks[remotePdfUrl] = shortFile;
 
         var iframeurl =  $@"https://docs.google.com/viewer?url="+ remotePdfUrl + "&embedded=true";
-        var iframe = $@"<iframe src=""{iframeurl}"" style=""width:100%; height:100%;"" ></iframe>";
+        var iframe = $@"<embed src=""{iframeurl}"" style=""width:100%; height:100%;"" ></embed>";
 
         var klasshtml = klassHtml(iframe);
 
