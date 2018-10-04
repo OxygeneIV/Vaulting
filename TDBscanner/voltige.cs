@@ -115,7 +115,8 @@ namespace Tests.Voltige
             //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
             // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+            // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+            string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
 
             // Open Browser
             var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -125,10 +126,10 @@ namespace Tests.Voltige
 
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
-            //l.email.SetText("annaomagnus@hotmail.com");
-            //l.password.SetText("berlin96");
-            l.email.SetText("oxygeneiv@hotmail.com");
-            l.password.SetText("xfiles67");
+            l.email.SetText("annaomagnus@hotmail.com");
+            l.password.SetText("berlin96");
+            //l.email.SetText("oxygeneiv@hotmail.com");
+            //l.password.SetText("xfiles67");
             l.SubmitButton.Click();
 
             // Inistatiate the Competition page
@@ -207,12 +208,6 @@ namespace Tests.Voltige
                         classpage = PageObjectFactory.Init<ClassPage>(driver);
                         Wait.UntilOrThrow(() => classpage.CompetitorTable.Displayed);
 
-                        //// Fetch class Id Num in DB
-                        //var classId = classpage.WebDriver.Url;
-                        //var classurls = classId.Split('/');
-                        //var classIdNum = Int32.Parse(classurls[classurls.Length - 2]);
-
-
                         comprows = classpage.CompetitorTable.Rows.ToList();
                         var curCompsrow = comprows[j];
 
@@ -242,7 +237,6 @@ namespace Tests.Voltige
                         var horseCellText = horseCell.Text.Trim();
                         var clubCellText = clubCell.Text.Trim();
 
-                        //_classes[classIdNum] = classnr + "|" + classnamn;
                         _linf[linfIdNum] = linftext;
                         _horse[horseIdNum] = horseCellText;
                         _clubs[clubIdNum] = clubCellText;

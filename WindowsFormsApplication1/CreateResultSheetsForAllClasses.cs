@@ -107,7 +107,7 @@ namespace WindowsFormsApplication1
             int maxcount = classes.Count;
 
 
-            // First delete all sheets
+            // First delete all sheets not being templates
             using (var results = new ExcelPackage(resultat))
             {
                 foreach (Klass klass in classes)

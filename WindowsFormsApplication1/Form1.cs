@@ -40,15 +40,8 @@ namespace WindowsFormsApplication1
         public static string horseResultsFolder;
         public static string logosfolder;
         private static string workingDirectory;
-
-        //private static string ridsportlogo;
-        //private static string logovoid;
-        //private static string preliminaryResults;
         private static bool fake;
         private static string fakefile;
-
-
-
 
         public Form1()
         {
