@@ -15,7 +15,7 @@ namespace WindowsFormsApplication1
         {
             if (showmessageboxes)
             {
-                //this.BeginInvoke((Action)(() => MessageBox.Show(text)));
+
                 MessageBox.Show(this, text);
             }
         }
@@ -87,7 +87,7 @@ namespace WindowsFormsApplication1
 
         private void ReadResultsFromInbox()
         {
-            DirectoryInfo dirinfo = new DirectoryInfo(inbox);
+            DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
             var files = dirinfo.EnumerateFiles("*.xls*");
             var max = files.Count();
             UpdateProgressBarHandler(0);
@@ -96,63 +96,43 @@ namespace WindowsFormsApplication1
 
             if (files.Count() == 0)
             {
-                showMessageBox("No result files available");
+                UpdateMessageTextBox("No result files available");
                 return;
             }
+
             UpdateMessageTextBox("Beginning import of results");
-
-            UpdateProgressBarHandler(0);
-            UpdateProgressBarLabel("");
-            UpdateProgressBarMax(files.Count());
-
-
-
-            // If we have issues with excel versions, try by enabling this foreach loop and "int fNumber" definition
-            // Opens and saves the file using local excel application
-
-            //int fNumber = 0;
-            //foreach (var f in files)
-            //{
-            //    // First copy the file before trying anything stupid.
-            //    var newPath = Path.Combine(backup, f.Name);
-            //    File.Copy(f.FullName, newPath, true);
-
-            //    fNumber++;
-            //    UpdateProgressBarLabel("Re-saving for compatibility issues : " + f.Name);
-            //    var MyApp = new Microsoft.Office.Interop.Excel.Application();
-            //    MyApp.Visible = false;
-            //    var workbooks = MyApp.Workbooks;
-            //    var MyBook = workbooks.Open(f.FullName);
-            //    MyBook.Close(true);
-            //    workbooks.Close();
-            //    MyApp.Quit();
-
-            //    Marshal.ReleaseComObject(MyBook);
-            //    Marshal.ReleaseComObject(workbooks);
-            //    Marshal.ReleaseComObject(MyApp);
-            //    MyBook = null;
-            //    workbooks = null;
-            //    MyApp = null;
-            //    UpdateProgressBarHandler(fNumber);
-            //}
-
             UpdateProgressBarHandler(0);
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
-          var horseFileName = Form1.horseresultfile;
+            var horseFileName = Form1.horseresultfile;
             FileInfo resultat = new FileInfo(resultfile);
             using (ExcelPackage results = new ExcelPackage(resultat))
             {
-                //results.Workbook.CalcMode = ExcelCalcMode.Automatic;
                 try
                 {
                     int counter = 0;
                     foreach (var f in files)
                     {
+                        var toFile1 = Path.Combine(outboxFolder, f.Name);
+                        if(File.Exists(toFile1))
+                        {
+                            // Overwrite
+                            var msg = MessageBox.Show(@"File already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
+                            if (msg == DialogResult.Yes)
+                            {
+                                // continue
+                            }
+                            else
+                            {
+                                UpdateMessageTextBox($"Ignoring file {f.Name}");
+                                continue;
+                            }
+                           
+                        }
 
-                        //    // First copy the file before trying anything stupid.
-                        var newPath = Path.Combine(backup, f.Name);
+                        // First copy the file before trying anything stupid.
+                        var newPath = Path.Combine(backupFolder, f.Name);
                         File.Copy(f.FullName, newPath, true);
 
                         counter++;
@@ -169,18 +149,9 @@ namespace WindowsFormsApplication1
                                 else
                                 {
                                     var res = ws.Cells["result"].GetValue<float>();
-                                    //var klassName = ws.Cells["klass"].Value.ToString();
-                                    //var bord = ws.Cells["bord"].Value.ToString();
-                                    //var moment = ws.Cells["moment"].Value.ToString();
                                     var id = ws.Cells["id"].Value.ToString();
-
-                                    // ID
-                                    //string refid = id + "_" + klassName + "_" + moment.Replace(' ', '_') + "_" + bord;
                                     string refid = id;
-
-
-
-                                  var refsplit = refid.Split('_');
+                                    var refsplit = refid.Split('_');
 
 
                                   // Horse analysis
@@ -204,10 +175,7 @@ namespace WindowsFormsApplication1
 
                                    // SM & NM
                                     if (refid.Contains(".2")) // add results to 0 and 1
-                                    {
-                                        // 0
-
-                                        
+                                    {                                      
                                         var klassMain = refsplit[3].Trim().Split('.').First();
                                         
                                         var zero = refid.Replace(".2", "");
@@ -226,7 +194,7 @@ namespace WindowsFormsApplication1
                                     else
                                     {
  
-                                        var klassMain = refsplit[3].Trim();
+                                        var klassMain = refsplit[2].Trim();
 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
                                         if (horsename != null)
@@ -234,12 +202,9 @@ namespace WindowsFormsApplication1
                                           File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
                                         }
                                      }
-
-
-
                                 }
                             }
-                            var toFile = Path.Combine(outbox, f.Name);
+                            var toFile = Path.Combine(outboxFolder, f.Name);
                             File.Move(f.FullName, toFile);
                         }
                         catch (Exception e)
@@ -261,40 +226,36 @@ namespace WindowsFormsApplication1
                 finally
                 {
                     UpdateMessageTextBox("Completed import of results");
-                    //var calcOptions = new ExcelCalculationOption();                    
-                    //results.Workbook.Calculate(new ExcelCalculationOption());
                     UpdateMessageTextBox("Completed import of results, saving...");
                     results.Save();
-                    //var calcOptions = new ExcelCalculationOption();                    
-                    //results.Workbook.Calculate();
                     UpdateMessageTextBox("Save completed, wait for calculation");
                 }
             }
 
             UpdateMessageTextBox("Import of results, calculating points...");
        
-            bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
-          if (!docalc)
-          {
-            UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
-            return;
-          }
+              bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
+              if (!docalc)
+              {
+                UpdateMessageTextBox("Import of results, calculation done...sorting...");
+                return;
+              }
     
-            var MyApp = new Microsoft.Office.Interop.Excel.Application();
-            MyApp.Visible = true;
-            var workbooks = MyApp.Workbooks;
-            var MyBook = workbooks.Open(resultfile);
-            MyApp.CalculateFull();
-            MyBook.Close(true);
-            workbooks.Close();
-            MyApp.Quit();
-            UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
-            Marshal.ReleaseComObject(MyBook);
-            Marshal.ReleaseComObject(workbooks);
-            Marshal.ReleaseComObject(MyApp);
-            MyBook = null;
-            workbooks = null;
-            MyApp = null;
+                var MyApp = new Microsoft.Office.Interop.Excel.Application();
+                MyApp.Visible = true;
+                var workbooks = MyApp.Workbooks;
+                var MyBook = workbooks.Open(resultfile);
+                MyApp.CalculateFull();
+                MyBook.Close(true);
+                workbooks.Close();
+                MyApp.Quit();
+                UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
+                Marshal.ReleaseComObject(MyBook);
+                Marshal.ReleaseComObject(workbooks);
+                Marshal.ReleaseComObject(MyApp);
+                MyBook = null;
+                workbooks = null;
+                MyApp = null;
 
 
 

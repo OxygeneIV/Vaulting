@@ -65,12 +65,7 @@ namespace WindowsFormsApplication1
 
                 Moment moment = new Moment();
 
-                // split
-                //var arr = momentText.Split(',');
-                //int momentType = int.Parse(arr[0]);
-                //string momentLabel = arr[1];
                 moment.Name = momentText;
-                //moment.Type = momentType;
 
                 var submomentsText = range.ElementAt(i+4).Text;
 
@@ -140,7 +135,7 @@ namespace WindowsFormsApplication1
                 var submoments = submomentsText.Split(',');
                 int count = 65;
                 int judgeindex = 0;
-               // foreach (var s in submoments.ToList().GetRange(0, submomentsJudges.Count()))
+
                foreach (var s in submoments.ToList())
                 {
                     if (string.IsNullOrEmpty(s) || string.IsNullOrWhiteSpace(s))

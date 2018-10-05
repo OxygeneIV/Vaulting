@@ -163,10 +163,10 @@ namespace WindowsFormsApplication1
       var index = @"
       <html>
         <head>
-          <title>SM/NM 2018</title>
+          <title>Jälla 2018-10-07</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">SM/NM 2018</h1>
+               <h1 align=""center"">Jälla 2018-10-07</h1>
             <div align=""center"">
             DATA
            </div>

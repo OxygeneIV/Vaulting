@@ -26,10 +26,10 @@ namespace WindowsFormsApplication1
         private static string horseresultfile;
 
         private static string startlistfile;
-        private static string inbox;
-        private static string outbox;
-        private static string fakebox;
-        private static string backup;
+        private static string inboxFolder;
+        private static string outboxFolder;
+        private static string fakeboxFolder;
+        private static string backupFolder;
         private static bool showmessageboxes;
         private static bool competitionstarted;
 
@@ -38,7 +38,7 @@ namespace WindowsFormsApplication1
         public static string printedresultsFolder;
         public static string mergedresultsFolder;
         public static string horseResultsFolder;
-        public static string logosfolder;
+        public static string logosFolder;
         private static string workingDirectory;
         private static bool fake;
         private static string fakefile;
@@ -88,19 +88,19 @@ namespace WindowsFormsApplication1
                 // Folders
                 List<string> foldersToCreate = new List<string>();
 
-                inbox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["inbox"]);
-                foldersToCreate.Add(inbox);
+                inboxFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["inbox"]);
+                foldersToCreate.Add(inboxFolder);
 
-                fakebox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["fakebox"]);
-                foldersToCreate.Add(fakebox);
+                fakeboxFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["fakebox"]);
+                foldersToCreate.Add(fakeboxFolder);
 
-                backup = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["backup"]);
-                foldersToCreate.Add(backup);
+                backupFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["backup"]);
+                foldersToCreate.Add(backupFolder);
 
-                outbox = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
-                foldersToCreate.Add(outbox);
+                outboxFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
+                foldersToCreate.Add(outboxFolder);
 
-                logosfolder = Path.Combine(Application.StartupPath, "logos");
+                logosFolder = Path.Combine(Application.StartupPath, "logos");
                 //foldersToCreate.Add(logosfolder);
 
                 printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
@@ -129,7 +129,7 @@ namespace WindowsFormsApplication1
                 //logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
 
 
-                fakefile = Path.Combine(fakebox, "fakedresults.xlsx");
+                fakefile = Path.Combine(fakeboxFolder, "fakedresults.xlsx");
 
                 if(!File.Exists(resultfile))
                 {
@@ -398,7 +398,7 @@ namespace WindowsFormsApplication1
            
             UpdateProgressBarLabel("");
 
-            DirectoryInfo dirinfo = new DirectoryInfo(fakebox);
+            DirectoryInfo dirinfo = new DirectoryInfo(fakeboxFolder);
             var files = dirinfo.EnumerateFiles("*.xls*").ToList();
             UpdateProgressBarMax(files.Count());
 
@@ -763,12 +763,12 @@ namespace WindowsFormsApplication1
 
           try
           {
-
-            var sponsorlogo = Path.Combine(Form1.logosfolder, "folksam.png");
-            var complogo = Path.Combine(Form1.logosfolder, "smnmlogo2018.png");
-            var preliminary = Path.Combine(Form1.logosfolder, "preliminaryresults.png");
-            var ridsport = Path.Combine(Form1.logosfolder, "logo_ridsport_top.png");
-            var datelogo = Path.Combine(Form1.logosfolder, "datelogo.png");
+            
+            //var sponsorlogo = Path.Combine(Form1.logosFolder, "sponsor.png");
+            var complogo = Path.Combine(Form1.logosFolder, "competition.png");
+            var preliminary = Path.Combine(Form1.logosFolder, "preliminaryresults.png");
+            var ridsport = Path.Combine(Form1.logosFolder, "logo_ridsport_top.png");
+            var datelogo = Path.Combine(Form1.logosFolder, "date.png");
 
 
             PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
@@ -790,26 +790,26 @@ namespace WindowsFormsApplication1
                 gfx.DrawImage(xim, new Point(120, 10));
               }
 
-              using (XGraphics gfx = XGraphics.FromPdfPage(page))
-              {
-                var xim = XImage.FromFile(complogo);
-                gfx.ScaleTransform(0.15);
-                gfx.DrawImage(xim, new Point(800, 10));
-              }
+              //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              //{
+              //  var xim = XImage.FromFile(complogo);
+              //  gfx.ScaleTransform(0.15);
+              //  gfx.DrawImage(xim, new Point(800, 10));
+              //}
 
               using (XGraphics gfx = XGraphics.FromPdfPage(page))
               {
                 var xim = XImage.FromFile(datelogo);
                 gfx.ScaleTransform(0.3);
-                gfx.DrawImage(xim, new Point(550, 30));
+                gfx.DrawImage(xim, new Point(450, 30));
               }
 
-              using (XGraphics gfx = XGraphics.FromPdfPage(page))
-              {
-                var xim = XImage.FromFile(sponsorlogo);
-                gfx.ScaleTransform(0.3);
-                gfx.DrawImage(xim, new Point(2000, 30));
-              }
+              //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+              //{
+              //  var xim = XImage.FromFile(sponsorlogo);
+              //  gfx.ScaleTransform(0.3);
+              //  gfx.DrawImage(xim, new Point(2000, 30));
+              //}
 
               if (preliminiaryResults)
               {
@@ -817,7 +817,7 @@ namespace WindowsFormsApplication1
                 {
                   var xim = XImage.FromFile(preliminary);
                   gfx.ScaleTransform(0.5);
-                  gfx.DrawImage(xim, new Point(1300, 140));
+                  gfx.DrawImage(xim, new Point(1200, 140));
                 }
               }
             }
@@ -1092,19 +1092,19 @@ namespace WindowsFormsApplication1
             ws.Cells[row, 6].Value = horse.SMNMMaxTeam;
             ws.Cells[row, 7].Value = horse.SMNMMeanTeam;
 
-            ws.Cells[row, 8].Value = horse.SMMax;
-            ws.Cells[row, 9].Value = horse.SMAverage;
-            ws.Cells[row, 10].Value = horse.SMMaxInd;
-            ws.Cells[row, 11].Value = horse.SMMeanInd;
-            ws.Cells[row, 12].Value = horse.SMMaxTeam;
-            ws.Cells[row, 13].Value = horse.SMMeanTeam;
+            //ws.Cells[row, 8].Value = horse.SMMax;
+            //ws.Cells[row, 9].Value = horse.SMAverage;
+            //ws.Cells[row, 10].Value = horse.SMMaxInd;
+            //ws.Cells[row, 11].Value = horse.SMMeanInd;
+            //ws.Cells[row, 12].Value = horse.SMMaxTeam;
+            //ws.Cells[row, 13].Value = horse.SMMeanTeam;
 
-            ws.Cells[row, 14].Value = horse.NMMax;
-            ws.Cells[row, 15].Value = horse.NMAverage;
-            ws.Cells[row, 16].Value = horse.NMMaxInd;
-            ws.Cells[row, 17].Value = horse.NMMeanInd;
-            ws.Cells[row, 18].Value = horse.NMMaxTeam;
-            ws.Cells[row, 19].Value = horse.NMMeanTeam;
+            //ws.Cells[row, 14].Value = horse.NMMax;
+            //ws.Cells[row, 15].Value = horse.NMAverage;
+            //ws.Cells[row, 16].Value = horse.NMMaxInd;
+            //ws.Cells[row, 17].Value = horse.NMMeanInd;
+            //ws.Cells[row, 18].Value = horse.NMMaxTeam;
+            //ws.Cells[row, 19].Value = horse.NMMeanTeam;
             row++;
             }
 
@@ -1121,46 +1121,7 @@ namespace WindowsFormsApplication1
       }
 
 
-    //  private void AddHorseExcelSheet(string file,string sheetname, List<HPclass> horsepoints)
-    //  {
-    //    var horsepointGroup = from so in horsepoints
-    //                group so by so.Name into TotaledOrders
-    //      select new
-    //      {
-    //        HorseName = TotaledOrders.Key,
-    //        Average   = TotaledOrders.Average(s => s.point),
-    //        Max       = TotaledOrders.Max(s => s.point),
-    //      };
-
-    //    var maxH  = horsepointGroup.OrderBy(m => m.Max);
-    //    var meanH = horsepointGroup.OrderBy(m => m.Average);
-
-    //    var fileinfo = new FileInfo(file);
-    //    using (var results = new ExcelPackage(fileinfo))
-    //    {
-    //      var ws = results.Workbook.Worksheets.Add(sheetname);
-    //      var row = 1;
-    //      foreach (var max in maxH)
-    //      {
-    //        var namecell = ws.Cells[row, 1];
-    //        var maxcell  = ws.Cells[row, 2];
-    //        namecell.Value = max.HorseName;
-    //        maxcell.Value  = max.Max;
-    //        row++;
-    //      }
-
-    //      row = row + 4;
-    //      foreach (var max in meanH)
-    //      {
-    //        var namecell = ws.Cells[row, 1];
-    //        var maxcell = ws.Cells[row, 2];
-    //        namecell.Value = max.HorseName;
-    //        maxcell.Value = max.Average;
-    //        row++;
-    //      }
-    //    results.Save();
-    //    }
-    //}
+ 
 
     public void CalculateHorsePoints()
     {

@@ -77,6 +77,7 @@ namespace WindowsFormsApplication1
                 //paint the background
                 drawing.Clear(backColor);
 
+              
                 //create a brush for the text
                 using (Brush textBrush = new SolidBrush(textColor))
                 {
@@ -98,10 +99,7 @@ namespace WindowsFormsApplication1
             UpdateProgressBarLabel("");
 
             FileInfo resultat = new FileInfo(resultfile);
-            //Image im = new Bitmap(ridsportlogo);
-            //Image imVoid = new Bitmap(logovoid);
 
-            //Image prel = new Bitmap(preliminaryResults);
             string reference = "ResultTemplate";
             int classCount = 0;
             int maxcount = classes.Count;
@@ -160,10 +158,6 @@ namespace WindowsFormsApplication1
                             
                             ExcelHeaderFooterText t22 = classWorksheet.HeaderFooter.OddHeader;
                             t22.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
-                            //t22.LeftAlignedText = "SM/NM 2018, Laholm/Caprifolen   ";
-                            //t22.InsertPicture(im, PictureAlignment.Left);
-                            //t22.InsertPicture(imVoid, PictureAlignment.Right);
-                            
 
                         // Type the moments that are defined for the class
                         int counter = 0;
@@ -182,9 +176,12 @@ namespace WindowsFormsApplication1
                             
                             foreach (SubMoment submom in mom.SubMoments)
                             {
-                                string judgeName = string.Format("{0,-40}", submom.Table.judge.Fullname);
+                                if (submom.Table.judge.Fullname.Trim().Length > 0)
+                                {
+                                    string judgeName = string.Format("{0,-30}", submom.Table.judge.Fullname);
 
-                                judgetext = judgetext + "   " + submom.Table.Name + ": " + judgeName;
+                                    judgetext = judgetext + "   " + submom.Table.Name + ": " + judgeName;
+                                }
 
                             }
                             totalJudge = totalJudge + judgetext + "\n";
@@ -202,7 +199,7 @@ namespace WindowsFormsApplication1
                         // just some test
                         //
                         totalJudge = totalJudge + "\n\n";
-                        var img = DrawTextImage(totalJudge, new Font("Lucida Console", 9, FontStyle.Italic), Color.Black, Color.White);
+                        var img = DrawTextImage(totalJudge, new Font("Lucida Console", 12, FontStyle.Italic), Color.Black, Color.White);
 
                         ExcelHeaderFooterText t5 = classWorksheet.HeaderFooter.OddFooter;
                         t5.InsertPicture(img, PictureAlignment.Centered);

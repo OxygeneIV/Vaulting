@@ -45,12 +45,6 @@ namespace WindowsFormsApplication1
             }
         }
 
-
-        private void AddVaulterToResultsFile()
-        {
-
-        }
-
         // Load vaulters from startlist into result lists in correct class sheets
         private void PopulateResultSheetsWithVaulters()
         {
@@ -87,8 +81,7 @@ namespace WindowsFormsApplication1
 
 
                     var sheet = results.Workbook.Worksheets[klass];
-                    //sheet.HeaderFooter.differentFirst = true; //ML
-                    //sheet.HeaderFooter.differentOddEven = false;
+
                     int row = sheet.Dimension.End.Row;
 
                     fromRange = sheet.Cells["ekipage"];
@@ -196,21 +189,6 @@ namespace WindowsFormsApplication1
                                 _cond2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                 _cond2.Style.Fill.BackgroundColor.Index = 3;
 
-                                //endcol = 11;
-                                //ExcelAddress _formatRangeAddressB = new ExcelAddress(row + i, endcol, row + i, endcol);
-                                //var _cond1B = sheet.ConditionalFormatting.AddExpression(_formatRangeAddressB);
-                                //_cond1B.Formula = $"COUNTBLANK($G{row + i})=0";
-                                //_cond1B.StopIfTrue = false;
-                                //_cond1B.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                //var color = System.Drawing.ColorTranslator.FromHtml("#E2EBD5");
-                                ////_cond1B.Style.Fill.BackgroundColor.Index = -4142;
-                                //_cond1B.Style.Fill.BackgroundColor.Color = color;
-
-                                //ExcelAddress _formatRangeAddress2B = new ExcelAddress(row + i, endcol, row + i, endcol);
-                                //var _cond2B = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2B);
-                                //_cond2B.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                //_cond2B.Style.Fill.BackgroundColor.Index = 35;
-
                             }
 
                         }
@@ -250,8 +228,8 @@ namespace WindowsFormsApplication1
                         foreach (SubMoment submoment in moment.SubMoments)
                         {
                             // ID
-                            string id = d.Id + "_" + klass + "_" + moment.Name.Replace(' ', '_') + "_" + submoment.Table.Name;
-                            id = d.Id + "_" + momentIndex + "_" + submoment.Table.Name; //ID
+                            //string id = d.Id + "_" + klass + "_" + moment.Name.Replace(' ', '_') + "_" + submoment.Table.Name;
+                            string id = d.Id + "_" + momentIndex + "_" + submoment.Table.Name; //ID
 
                             var rng = sheet.Cells[startrow, colnum];
                             sheet.Names.Add(id, rng);
