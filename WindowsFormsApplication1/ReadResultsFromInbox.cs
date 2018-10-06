@@ -118,10 +118,13 @@ namespace WindowsFormsApplication1
                         if(File.Exists(toFile1))
                         {
                             // Overwrite
-                            var msg = MessageBox.Show(@"File already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
+                            var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
                             if (msg == DialogResult.Yes)
                             {
-                                // continue
+                                // continue using a backup
+                                string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+                                string newfile = $"{toFile1}_{date}";
+                                File.Move(toFile1,newfile);
                             }
                             else
                             {
