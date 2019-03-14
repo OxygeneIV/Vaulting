@@ -100,7 +100,11 @@ namespace WindowsFormsApplication1
                 outboxFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["outbox"]);
                 foldersToCreate.Add(outboxFolder);
 
-                logosFolder = Path.Combine(Application.StartupPath, "logos");
+                logosFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logos"]);
+
+                if(!Directory.Exists(logosFolder))
+                    logosFolder = Path.Combine(Application.StartupPath, "logos");
+
                 //foldersToCreate.Add(logosfolder);
 
                 printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
@@ -429,6 +433,8 @@ namespace WindowsFormsApplication1
 
             int rownumber = 0;
 
+            Boolean woody = bool.Parse(ConfigurationManager.AppSettings["woody"]);
+
             foreach (var f1 in files)
             {
                 rownumber++;
@@ -444,7 +450,10 @@ namespace WindowsFormsApplication1
                         var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
 
                         var rand = Math.Round(new Random().NextDouble() * 10, 3);
-
+                        if (f1.FullName.Contains("_A_") && woody)
+                        {
+                            rand = 6.5;
+                        }
                         
 
                         var range = ws.NamedRange("result");
@@ -817,7 +826,7 @@ namespace WindowsFormsApplication1
                 {
                   var xim = XImage.FromFile(preliminary);
                   gfx.ScaleTransform(0.5);
-                  gfx.DrawImage(xim, new Point(1200, 140));
+                  gfx.DrawImage(xim, new Point(1300, 140));
                 }
               }
             }
