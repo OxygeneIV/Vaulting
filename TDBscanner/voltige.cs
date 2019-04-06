@@ -19,7 +19,7 @@ namespace Tests.Voltige
 
         [Locator("#password")] public PasswordField password;
 
-        [Locator("[type=submit]")] public Button SubmitButton;
+        [Locator("[value='Logga in']")] public Button SubmitButton;
     }
 
     /// <summary>
@@ -116,7 +116,8 @@ namespace Tests.Voltige
             // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
             // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+            string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
 
             // Open Browser
             var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -226,7 +227,7 @@ namespace Tests.Voltige
                         var linfId = linfCell.LinkUrl;
                         var horseId = horseCell.LinkUrl;
                         var clubId = clubCell.LinkUrl;
-                        var ekipageId = curCompsrow.GetCell(5).LinkUrl;
+                        var ekipageId = curCompsrow.GetCell(6).LinkUrl;
 
                         var linfIdNum = Int32.Parse(linfId.Split('/').Last());
                         var horseIdNum = Int32.Parse(horseId.Split('/').Last());
@@ -243,7 +244,7 @@ namespace Tests.Voltige
 
 
                         // Open tävlande
-                        curCompsrow.GetCell(5).LinkClick();
+                        curCompsrow.GetCell(6).LinkClick();
 
                         EkipagePage ekipagePage = PageObjectFactory.Init<EkipagePage>(driver);
                         Wait.UntilOrThrow(() => ekipagePage.Displayed);
