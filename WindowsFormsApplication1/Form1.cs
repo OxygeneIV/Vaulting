@@ -11,9 +11,11 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Globalization;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using Color = System.Drawing.Color;
 
 
 namespace WindowsFormsApplication1
@@ -718,6 +720,9 @@ namespace WindowsFormsApplication1
             bool preliminiaryResults = checkBox1.Checked;
             string fullpath = Path.Combine(printedresultsFolder, filename);
             string pdfFullPath = fullpath + ".pdf";
+            String noresults = ConfigurationManager.AppSettings["noresults"];
+
+            List<String> noresultsList = noresults.Split(',').ToList();
 
             try
             {
@@ -731,6 +736,15 @@ namespace WindowsFormsApplication1
                 workbooks = MyApp.Workbooks;
                 MyBook = workbooks.Open(sortedresultsfile,ReadOnly:true);
                 MySheet = MyBook.Sheets[className];
+
+
+
+                if (noresultsList.Contains(className))
+                {
+                    var range = MySheet.get_Range("H7", "O50");
+                    range.NumberFormat = ";;;";               
+                }
+
                 //MySheet.Activate();
                 
                 //if (checkBox1.Checked)
@@ -778,9 +792,9 @@ namespace WindowsFormsApplication1
             var preliminary = Path.Combine(Form1.logosFolder, "preliminaryresults.png");
             var ridsport = Path.Combine(Form1.logosFolder, "logo_ridsport_top.png");
             var datelogo = Path.Combine(Form1.logosFolder, "date.png");
+              var noresultlogo = Path.Combine(Form1.logosFolder, "nopoints.png");
 
-
-            PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
+                PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
 
             for (int i = 0; i < document.Pages.Count; ++i)
             {
@@ -829,7 +843,19 @@ namespace WindowsFormsApplication1
                   gfx.DrawImage(xim, new Point(1200, 140));
                 }
               }
-            }
+
+
+                if (noresultsList.Contains(className))
+                {
+                    using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                    {
+                        var xim = XImage.FromFile(noresultlogo);
+                        gfx.ScaleTransform(0.4);
+                        gfx.DrawImage(xim, new Point(500,10));
+                    }
+                  }
+
+             }
 
             document.Options.CompressContentStreams = true;
             document.Options.NoCompression = false;
