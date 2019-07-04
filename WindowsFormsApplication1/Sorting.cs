@@ -3,6 +3,11 @@ using System.IO;
 using System.Linq;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
+using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2013.Word;
+using ListBox = System.Windows.Forms.ListBox;
+using System.Configuration;
 
 namespace WindowsFormsApplication1
 {
@@ -31,11 +36,207 @@ namespace WindowsFormsApplication1
         }
 
 
-    /// <summary>
-    /// Sort results. If argument sort only this class
-    /// </summary>
-    /// <param name="inklass"></param>
-    private void SortResults(string inklass = null)
+        public class ResultObject
+        {
+            public string clazz;
+            public string description;
+            public int rank;
+            public string name;
+            public string horse;
+
+            public string toFileStyle()
+            {
+                var l = new List<String>() {name, clazz, description, rank.ToString(), horse};
+                return String.Join("|", l);
+            }
+        }
+
+        public class omvandStartordningsClass
+        {
+            public Klass klass;
+            public Int32 max;
+
+        }
+
+        public void extractFromSortedFile()
+        {
+
+            List<string> omvandsklass = new List<string>();
+            List<int> maxPerClass = new List<int>();
+            var classes = readClasses();
+
+            var omvandclasses = ConfigurationManager.AppSettings["omvandclasses"].Split(',').Select(s => s.Trim()).ToList();
+            var maxomvandclasses = ConfigurationManager.AppSettings["maxomvandclasses"].Split(',').Select(s => s.Trim()).ToList();
+
+            omvandsklass.AddRange(omvandclasses);
+            maxPerClass.AddRange(maxomvandclasses.Select(s=>Int32.Parse(s)));
+
+            List< omvandStartordningsClass> omvandStartordningsClasses = new List<omvandStartordningsClass>();
+
+            for (int i = 0; i < omvandclasses.Count(); i++)
+            {
+                omvandStartordningsClass o = new omvandStartordningsClass();
+                o.klass = classes.Single(c => c.Name == omvandclasses[i]);
+                o.max = maxPerClass[i];
+                omvandStartordningsClasses.Add(o);
+            }
+
+
+            String extracted = omvandfile + ".txt";
+            if (File.Exists(sortedresultsfile))
+            {
+                File.Delete(omvandfile);
+                File.Copy(sortedresultsfile, omvandfile);
+            }
+            else
+            {
+                UpdateMessageTextBox("Need sorted results for omvänd startordning...");
+                return;
+            }
+
+            if (File.Exists(extracted))
+            {
+                File.Delete(extracted);
+            }
+
+            // var classes = readClasses();
+
+
+            var max = classes.Count();
+
+            UpdateProgressBarHandler(0);
+            UpdateProgressBarMax(max);
+            UpdateProgressBarLabel("");
+            UpdateProgressBarLabel("Starting Result Extract!!");
+            UpdateMessageTextBox("omvänd startordning...");
+         
+
+            var MyApp = new Application();
+            MyApp.Visible = false;
+            var workbooks = MyApp.Workbooks;
+            var MyBook = workbooks.Open(omvandfile);
+
+            int counter = 0;
+            
+          
+            List<ResultObject> goodPeople = new List<ResultObject>();
+       
+            foreach (omvandStartordningsClass klass in omvandStartordningsClasses)
+            {
+
+              
+                int startrow = 7;
+                int rank = 0;
+                while (rank < klass.max)
+                {
+                    if (rank < klass.max)
+                    { 
+                        counter++;
+                    string className = klass.klass.Name;
+                    var MySheet = MyBook.Sheets[className];
+
+                    MySheet.Activate();
+                    UpdateMessageTextBox($"Looking at {className}");
+                    int namerow = startrow + 1;
+                    int horserow = startrow + 2;
+                    if (MySheet.Cells[namerow, 4].Value2 != null)
+                    {
+
+                        string name = MySheet.Cells[namerow, 4].Value.ToString();
+                        string horse = MySheet.Cells[horserow, 6].Value.ToString();
+
+                        rank = rank + 1;
+
+                        ResultObject r = new ResultObject();
+                        r.clazz = className;
+                        r.description = klass.klass.Description;
+                        r.horse = horse;
+                        r.name = name;
+                        r.rank = rank;
+
+                        UpdateProgressBarLabel("Looked at class " + klass.klass.Name + " - " + r.name);
+                        File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
+                        goodPeople.Add(r);
+                        startrow = startrow + 4;
+                    }
+                }
+            }
+            }
+
+            MyBook.Close(true);
+            workbooks.Close();
+            MyApp.Quit();
+
+            Marshal.ReleaseComObject(MyBook);
+            Marshal.ReleaseComObject(workbooks);
+            Marshal.ReleaseComObject(MyApp);
+            MyBook = null;
+            workbooks = null;
+            MyApp = null;
+            counter = 0;
+            UpdateProgressBarLabel("startordning completed");
+            UpdateMessageTextBox($"startordning completed with competitors  "+ goodPeople.Count);
+
+            List<String> horsenames = new List<string>();
+
+            while (goodPeople.Count > 0)
+            {
+                File.AppendAllText(extracted, "Main Loop - Got " + goodPeople.Count + " competitors" +Environment.NewLine);
+
+                // Cleanup 
+
+                foreach (omvandStartordningsClass klass in omvandStartordningsClasses)
+                {
+                    if (goodPeople.Count() == 0)
+                        break;
+
+                    File.AppendAllText(extracted, "Using currently top ranked from klass " + klass.klass.Name + Environment.NewLine);
+                    Boolean stillThere = goodPeople.Any(p => p.clazz == klass.klass.Name);
+
+                    if (!stillThere)
+                    {
+                        UpdateMessageTextBox("No more in that class, go to next");
+                        continue;
+                    }
+
+                    ResultObject r = goodPeople.First(p => p.clazz == klass.klass.Name);
+                    String horse = r.horse;
+                    File.AppendAllText(extracted, "Selected horse from currently top ranked in class "+ klass.klass.Name + " = " + horse + Environment.NewLine);
+                    UpdateMessageTextBox("Horse : " + horse);
+                    horsenames.Add(horse);
+                    List<ResultObject> removable = goodPeople.FindAll(p => p.horse == horse);
+                    File.AppendAllText(extracted, "Got totally " + removable.Count + " competitors with that horse " + Environment.NewLine);
+
+                    // The rest
+                    foreach (ResultObject people in removable)
+                    {
+                        File.AppendAllText(extracted, "Removing  " + people.toFileStyle() + Environment.NewLine);
+                        goodPeople.Remove(people);
+                    }
+                    File.AppendAllText(extracted, "After removal, got " + goodPeople.Count() + " competitors left " + Environment.NewLine);
+                    UpdateMessageTextBox("After removal, got " + goodPeople.Count() + " voltigörer");
+                }
+                
+               
+
+            }
+
+            File.AppendAllText(extracted, "Final Horse order..." + Environment.NewLine);
+            foreach (var hname in horsenames)
+            {
+                File.AppendAllText(extracted, hname + Environment.NewLine);
+            }
+
+
+
+
+        }
+
+        /// <summary>
+        /// Sort results. If argument sort only this class
+        /// </summary>
+        /// <param name="inklass"></param>
+        private void SortResults(string inklass = null)
         {
          
             if (File.Exists(sortedresultsfile))

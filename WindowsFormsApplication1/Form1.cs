@@ -37,6 +37,7 @@ namespace WindowsFormsApplication1
 
 
         public static string sortedresultsfile;
+        public static string omvandfile;
         public static string printedresultsFolder;
         public static string mergedresultsFolder;
         public static string horseResultsFolder;
@@ -130,6 +131,7 @@ namespace WindowsFormsApplication1
                 horseresultfile = Path.Combine(horseResultsFolder, ConfigurationManager.AppSettings["horseresults"]);
                 startlistfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["startlist"]);
                 sortedresultsfile = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["sortedresults"]);
+                omvandfile= Path.Combine(workingDirectory, ConfigurationManager.AppSettings["omvandstartordning"]);
                 //ridsportlogo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
                 //preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
                 //logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
@@ -850,7 +852,7 @@ namespace WindowsFormsApplication1
                     using (XGraphics gfx = XGraphics.FromPdfPage(page))
                     {
                         var xim = XImage.FromFile(noresultlogo);
-                        gfx.ScaleTransform(0.4);
+                        gfx.ScaleTransform(0.8);
                         gfx.DrawImage(xim, new Point(500,10));
                     }
                   }
@@ -1386,8 +1388,13 @@ namespace WindowsFormsApplication1
 
       }
     }
-  }
-  public static class Extension
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            extractFromSortedFile();
+        }
+    }
+    public static class Extension
     {
         public static bool IsNumeric(this string s)
         {
