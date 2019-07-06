@@ -815,14 +815,14 @@ namespace WindowsFormsApplication1
                 gfx.DrawImage(xim, new Point(120, 10));
               }
 
-              //using (XGraphics gfx = XGraphics.FromPdfPage(page))
-              //{
-              //  var xim = XImage.FromFile(complogo);
-              //  gfx.ScaleTransform(0.15);
-              //  gfx.DrawImage(xim, new Point(800, 10));
-              //}
+            using (XGraphics gfx = XGraphics.FromPdfPage(page))
+            {
+                var xim = XImage.FromFile(complogo);
+                gfx.ScaleTransform(0.15);
+                gfx.DrawImage(xim, new Point(600, 10));
+            }
 
-              using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                    using (XGraphics gfx = XGraphics.FromPdfPage(page))
               {
                 var xim = XImage.FromFile(datelogo);
                 gfx.ScaleTransform(0.3);
@@ -842,7 +842,7 @@ namespace WindowsFormsApplication1
                 {
                   var xim = XImage.FromFile(preliminary);
                   gfx.ScaleTransform(0.5);
-                  gfx.DrawImage(xim, new Point(1200, 140));
+                  gfx.DrawImage(xim, new Point(1300, 140));
                 }
               }
 
