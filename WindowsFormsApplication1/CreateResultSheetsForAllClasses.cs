@@ -74,6 +74,7 @@ namespace WindowsFormsApplication1
             Image retImg = new Bitmap((int)textSize.Width, (int)textSize.Height);
             using (var drawing = Graphics.FromImage(retImg))
             {
+                drawing.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 //paint the background
                 drawing.Clear(backColor);
 
@@ -124,7 +125,7 @@ namespace WindowsFormsApplication1
 
             using (var results = new ExcelPackage(resultat))
             {
-
+                
                 // Copy main sheet to each class results and update header
                 foreach (Klass klass in classes)
                 {
@@ -149,6 +150,7 @@ namespace WindowsFormsApplication1
 
                         var classWorksheet = ws.Copy(reference, className);
 
+                         
                         var refRange = classWorksheet.Cells["ekipage"];
                         var start = refRange.Start;
                         var end = refRange.End;
@@ -157,7 +159,8 @@ namespace WindowsFormsApplication1
 
                             
                             ExcelHeaderFooterText t22 = classWorksheet.HeaderFooter.OddHeader;
-                            t22.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
+                            t22.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description;
+                          //  t22.CenteredText = "&\"Arial,bold\"&16" + "Klass " + klass.Name + "  -  " + klass.Description + "&B" + "&\"Arial\"&8" + (char)13 + "&P (&N)";
 
                         // Type the moments that are defined for the class
                         int counter = 0;
@@ -184,6 +187,7 @@ namespace WindowsFormsApplication1
                                 }
 
                             }
+
                             totalJudge = totalJudge + judgetext + "\n";
 
                           
@@ -198,12 +202,36 @@ namespace WindowsFormsApplication1
 
                         // just some test
                         //
-                        totalJudge = totalJudge + "\n\n";
-                        var img = DrawTextImage(totalJudge, new Font("Lucida Console", 12, FontStyle.Italic), Color.Black, Color.White);
+                            totalJudge = totalJudge;// + "\n\n";
+                         
+                           // Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+
+                        //FontFamily fontFamily = new FontFamily("L");
+                        //    Font testFont = new Font(
+                        //        fontFamily,
+                        //        10,
+                        //        FontStyle.Regular,
+                        //        GraphicsUnit.Pixel);
+
+                            Font testFont = new Font("Lucida Console", 11, FontStyle.Regular);
+
+
+                        var img = DrawTextImage(totalJudge, testFont, Color.Black, Color.Transparent);
+
+                            //Graphics g = Graphics.FromImage(img);
+                            
+                            //    g.TextRenderingHint= System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                            // etc...
+                        
+
+                        // var img = DrawTextImage(totalJudge, new Font("Lucida Console", 11, FontStyle.Italic), Color.Black, Color.Transparent);
+
 
                         ExcelHeaderFooterText t5 = classWorksheet.HeaderFooter.OddFooter;
+                        
                         t5.InsertPicture(img, PictureAlignment.Centered);
-
+                        // Test
+                        //    t5.CenteredText = totalJudge;
 
                         classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
                         UpdateProgressBarLabel("Added result sheet for class " + className);
@@ -225,5 +253,7 @@ namespace WindowsFormsApplication1
 
             UpdateProgressBarLabel("All result sheets created");
         }
+
+
     }
 }
