@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows.Forms;
 //using Bytescout.PDF2HTML;
 //using EvoPdf.PdfToHtml;
 using FluentFTP;
@@ -30,6 +31,7 @@ namespace WindowsFormsApplication1
       var index = $@"
       <html>
         <body bgcolor=white>
+
             {iframestring}
         </body>
       </html>
@@ -137,12 +139,16 @@ namespace WindowsFormsApplication1
 
         var iframeurl =  $@"https://docs.google.com/viewer?url="+ remotePdfUrl + "&embedded=true";
         var iframe = $@"<embed src=""{iframeurl}"" style=""width:100%; height:100%;"" ></embed>";
+          //var iframeurl = $@"https://docs.google.com/viewer?url=" + remotePdfUrl;
+              // var iframe = $@"<embed src=""{iframeurl}#toolbar=0&navpanes=0&scrollbar=0"" style=""width:500px; height:1000px;"" ></embed>";
+          iframe = "<a href=" + @""""+remotePdfUrl+@""""+ ">"+shortFile+"</a>";
+                var klasshtml = klassHtml(iframe);
+                // ditlagd
+          pdfLinks[remotePdfUrl] = iframe;
 
-        var klasshtml = klassHtml(iframe);
-
-        var localHtml = Path.Combine(Form1.mergedresultsFolder, "klass.html");
+                var localHtml = Path.Combine(Form1.mergedresultsFolder, "klass.html");
         File.WriteAllText(localHtml, klasshtml);
-        klasshtmlfiles.Add(remoteHTMLFile);
+        klasshtmlfiles.Add(remoteHTMLFile); 
         // Create folder and klass.html
 
         FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
@@ -163,10 +169,10 @@ namespace WindowsFormsApplication1
       var index = @"
       <html>
         <head>
-          <title>Mälarcup, Uppsala 2019-04-07</title>
+          <title>Voltige-SM, Uppsala 12-14 juli 2019</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">Mälarcup, Uppsala 2019-04-07</h1>
+               <h1 align=""center"">Voltige-SM, Uppsala 12-14 juli 2019</h1>
             <div align=""center"">
             DATA
            </div>

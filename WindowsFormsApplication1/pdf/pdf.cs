@@ -15,6 +15,7 @@ namespace WindowsFormsApplication1
         {
             var now = DateTime.Now;
              PdfDocument document = new PdfDocument();
+              
             foreach (string pdfFile in pdfFiles)
             {
                 PdfDocument inputPDFDocument = PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import);
