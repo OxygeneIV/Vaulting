@@ -64,9 +64,10 @@ namespace WindowsFormsApplication1
 			List<string> omvandsklass = new List<string>();
 			List<int> maxPerClass = new List<int>();
 			var classes = readClasses();
-			
 
-			var omvandclasses = ConfigurationManager.AppSettings["omvandclasses"].Split(',').Select(s => s.Trim()).ToList();
+		    var escamilo = ConfigurationManager.AppSettings["escamilo"];
+
+            var omvandclasses = ConfigurationManager.AppSettings["omvandclasses"].Split(',').Select(s => s.Trim()).ToList();
 			var maxomvandclasses = ConfigurationManager.AppSettings["maxomvandclasses"].Split(',').Select(s => s.Trim()).ToList();
 
 			omvandsklass.AddRange(omvandclasses);
@@ -148,8 +149,12 @@ namespace WindowsFormsApplication1
 
 						string name = MySheet.Cells[namerow, 4].Value.ToString();
 						string horse = MySheet.Cells[horserow, 6].Value.ToString();
+					    if (escamilo == "1")
+					    {
+					        horse = horse.Replace("  ", " ");
+					    }
 
-						rank = rank + 1;
+					    rank = rank + 1;
 
 						ResultObject r = new ResultObject();
 						r.clazz = className;
