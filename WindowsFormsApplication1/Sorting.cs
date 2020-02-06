@@ -65,7 +65,7 @@ namespace WindowsFormsApplication1
 			List<int> maxPerClass = new List<int>();
 			var classes = readClasses();
 
-		    var escamilo = ConfigurationManager.AppSettings["escamilo"];
+		    //var escamilo = ConfigurationManager.AppSettings["escamilo"];
 
             var omvandclasses = ConfigurationManager.AppSettings["omvandclasses"].Split(',').Select(s => s.Trim()).ToList();
 			var maxomvandclasses = ConfigurationManager.AppSettings["maxomvandclasses"].Split(',').Select(s => s.Trim()).ToList();
@@ -149,10 +149,10 @@ namespace WindowsFormsApplication1
 
 						string name = MySheet.Cells[namerow, 4].Value.ToString();
 						string horse = MySheet.Cells[horserow, 6].Value.ToString();
-					    if (escamilo == "1")
-					    {
-					        horse = horse.Replace("  ", " ");
-					    }
+					    //if (escamilo == "1" && horse.ToLower().Contains("escamilo"))
+					    //{
+					    //    horse = horse.Replace("  ", " ");
+					    //}
 
 					    rank = rank + 1;
 
@@ -228,7 +228,10 @@ namespace WindowsFormsApplication1
 
 					ResultObject r = goodPeople.First(p => p.clazz == startordningsClass.klass.Name);
 					String horse = r.horse;
-					File.AppendAllText(extracted, "Selected horse from currently top ranked in class "+ startordningsClass.klass.Name + " = " + horse + Environment.NewLine);
+				    File.AppendAllText(extracted,
+				        "Selected top ranked competitor from klass " + startordningsClass.klass.Name + " = " +
+				        r.toFileStyle() + Environment.NewLine);
+                    File.AppendAllText(extracted, "Selected horse from currently top ranked in class "+ startordningsClass.klass.Name + " = " + horse + Environment.NewLine);
 					UpdateMessageTextBox("Horse : " + horse);
 					horsenames.Add(horse);
 					List<ResultObject> removable = goodPeople.FindAll(p => p.horse == horse);

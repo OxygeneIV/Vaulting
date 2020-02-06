@@ -254,6 +254,7 @@
     <Content Include="logos\logo_ridsport_top_mini.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="logos\nopoints.png" />
     <Content Include="logos\PreliminaryResults.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

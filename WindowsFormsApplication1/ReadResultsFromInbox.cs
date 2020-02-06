@@ -156,6 +156,8 @@ namespace WindowsFormsApplication1
                                     string refid = id;
                                     var refsplit = refid.Split('_');
 
+                                    //var horsenumber = refsplit[3].Trim();
+
 
                                   // Horse analysis
                                   // SM & NM HorsePointStoring
@@ -198,6 +200,21 @@ namespace WindowsFormsApplication1
                                     {
  
                                         var klassMain = refsplit[2].Trim();
+
+                                        // Escamilo
+                                        /*
+                                        if (klassMain == "5" || klassMain == "6")
+                                        {
+                                            if (horsenumber == "")  // New Common Escamilo
+                                            {
+
+                                                // Update refid for class 5 and 6
+                                                var newRefsplit = refsplit;
+                                                newRefsplit[3]  = oldHorseNumber; // Old escamilo for class 5 and 6
+                                                refid = String.Join("_", newRefsplit).Trim();
+                                            }
+                                        }
+                                        */
 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
                                         if (horsename != null)

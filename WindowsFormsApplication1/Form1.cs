@@ -790,7 +790,7 @@ namespace WindowsFormsApplication1
           {
             
             //var sponsorlogo = Path.Combine(Form1.logosFolder, "sponsor.png");
-            var complogo = Path.Combine(Form1.logosFolder, "competition.png");
+            //var complogo = Path.Combine(Form1.logosFolder, "competition.png");
             var preliminary = Path.Combine(Form1.logosFolder, "preliminaryresults.png");
             var ridsport = Path.Combine(Form1.logosFolder, "logo_ridsport_top.png");
             var datelogo = Path.Combine(Form1.logosFolder, "date.png");
@@ -815,12 +815,12 @@ namespace WindowsFormsApplication1
                 gfx.DrawImage(xim, new Point(120, 10));
               }
 
-            using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            {
-                var xim = XImage.FromFile(complogo);
-                gfx.ScaleTransform(0.15);
-                gfx.DrawImage(xim, new Point(600, 10));
-            }
+            //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+            //{
+            //    var xim = XImage.FromFile(complogo);
+            //    gfx.ScaleTransform(0.15);
+            //    gfx.DrawImage(xim, new Point(600, 10));
+            //}
 
                     using (XGraphics gfx = XGraphics.FromPdfPage(page))
               {

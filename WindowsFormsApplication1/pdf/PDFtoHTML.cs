@@ -169,10 +169,10 @@ namespace WindowsFormsApplication1
       var index = @"
       <html>
         <head>
-          <title>Voltige-SM, Uppsala 12-14 juli 2019</title>
+          <title>Uppsala / Järlåsaskolan 2020-02-08</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">Voltige-SM, Uppsala 12-14 juli 2019</h1>
+               <h1 align=""center"">Uppsala / Järlåsaskolan 2020-02-08</h1>
             <div align=""center"">
             DATA
            </div>
