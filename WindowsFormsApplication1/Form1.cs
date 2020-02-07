@@ -826,7 +826,7 @@ namespace WindowsFormsApplication1
               {
                 var xim = XImage.FromFile(datelogo);
                 gfx.ScaleTransform(0.35);
-                gfx.DrawImage(xim, new Point(400, 30));
+                gfx.DrawImage(xim, new Point(260, 30));
               }
 
               //using (XGraphics gfx = XGraphics.FromPdfPage(page))
