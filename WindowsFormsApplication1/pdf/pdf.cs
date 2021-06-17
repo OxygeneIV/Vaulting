@@ -33,56 +33,8 @@ namespace WindowsFormsApplication1
             XBrush brush = XBrushes.Black;
             // Create variable that store page count  
             string noPages = document.Pages.Count.ToString();
-            // Set for loop of document page count and set page number using DrawString function of PdfSharp  
-            for (int i = 0; i < document.Pages.Count; ++i)
-            {
-                PdfPage page = document.Pages[i];
-              
-              // Make a layout rectangle.  
-                XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
-                using (XGraphics gfx = XGraphics.FromPdfPage(page))
-                {
-                    gfx.DrawString($" {now:F} -  Page " + (i + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
-                }
 
-
-
-            //using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            //{
-            //  var xim = XImage.FromFile(ridsport);
-            //  gfx.ScaleTransform(0.4);
-            //  gfx.DrawImage(xim, new Point(120, 10));
-            //}
-            //  using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            //  {
-            //    var xim = XImage.FromFile(complogo);
-            //    gfx.ScaleTransform(0.15);
-            //    gfx.DrawImage(xim, new Point(800, 10));
-            //  }
-
-            //  using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            //  {
-            //    var xim = XImage.FromFile(datelogo);
-            //    gfx.ScaleTransform(0.3);
-            //    gfx.DrawImage(xim, new Point(550, 30));
-            //  }
-
-            //  using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            //  {
-            //    var xim = XImage.FromFile(sponsorlogo);
-            //    gfx.ScaleTransform(0.3);
-            //    gfx.DrawImage(xim,new Point(2000,30));
-            //   }
-
-            //  using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            //  {
-            //    var xim = XImage.FromFile(preliminary);
-            //    gfx.ScaleTransform(0.5);
-            //    gfx.DrawImage(xim, new Point(1300, 140));
-            //  }
-
-      }
-      document.Options.CompressContentStreams = true;
+            document.Options.CompressContentStreams = true;
             document.Options.NoCompression = false;
             // In the final stage, all documents are merged and save in your output file path.  
             document.Save(outputFilePath);
