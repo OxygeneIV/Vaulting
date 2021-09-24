@@ -76,9 +76,11 @@ namespace WindowsFormsApplication1
       var files = Directory.GetFiles(folder, "*.pdf").ToList();
 
       var singlefile = Path.Combine(Form1.mergedresultsFolder, "All_Results.pdf");
+      var singlefile2 = Path.Combine(Form1.mergedresultsFolder, "Startlista.pdf");
+            
 
       // Test FTP
-      var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
+            var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
       var FTPuser   = ConfigurationManager.AppSettings["ftpuser"];
       var FTPpwd    = ConfigurationManager.AppSettings["ftppwd"];
       var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
@@ -119,9 +121,14 @@ namespace WindowsFormsApplication1
       {
         files.Insert(0, singlefile);
       }
+            if (File.Exists(singlefile2))
+            {
+                files.Insert(0, singlefile2);
+            }
 
       foreach (var f in files)
       {
+               
         var PdfFilename = Path.GetFileName(f);
         var shortFile   =  Path.GetFileNameWithoutExtension(f);
 
@@ -169,10 +176,10 @@ namespace WindowsFormsApplication1
       var index = @"
       <html>
         <head>
-          <title>Uppsala / Jälla Gård 2021-06-19</title>
+          <title>Uppsala / Tuthammarens Ridcenter 2021-09-25</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">Uppsala / Jälla Gård 2021-06-19</h1>
+               <h1 align=""center"">Uppsala / Tuthammarens Ridcenter 2021-09-25</h1>
             <div align=""center"">
             DATA
            </div>
