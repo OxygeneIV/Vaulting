@@ -812,7 +812,7 @@ namespace WindowsFormsApplication1
               {
                 var xim = XImage.FromFile(ridsport);
                 gfx.ScaleTransform(0.4);
-                gfx.DrawImage(xim, new Point(140, 20));
+                gfx.DrawImage(xim, new Point(120, 10));
               }
 
             //using (XGraphics gfx = XGraphics.FromPdfPage(page))
@@ -826,7 +826,7 @@ namespace WindowsFormsApplication1
               {
                 var xim = XImage.FromFile(datelogo);
                 gfx.ScaleTransform(0.35);
-                gfx.DrawImage(xim, new Point(290, 40));
+                gfx.DrawImage(xim, new Point(260, 30));
               }
 
               //using (XGraphics gfx = XGraphics.FromPdfPage(page))
@@ -842,7 +842,7 @@ namespace WindowsFormsApplication1
                 {
                   var xim = XImage.FromFile(preliminary);
                   gfx.ScaleTransform(0.5);
-                  gfx.DrawImage(xim, new Point(1900, 210));
+                  gfx.DrawImage(xim, new Point(1300, 140));
                 }
               }
 
@@ -853,7 +853,7 @@ namespace WindowsFormsApplication1
                     {
                         var xim = XImage.FromFile(noresultlogo);
                         gfx.ScaleTransform(0.8);
-                        gfx.DrawImage(xim, new Point(700,10));
+                        gfx.DrawImage(xim, new Point(500,10));
                     }
                   }
 

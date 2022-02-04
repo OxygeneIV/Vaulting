@@ -176,10 +176,10 @@ namespace WindowsFormsApplication1
       var index = @"
       <html>
         <head>
-          <title>Uppsala / Tuthammarens Ridcenter 2021-09-25</title>
+          <title>Trähästcup Mellansverige, Delmoment 1   Gamla Uppsala skola, 2022-02-05</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">Uppsala / Tuthammarens Ridcenter 2021-09-25</h1>
+               <h1 align=""center"">Trähästcup Mellansverige, Delmoment 1 <br/> Gamla Uppsala skola, 2022-02-05</h1>
             <div align=""center"">
             DATA
            </div>

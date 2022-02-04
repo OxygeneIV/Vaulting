@@ -115,6 +115,20 @@ namespace WindowsFormsApplication1
                                 _cond2_2.Style.Fill.BackgroundColor.Index = 3;
                             }
 
+                            if (theclass.ResultTemplate.Trim().EndsWith("1B"))
+                            {
+                                endcol = 9;
+                                ExcelAddress _formatRangeAddress_2 = new ExcelAddress(row + i, 9, row + i, endcol);
+                                var _cond1_2 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress_2);
+                                _cond1_2.Formula = $"COUNTBLANK($G{row + i})=1";
+                                _cond1_2.StopIfTrue = true;
+
+                                ExcelAddress _formatRangeAddress2_2 = new ExcelAddress(row + i, 9, row + i, endcol);
+                                var _cond2_2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2_2);
+                                _cond2_2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                _cond2_2.Style.Fill.BackgroundColor.Index = 3;
+                            }
+
                             if (theclass.ResultTemplate.Trim().EndsWith("2"))
                             {
                                 endcol = 9;
