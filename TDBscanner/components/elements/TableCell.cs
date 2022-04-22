@@ -21,7 +21,8 @@ namespace Viedoc.viedoc.pages.components.elements
             }
             else
             {
-                link_.Click();
+                link_.JavaClick();
+                //link_.Click();
             }
         }
 

@@ -29,12 +29,17 @@ namespace Tests.Voltige
     public class CompetitionPage : PageObject
     {
         [Locator(How.Sizzle, "table:first")] public Table ClassesTable;
+
+
+        [Locator(".alert-dismissible .btn-close")]
+        public Button closePopup;
     }
 
-    [Locator(How.Sizzle, "body:has(h4:contains(Allmänt))")]
+    [Locator(How.Sizzle, "body:has(h4:contains(Kontakt))")]
     public class CompetitorPage : PageObject
     {
-        [Locator(".row p a[href*='/clubs/']")]
+        //[Locator(".row p a[href*='/clubs/']")] dd:nth-of-type(3) > a:nth-of-type(2)
+        [Locator(".row a[href*='/clubs/']:nth-of-type(2)")]
         public Link ClubLink;
 
         public string ClubLinkText => ClubLink.TrimmedText;
@@ -47,6 +52,9 @@ namespace Tests.Voltige
     public class ClassPage : PageObject
     {
         [Locator(How.Sizzle, "table:first.tablesorter")] public Table CompetitorTable;
+
+        [Locator(".alert-dismissible .btn-close")]
+        public Button closePopup;
     }
 
 
@@ -122,7 +130,8 @@ namespace Tests.Voltige
             //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
             //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+            string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
 
             // Open Browser
             var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -146,6 +155,8 @@ namespace Tests.Voltige
 
             // Chec we have a table of classes
             Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
+            //c.closePopup.Click();
+
 
             var rows = c.ClassesTable.Rows.ToList();
             var numberOfClasses = rows.Count;
@@ -166,14 +177,22 @@ namespace Tests.Voltige
             {
                 c = PageObjectFactory.Init<CompetitionPage>(driver);
 
+                //c.closePopup.Click();
+
                 // Get the classes table
                 Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
+                
 
                 // Fetch the rows
                 rows = c.ClassesTable.Rows.ToList();
 
                 // Set current row
                 var curClassrow = rows[i];
+
+                curClassrow.ScrollIntoView();
+
+                System.Threading.Thread.Sleep(2000);
+
 
                 // DATA
                 var classnr = curClassrow.GetCellText("Nr"); // Class Nr
@@ -191,6 +210,8 @@ namespace Tests.Voltige
                 // Now we have the class details Page
                 ClassPage classpage = PageObjectFactory.Init<ClassPage>(driver);
                 Wait.UntilOrThrow(() => classpage.Displayed);
+
+               
 
                 // Check # anmälda
                 var comprows = classpage.CompetitorTable.Rows.ToList();
@@ -213,6 +234,8 @@ namespace Tests.Voltige
                     {
                         classpage = PageObjectFactory.Init<ClassPage>(driver);
                         Wait.UntilOrThrow(() => classpage.CompetitorTable.Displayed);
+
+                    
 
                         comprows = classpage.CompetitorTable.Rows.ToList();
                         var curCompsrow = comprows[j];

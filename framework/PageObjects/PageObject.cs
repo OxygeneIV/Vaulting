@@ -414,6 +414,7 @@ namespace Framework.PageObjects
                 }
                 else
                 {
+                    ScrollIntoView();
                     Log.Info("Clicking...");
                     DoAction(i => i.Click(), 120);
                     Log.Info("Clicking done");
@@ -960,6 +961,9 @@ namespace Framework.PageObjects
         {
             Log.Info("Scrolling me into view...");
             DoAction(i => WebDriver.ExecuteJavascript("arguments[0].scrollIntoView(false)", i));
+            //DoAction(i => WebDriver.ExecuteJavascript("arguments[0].scrollIntoView('{ block: \"start\"}')", i));
+            DoAction(i => WebDriver.ExecuteJavascript("window.scrollBy(0, 300);"));
+            
             Log.Info("Scrolling me into view done...");
         }
 
