@@ -30,6 +30,7 @@ namespace Tests.Voltige
     {
         [Locator(How.Sizzle, "table:first")] public Table ClassesTable;
 
+        [Locator(How.Css, "table:nth-of-type(2)")] public Table ClassesTable2;
 
         [Locator(".alert-dismissible .btn-close")]
         public Button closePopup;
@@ -131,7 +132,11 @@ namespace Tests.Voltige
             //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
             //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+
+            // SM https://tdb.ridsport.se/meetings/63485
+
+           // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+            string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
 
             // Open Browser
             var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -141,8 +146,12 @@ namespace Tests.Voltige
 
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
-            l.email.SetText("annaomagnus@hotmail.com");
-            l.password.SetText("berlin96");
+
+            l.email.SetText("helena.heuman@billdalsridklubb.com");
+            l.password.SetText("1492");
+
+            //l.email.SetText("annaomagnus@hotmail.com");
+            //l.password.SetText("berlin96");
             //l.email.SetText("oxygeneiv@hotmail.com");
             //l.password.SetText("xfiles67");
             l.SubmitButton.Click();
@@ -155,11 +164,18 @@ namespace Tests.Voltige
 
             // Chec we have a table of classes
             Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
+            Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
+
             //c.closePopup.Click();
 
 
             var rows = c.ClassesTable.Rows.ToList();
             var numberOfClasses = rows.Count;
+
+            var rows2 = c.ClassesTable2.Rows.ToList();
+            var numberOfClasses2 = rows2.Count;
+
+            numberOfClasses = numberOfClasses + numberOfClasses2;
 
             // All ints are DB Ids, not what is diaplyed in the table 1, 2, 3.1, 3.2, 4  etc
 
@@ -181,13 +197,26 @@ namespace Tests.Voltige
 
                 // Get the classes table
                 Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
-                
+                Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
 
+
+                  
                 // Fetch the rows
                 rows = c.ClassesTable.Rows.ToList();
-
                 // Set current row
-                var curClassrow = rows[i];
+                var curClassrow =rows[0];
+
+                if (i==(numberOfClasses-1))
+                {
+                    rows = c.ClassesTable2.Rows.ToList();
+                    curClassrow = rows[0];
+                }
+                else
+                {
+                     curClassrow = rows[i];
+
+                }
+
 
                 curClassrow.ScrollIntoView();
 

@@ -138,17 +138,31 @@ namespace WindowsFormsApplication1
         var HTMLfolder = $"{safeRemoteFolderName}/";
 
         var remotePdfFile  = HTMLfolder + safeRemotePdfFile;
-        var remoteHTMLFile = HTMLfolder + safeRemoteFolderName+".html";
+       // remotePdfFile = remotePdfFile + DateTime.Now.ToString("yyyyMMddTHHmmss")+".pdf";  // JALLA
+
+         var remoteHTMLFile = HTMLfolder + safeRemoteFolderName+".html";
 
         var remotePdfUrl = remotepdfurl + remotePdfFile;
 
         pdfLinks[remotePdfUrl] = shortFile;
+
+                /*
+                 * $original_filename = '34_file.pdf';
+echo "<a href='$original_filename?version=".date("dHis")."'>
+Download the file
+</a>";
+                 */
+
+                // JALLA
+                //remotePdfUrl = remotePdfUrl + "?version=\".date(\"dHis\").\"";
 
         var iframeurl =  $@"https://docs.google.com/viewer?url="+ remotePdfUrl + "&embedded=true";
         var iframe = $@"<embed src=""{iframeurl}"" style=""width:100%; height:100%;"" ></embed>";
           //var iframeurl = $@"https://docs.google.com/viewer?url=" + remotePdfUrl;
               // var iframe = $@"<embed src=""{iframeurl}#toolbar=0&navpanes=0&scrollbar=0"" style=""width:500px; height:1000px;"" ></embed>";
           iframe = "<a href=" + @""""+remotePdfUrl+@""""+ ">"+shortFile+"</a>";
+          //iframe = "<a href=" + @"""" + remotePdfUrl + @"""" + ">" + shortFile + "</a>";  // JALLA
+
                 var klasshtml = klassHtml(iframe);
                 // ditlagd
           pdfLinks[remotePdfUrl] = iframe;
@@ -172,14 +186,22 @@ namespace WindowsFormsApplication1
 
         //client1.Disconnect();
       }
+      var meta= @"
+          <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
+                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
+                   <meta http-equiv = ""Expires"" content = ""0"" >
+                ";
 
       var index = @"
       <html>
         <head>
-          <title>Trähästcup Mellansverige, Delmoment 1   Gamla Uppsala skola, 2022-02-05</title>
+                  <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
+                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
+                   <meta http-equiv = ""Expires"" content = ""0"" >
+          <title>3*, 2* och 1*, 23:e april 2022 Jälla</title>
         </head>
         <body bgcolor=white>
-               <h1 align=""center"">Trähästcup Mellansverige, Delmoment 1 <br/> Gamla Uppsala skola, 2022-02-05</h1>
+               <h1 align=""center"">Voltige 3*, 2* och 1*<br/>Jälla, Uppsala 2022-04-23</h1>
             <div align=""center"">
             DATA
            </div>
