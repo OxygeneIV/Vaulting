@@ -323,10 +323,17 @@ namespace WindowsFormsApplication1
 			UpdateMessageTextBox("Starting Sort of results...");
 			File.Copy(resultfile, sortedresultsfile);
 
-			var MyApp = new Application();
-			MyApp.Visible = false;
-			var workbooks = MyApp.Workbooks;
-			var MyBook = workbooks.Open(sortedresultsfile);
+            // Sätt färger på cellerna
+
+            var MyApp = new Application();
+            var workbooks = MyApp.Workbooks;
+
+            Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+
+            //MyApp = new Application();
+            MyApp.Visible = false;
+			 workbooks = MyApp.Workbooks;
+			 MyBook = workbooks.Open(sortedresultsfile);
 			
 			int counter = 0;
 
@@ -356,9 +363,60 @@ namespace WindowsFormsApplication1
 				UpdateProgressBarLabel("Sorted class ( " + counter + " / " + max + " ) " + klass.Name + " - " + klass.Description);
 			}
 
+
+
 			MyBook.Close(true);
 			workbooks.Close();
-			MyApp.Quit();
+
+
+            MyApp.Visible = false;
+            workbooks = MyApp.Workbooks;
+
+            MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+
+            foreach (Klass className in classes)
+            {
+
+                Worksheet sss=  MyBook.Sheets[className.Name];
+                Range r =  sss.UsedRange;
+                int g = r.Rows.Count;
+
+
+                var MySheet = MyBook.Sheets[className.Name];
+
+
+               Range range2 = MySheet.UsedRange.SpecialCells(XlCellType.xlCellTypeAllFormatConditions);
+                int hhh= range2.Cells.Count;
+
+                foreach (Range c in range2.Cells)
+                {
+
+                    var color = c.DisplayFormat.Interior.Color;
+
+                    if (color == 65280)
+                    {
+                        c.Interior.Color = 65280;
+                    }
+                    else
+                    {
+                        if (color == 14348258  || color == 14019554)
+                        {
+                            c.Interior.Color = 14348258;
+                        }
+                    }
+                    var t2 = c.Value2;
+                    var t1 = c.Value;
+
+                }
+
+            }
+
+            MyBook.Save();
+            MyBook.Close();
+
+
+
+            MyApp.Quit();
 
 			Marshal.ReleaseComObject(MyBook);
 			Marshal.ReleaseComObject(workbooks);

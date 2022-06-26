@@ -48,6 +48,7 @@ namespace WindowsFormsApplication1
 
         public Form1()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             InitializeComponent();
             setPathes();
          
@@ -726,6 +727,45 @@ namespace WindowsFormsApplication1
 
             List<String> noresultsList = noresults.Split(',').ToList();
 
+
+
+
+            // Domare
+            int counter = 0;
+            Klass klass = readClasses().Find(c => c.Name.Equals(className));
+            List<String> judgelist = new List<string>();
+            //String totalJudge = "";
+            foreach (Moment mom in klass.Moments)
+            {
+                counter++;
+                string judgetext = string.Format("{0,15}", mom.Name);
+                // Can be calculated, but not yet...
+                int subcounter = 8;
+               
+                foreach (SubMoment submom in mom.SubMoments)
+                {
+             
+                    if (submom.Table.judge.Fullname.Trim().Length > 0)
+                    {
+                        string judgeName = string.Format("{0,-30}", submom.Table.judge.Fullname);
+
+                        judgetext = judgetext + "   " + submom.Table.Name + " : " +judgeName;
+                    }
+                     
+                }
+                judgelist.Add(judgetext);
+               // totalJudge = totalJudge + judgetext + "\n";
+
+
+
+                //foreach (SubMoment submom in mom.SubMoments)
+                //{
+                //    int row = classWorksheet.Cells[$"round{counter}"].Start.Row;
+                //    classWorksheet.Cells[row, subcounter].Value = submom.Name;
+                //    subcounter++;
+                //}
+            }
+
             try
             {
                 MyApp = new Excel.Application
@@ -736,9 +776,11 @@ namespace WindowsFormsApplication1
                     //DisplayAlerts = true
                 };
                 workbooks = MyApp.Workbooks;
-                MyBook = workbooks.Open(sortedresultsfile,ReadOnly:true);
+
+                MyBook = workbooks.Open(sortedresultsfile, ReadOnly: true);
                 MySheet = MyBook.Sheets[className];
 
+                var usedRange = MySheet.UsedRange;
 
 
                 if (noresultsList.Contains(className))
@@ -761,11 +803,103 @@ namespace WindowsFormsApplication1
                 //MyApp.Visible = true;
                 //string fullpath = Path.Combine(printedresultsFolder, filename);
                 MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
+                //MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
+
+
+
+
+                //Excel.Range range2 = MySheet.UsedRange.SpecialCells(Excel.XlCellType.xlCellTypeAllFormatConditions);
+
+                // foreach (Excel.Range c in range2.Cells)
+                // {
+
+                //     var color = c.DisplayFormat.Interior.Color;
+                //     if(color==65280)
+                //     {
+                //         c.Interior.Color = 65280;
+                //     }
+                //     var t2 = c.Value2;
+                //     var t1 = c.Value;
+
+                // }
+
+
+
+
+
+                //  MySheet.SaveAs(pdfFullPath + ".html", Excel.XlFileFormat.xlHtml);
+
+                //Microsoft.Office.Interop.Excel.XlHtmlType t = Excel.XlHtmlType.xlHtmlCalc;
+
+                //FileInfo excelfile = new FileInfo(sortedresultsfile);
+                //String myName = MySheet.Name;
+
+                //var WorksheetHtml = new ExcelToHtml.ToHtml(excelfile,myName);
+                //WorksheetHtml.
+                //string html = WorksheetHtml.GetHtml();
+
+
+
+                //Excel.PublishObject p= MyBook.PublishObjects.Add(Excel.XlSourceType.xlSourceSheet, pdfFullPath + "AAA.html", MySheet.Name,null, t,MySheet.Name);
+                //p.Publish();
+
 
                 MyApp.DisplayAlerts = false;
                 MyBook.Close();
                 MyApp.DisplayAlerts = true;
                 MyApp.Quit();
+
+
+
+                var fileinfo = new FileInfo(sortedresultsfile);
+
+                using (var pck = new ExcelPackage(fileinfo))
+                {
+                    ExcelWorksheet sheet = pck.Workbook.Worksheets[className];
+
+                    var strUsedRange = sheet.Rows;
+                    var dim =  sheet.Dimension;
+                    String ddim = dim.ToString();
+                    //var tableRange = sheet.Cells[strUsedRange];//.LoadFromDataTable(_dataTable, true, style);
+
+                    var exporter = sheet.Cells[ddim].CreateHtmlExporter();
+                    var settings = exporter.Settings;
+
+                    settings.Culture = CultureInfo.InvariantCulture;
+                    settings.TableId = "voltige-table";
+                    settings.Accessibility.TableSettings.AriaLabel = "Voltige";
+                    settings.SetColumnWidth = true;
+
+                    // Export Html and CSS
+                    exporter.Settings.Minify = true;
+                    String Css = exporter.GetCssString();
+                    String Html = exporter.GetHtmlString();
+
+                    String finale = pdfFullPath + ".html";
+
+                    File.Delete(finale);
+
+                    List<String> JudegsList = judgelist.Select(p => "<br>" + p + "</br>").ToList();
+                    String JudegsListString =  String.Join("", JudegsList);
+
+
+                    String header =
+                        "<header>" +
+                        "Voltige-SM" +
+                        "Billdal, 2022-07-13 -> 2022-07-16" + JudegsListString+
+                        "</header>";
+
+                    File.AppendAllText(finale, "<html>");
+                    File.AppendAllText(finale, "<style>");
+                    File.AppendAllText(finale, Css);
+                    File.AppendAllText(finale, "</style>");
+                    File.AppendAllText(finale, header);
+
+                    File.AppendAllText(finale, Html);
+                    File.AppendAllText(finale, "</html>");
+                  
+                }
+
             }
             catch(Exception e)
             {
