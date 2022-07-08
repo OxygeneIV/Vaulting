@@ -935,7 +935,7 @@ namespace WindowsFormsApplication1
                   
                 }
 
-                createHtml();
+                createHtml(className);
 
             }
             catch(Exception e)
@@ -1043,7 +1043,7 @@ namespace WindowsFormsApplication1
         }
 
 
-        public void createHtml()
+        private void createHtml(String className)
         {
 
                 var deltagare = readVaulters();
@@ -1074,7 +1074,7 @@ namespace WindowsFormsApplication1
                 using (var results = new ExcelPackage(resultat))
                 {
 
-                String klassnamn = "13";
+                String klassnamn = className;
                 //foreach (Klass klass in classes)
                 //{
                 Klass klass = classes.First(c => c.Name.Equals(klassnamn));
@@ -1084,23 +1084,46 @@ namespace WindowsFormsApplication1
                 String file2 = null;
                 String text2 = null;
 
-                String file3 = null;
-                String text3 = null;
+                String _file3 = null;
+                String _text3 = null;
+
+                int moments = klass.Moments.Count();
+                List<Judge> judges = klass.Moments[0].SubMoments.Select(s => s.Table.judge).ToList();
 
                 if (klass.ResultTemplate.Equals("GK2"))
                 {
-                     file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
-                     text = File.ReadAllText(file);
-
+                    file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
                     file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
-                    text2 = File.ReadAllText(file2);
+                    _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
+                } else if (klass.ResultTemplate.Equals("ResultTemplate"))
+                   {
+                    if (moments == 3)
+                    {
+                        file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare3moment.html");
+                        file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare3moment.html");
+                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare3moment.html");
+                    }
+                    else if (moments == 4)
+                    {
+                        file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare4moment.html");
+                        file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare4moment.html");
+                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare4moment.html");
+                    }
                 }
 
+                text = File.ReadAllText(file);
+                text2 = File.ReadAllText(file2);
+                _text3 = File.ReadAllText(_file3);
 
-                    var sheet = results.Workbook.Worksheets[klass.Name];
-                    int  moments = klass.Moments.Count;
 
-                    int counter = 0;
+
+
+                var sheet = results.Workbook.Worksheets[klass.Name];
+
+
+
+                text = text.Replace("{KLASS}", "Klass" + klass.Name + " - "+ klass.Description);
+                int counter = 0;
                     foreach (Moment moment in klass.Moments)
                     {
                         counter++;
@@ -1129,10 +1152,9 @@ namespace WindowsFormsApplication1
 
 
                 for (int row = rowbase; row < endrow; row += 4)
-
                 {
-                    file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
-                    text3 = File.ReadAllText(file3);
+                    _text3 = File.ReadAllText(_file3);
+                    String text3 = _text3;
 
 
                     toRange = sheet.Cells[row, 1, row + 3, 15];
@@ -1172,7 +1194,18 @@ namespace WindowsFormsApplication1
                             subcounter++;
                             String table = submoment.Table.Name;
                             String point = toRange[row + counter, 7 + subcounter].Text; // GetValue<String>();// = moment;;
-                            text3 = text3.Replace("{POANG_" + rowindex + "_" + table + "}", point);
+                            String key = "{POANG_" + rowindex + "_" + table + "}";
+                            text3 = text3.Replace(key, point);
+                            String keycell = "{POANG_" + rowindex + "_" + table + "_CLASS}";
+
+                            if (point == "")
+                            {
+                                text3 = text3.Replace(keycell, "empty");
+                            }
+                            else
+                            {
+                                text3 = text3.Replace(keycell, "");
+                            }
                         }
                         counter++;
                     }
