@@ -107,7 +107,7 @@ namespace HorsePoints
                             }
 
                             // TEAM
-                            if (teamClasses.Contains(ws.Name)) //(ws.Name=="1" || ws.Name == "2" || ws.Name == "9" || ws.Name == "10" || ws.Name == "11" || ws.Name == "12")
+                            if (teamClasses.Contains(ws.Name)) 
                             {
                                 if (!definedHorsesTeam.Any(h => h.Name == horsename))
                                 {

@@ -43,6 +43,8 @@ namespace WindowsFormsApplication1
         public static string printedresultsFolder;
         public static string mergedresultsFolder;
         public static string horseResultsFolder;
+        public static string htmlResultsFolder;
+        public static string cssFolder;
         public static string logosFolder;
         private static string workingDirectory;
         private static bool fake;
@@ -118,7 +120,15 @@ namespace WindowsFormsApplication1
                 printedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["printedresults"]);
                 foldersToCreate.Add(printedresultsFolder);
 
-                 mergedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
+                htmlResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["htmlresultsfolder"]);
+                foldersToCreate.Add(htmlResultsFolder);
+
+                cssFolder = Path.Combine(htmlResultsFolder, ConfigurationManager.AppSettings["cssfolder"]);
+                foldersToCreate.Add(cssFolder);
+
+          
+
+                mergedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
                  foldersToCreate.Add(mergedresultsFolder);
 
                 horseResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["horseresultsfolder"]);
@@ -140,6 +150,17 @@ namespace WindowsFormsApplication1
                 //ridsportlogo = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logo"]);
                 //preliminaryResults = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["prel"]);
                 //logovoid = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["logovoid"]);
+
+                String cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
+                File.Copy(cssfile, Path.Combine(cssFolder, "stylesm.css"), true);
+
+                var files= Directory.EnumerateFiles(Path.Combine(Environment.CurrentDirectory, "html/img"));
+                foreach(String f in files)
+                {
+                   
+                    File.Copy(f, htmlResultsFolder+"/" +Path.GetFileName(f), true);
+                }
+
 
 
                 fakefile = Path.Combine(fakeboxFolder, "fakedresults.xlsx");
@@ -1082,13 +1103,24 @@ namespace WindowsFormsApplication1
                 String text = null;
 
                 String file2 = null;
-                String text2 = null;
+                String resultatheadertext = null;
 
                 String _file3 = null;
                 String _text3 = null;
 
+                String _file4 = null;
+                String _text4 = null;
+
+                //String cssfile = null;
+                String headfile = null;
+                String head = null;
+
                 int moments = klass.Moments.Count();
                 List<Judge> judges = klass.Moments[0].SubMoments.Select(s => s.Table.judge).ToList();
+
+                _file4 = Path.Combine(Environment.CurrentDirectory, "html/mallMain.html");
+                headfile= Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
+                //cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
 
                 if (klass.ResultTemplate.Equals("GK2"))
                 {
@@ -1111,11 +1143,11 @@ namespace WindowsFormsApplication1
                     }
                 }
 
+                head= File.ReadAllText(headfile);
                 text = File.ReadAllText(file);
-                text2 = File.ReadAllText(file2);
+                resultatheadertext = File.ReadAllText(file2);
                 _text3 = File.ReadAllText(_file3);
-
-
+                _text4 = File.ReadAllText(_file4);
 
 
                 var sheet = results.Workbook.Worksheets[klass.Name];
@@ -1128,31 +1160,35 @@ namespace WindowsFormsApplication1
                     {
                         counter++;
                         text = text.Replace("{MOMENT_"+counter+"}",moment.Name); 
-                        text2 = text2.Replace("{MOMENT_" + counter + "}", moment.Name);
+                        resultatheadertext = resultatheadertext.Replace("{MOMENT_" + counter + "}", moment.Name);
 
                     foreach (SubMoment submoment in moment.SubMoments)
                      {
                             String table = submoment.Table.Name;
                             String judgename = submoment.Table.judge.Fullname;
                             text = text.Replace("{MOMENT_" + counter + "_DOMARE_"+table+"}", judgename);
-                            text2 = text2.Replace("{MOMENT_" + counter + "_" + table + "}", submoment.Name);
+                            resultatheadertext = resultatheadertext.Replace("{MOMENT_" + counter + "_" + table + "}", submoment.Name);
                      }
                     }
 
                 File.WriteAllText("test.html", text);
-                File.WriteAllText("test2.html", text2);
-
-
-
+                File.WriteAllText("test2.html", resultatheadertext);
                 
                 int rowbase = 7;
                 int endrow = sheet.Dimension.End.Row;
 
                 String textrows = "";
 
+                String noresults = ConfigurationManager.AppSettings["noresults"];
+                List<String> noresultsList = noresults.Split(',').ToList();
+                Boolean noresultsInClass = noresultsList.Contains(klassnamn);
+
+                int currentRowInTable = 0;
 
                 for (int row = rowbase; row < endrow; row += 4)
                 {
+                    currentRowInTable++;
+
                     _text3 = File.ReadAllText(_file3);
                     String text3 = _text3;
 
@@ -1169,6 +1205,10 @@ namespace WindowsFormsApplication1
 
                     String tot = toRange[row + 1, 15].Text; // GetValue<String>();// 
 
+
+                    if (noresultsInClass) tot = "-";
+
+
                     text3 = text3.Replace("{PLACERING}", placering);
                     text3 = text3.Replace("{NAMN}", name);
                     text3 = text3.Replace("{KLUBB}", club);
@@ -1184,6 +1224,9 @@ namespace WindowsFormsApplication1
                         text3 = text3.Replace("{MOMENT_" + rowindex + "}", moment.Name);
 
                         String momsum = toRange[row + counter, 12].Text;// GetValue<String>();
+
+                        if (noresultsInClass) momsum = "-";
+
                         text3 = text3.Replace("{MOMENTSUM_" + rowindex + "}", momsum);
 
                         var tt = toRange[row, 1, row, 15];
@@ -1195,7 +1238,6 @@ namespace WindowsFormsApplication1
                             String table = submoment.Table.Name;
                             String point = toRange[row + counter, 7 + subcounter].Text; // GetValue<String>();// = moment;;
                             String key = "{POANG_" + rowindex + "_" + table + "}";
-                            text3 = text3.Replace(key, point);
                             String keycell = "{POANG_" + rowindex + "_" + table + "_CLASS}";
 
                             if (point == "")
@@ -1206,6 +1248,13 @@ namespace WindowsFormsApplication1
                             {
                                 text3 = text3.Replace(keycell, "");
                             }
+
+                            if (noresultsInClass) point = "-";
+                   
+                            text3 = text3.Replace(key, point);
+                 
+
+
                         }
                         counter++;
                     }
@@ -1214,6 +1263,13 @@ namespace WindowsFormsApplication1
 
                 File.WriteAllText("test3.html", textrows);
 
+
+                // Skapa fil
+                _text4=_text4.Replace("{HEAD}", head);
+                _text4=_text4.Replace("{TOP}", text);
+                _text4=_text4.Replace("{HEADER}", resultatheadertext);
+                _text4=_text4.Replace("{DATA}", textrows);
+                File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + klass.Description +".html"), _text4);
 
 
                 int h = 5;
@@ -1771,10 +1827,10 @@ namespace WindowsFormsApplication1
       UpdateMessageTextBox($"Analyzing Horse points...");
 
       var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
-        var horsepointclasses = ConfigurationManager.AppSettings["horsepointclasses"].Split(',').Select(s => s.Trim());
+      var horsepointclasses = ConfigurationManager.AppSettings["horsepointclasses"].Split(',').Select(s => s.Trim());
       var horsepoints = Form1.horseresultfile;
-        var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder,"CalculatedHorsePoints.xlsx");
-        var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
+      var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder,"CalculatedHorsePoints.xlsx");
+      var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
 
 
         var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
@@ -1841,7 +1897,7 @@ namespace WindowsFormsApplication1
           var fileinfo = new FileInfo(horsepointsCalculated);
           using (var results = new ExcelPackage(fileinfo))
           {
-            var ws = results.Workbook.Worksheets[1];
+            var ws = results.Workbook.Worksheets[0];
             var row = 2;
             foreach (var horse in horsepointGroup)
             {

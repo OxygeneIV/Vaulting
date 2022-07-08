@@ -60,6 +60,7 @@ table.header-table thead th {
 
 /* Resultattabellen */
 
+
 table.result-table {
     text-align: center;
     font-family: Calibri;
@@ -77,6 +78,8 @@ table.result-table {
         border-top: 2px solid black;
         /* width: 10px; */
     }
+
+
 
 
     table.result-table td {
@@ -97,6 +100,9 @@ th.bottomrow, tr.bottomrow {
     border-bottom: 4px solid black;
 }
 
+col.dummy {
+    width: 5%;
+}
 
 col.plats {
     width: 5%;
@@ -108,6 +114,10 @@ col.ekipage {
 
 td.empty {
     background: #00ff00;
+    border-left-style: solid;
+    border-left-width: thin;
+    border-right-style: solid;
+    border-right-width: thin;
 }
 
 col.moment {
@@ -133,6 +143,7 @@ colgroup col.ikon-right {
 colgroup col.klass {
     width: 60%;
 }
+
 
 img.ridsport {
     width: 50%;
@@ -169,4 +180,38 @@ td.rightdata {
 
 td.resultdata {
     width =7%;
+}
+
+.hidden {
+    width: 0
+}
+
+table.result-table tr th, table.result-table tr td {
+    vertical-align: middle;
+}
+
+td.left-label, th.left-label {
+    text-align: left
+}
+
+.result-table .momentlabel {
+    text-align: left;
+}
+
+.result-table .lastvalue {
+    border-right-style: solid;
+    border-right-width: thin;
+}
+
+.result-table .momentlabel + td {
+    border-left-style: solid;
+    border-left-width: thin;
+}
+
+.result-table .noborder_up {
+    border-top: none;
+}
+
+.result-table .noborder_down {
+    border-bottom: none;
 }
