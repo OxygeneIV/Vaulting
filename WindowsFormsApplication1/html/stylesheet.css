@@ -1,0 +1,172 @@
+﻿
+
+
+table.header-table {
+    text-align: center;
+    font-family: Calibri;
+    font-size: 16pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    white-space: nowrap;
+    border: 1px solid black;
+}
+
+table.domare-table {
+    text-align: left;
+    font-family: Calibri;
+    font-size: 12pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    white-space: nowrap;
+    border: 3px solid black;
+}
+
+
+th.klassnamn {
+    text-align: center;
+    font-family: Calibri;
+    font-weight: bolder;
+    font-size: 30pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    white-space: nowrap;
+    vertical-align: top;
+    border-bottom: 0px solid
+}
+
+th.tavlingsnamn {
+    text-align: center;
+    vertical-align: top;
+    font-family: Calibri;
+    font-weight: bolder;
+    font-size: 20pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    white-space: nowrap;
+    border-bottom: 0px solid
+}
+
+table.header-table > tbody > tr td.noborder {
+    border: none;
+}
+
+table.header-table thead th {
+    border-bottom: 0px;
+}
+
+/* Resultattabellen */
+
+table.result-table {
+    text-align: center;
+    font-family: Calibri;
+    font-size: 12pt;
+    border-spacing: 0;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    white-space: nowrap;
+    border: 3px solid black;
+}
+
+    table.result-table th {
+        background: lightgrey;
+        border-bottom: 2px solid black;
+        border-top: 2px solid black;
+        /* width: 10px; */
+    }
+
+
+    table.result-table td {
+        border-color: black;
+    }
+
+    table.result-table thead {
+        border: 2px solid black;
+    }
+
+
+/* tr.toprow, tr.toprow>td,tr.toprow>th{ */
+tr.toprow > td {
+    border-top: 4px solid black;
+}
+
+th.bottomrow, tr.bottomrow {
+    border-bottom: 4px solid black;
+}
+
+
+col.plats {
+    width: 5%;
+}
+
+col.ekipage {
+    width: 15%;
+}
+
+td.empty {
+    background: #00ff00;
+}
+
+col.moment {
+    width: 15%;
+}
+
+col.total {
+    width: 15%;
+}
+
+colgroup col.indata {
+    width: 100px;
+}
+
+colgroup col.ikon-left {
+    width: 20%;
+}
+
+colgroup col.ikon-right {
+    width: 20%;
+}
+
+colgroup col.klass {
+    width: 60%;
+}
+
+img.ridsport {
+    width: 50%;
+    object-fit: contain;
+}
+
+img.folksam {
+    width: 100%;
+    object-fit: contain;
+}
+
+colgroup.domartabell {
+    width: 1%;
+}
+/* 
+colgroup col.moment tr  {
+    background: red
+} */
+
+/*
+colgroup.indata tr td{
+    border-bottom: 1pt solid #ff000d;
+}
+ */
+td.leftdata {
+    border-left-style: solid;
+    border-left-width: thin;
+}
+
+td.rightdata {
+    border-right-style: solid;
+    border-right-width: thin;
+}
+
+td.resultdata {
+    width =7%;
+}
