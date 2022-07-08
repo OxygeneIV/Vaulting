@@ -429,7 +429,7 @@ namespace WindowsFormsApplication1
         private void doFake()
         {
             UpdateProgressBarHandler(0);
-           
+
             UpdateProgressBarLabel("");
 
             DirectoryInfo dirinfo = new DirectoryInfo(fakeboxFolder);
@@ -444,7 +444,7 @@ namespace WindowsFormsApplication1
 
             var file = new FileInfo(fakefile);
 
-            if(file.Exists)
+            if (file.Exists)
             {
                 file.Delete();
             }
@@ -458,19 +458,50 @@ namespace WindowsFormsApplication1
             UpdateProgressBarMax(files.Count());
 
 
-            // add a new worksheet to the empty workbook
-            //Dictionary<int, List<string>> data = new Dictionary<int, List<string>>();
-            ConcurrentDictionary<int, List<string>> data = new ConcurrentDictionary<int, List<string>>();
 
+            ExcelRange toRange;
+            ExcelRange fromRange;
             int rownumber = 0;
+            //Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 1 }, file1 =>
+            //  {
+            //      Interlocked.Increment(ref rownumber);
+            //      using (var results = new ExcelPackage(file1))
+            //      {
+            //          try
+            //          {
+
+            //              var rand = Math.Round(new Random().NextDouble() * 10, 3);
+            //              var sheet = results.Workbook.Worksheets.Single(w => w.Hidden.Equals(eWorkSheetHidden.Visible));
+            //              fromRange = sheet.Cells["result"];
+            //              fromRange.First().Value = rand;
+            //              //fromRange.Value = rand;
+            //                //fromRange.SetCellValue(0, 0, rand);
+            //                //var adr = fromRange.Address;
+            //                //sheet.SetValue(adr, rand);
+            //            }
+            //          catch (Exception e)
+            //          {
+            //              var s = e.Message;
+            //              UpdateMessageTextBox($"Exception : {file1.Name} " + s);
+            //          }
+            //          finally
+            //          {
+            //              results.Save();
+            //              UpdateProgressBarHandler(rownumber);
+            //              UpdateProgressBarLabel("Faked " + rownumber + " " + file1.Name);
+            //          }
+            //      }
+            //  });
+
+            //return;
+
+             ConcurrentDictionary<int, List<string>> data = new ConcurrentDictionary<int, List<string>>();
+
+ 
 
             Boolean woody = bool.Parse(ConfigurationManager.AppSettings["woody"]);
 
-
-
-
-
-
+            rownumber = 0;
             foreach (var f1 in files)
             {
                 //Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 50 }, f1 =>
@@ -484,6 +515,8 @@ namespace WindowsFormsApplication1
                     UpdateProgressBarLabel("Faking # " + rownumber+ " " + f1.Name);
                 //}
 
+                
+
                 try
                 {
 
@@ -493,6 +526,7 @@ namespace WindowsFormsApplication1
                         // the workbook will dispose of the sheets. The worksheet is not
                         // created inside a loop and the workbook's dispose is being
                         // called immediately after using the worksheet.
+                        
                         var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
 
                         var rand = Math.Round(new Random().NextDouble() * 10, 3);
@@ -897,64 +931,64 @@ namespace WindowsFormsApplication1
 
 
 
-                var fileinfo = new FileInfo(sortedresultsfile);
+               // var fileinfo = new FileInfo(sortedresultsfile);
 
-                using (var pck = new ExcelPackage(fileinfo))
-                {
-                    ExcelWorksheet sheet = pck.Workbook.Worksheets[className];
+                //using (var pck = new ExcelPackage(fileinfo))
+                //{
+                //    ExcelWorksheet sheet = pck.Workbook.Worksheets[className];
 
-                    var strUsedRange = sheet.Rows;
-                    var dim =  sheet.Dimension;
-                    String ddim = dim.ToString();
-                    //var tableRange = sheet.Cells[strUsedRange];//.LoadFromDataTable(_dataTable, true, style);
+                //    var strUsedRange = sheet.Rows;
+                //    var dim =  sheet.Dimension;
+                //    String ddim = dim.ToString();
+                //    //var tableRange = sheet.Cells[strUsedRange];//.LoadFromDataTable(_dataTable, true, style);
 
-                    var exporter = sheet.Cells[ddim].CreateHtmlExporter();
-                    var settings = exporter.Settings;
+                //    var exporter = sheet.Cells[ddim].CreateHtmlExporter();
+                //    var settings = exporter.Settings;
 
-                    settings.Culture = CultureInfo.InvariantCulture;
-                    settings.TableId = "voltige-table";
-                    settings.Accessibility.TableSettings.AriaLabel = "Voltige";
-                    settings.SetColumnWidth = true;
+                //    settings.Culture = CultureInfo.InvariantCulture;
+                //    settings.TableId = "voltige-table";
+                //    settings.Accessibility.TableSettings.AriaLabel = "Voltige";
+                //    settings.SetColumnWidth = true;
 
-                    // Export Html and CSS
-                    exporter.Settings.Minify = true;
-                    String Css = exporter.GetCssString();
-                    String Html = exporter.GetHtmlString();
+                //    // Export Html and CSS
+                //    exporter.Settings.Minify = true;
+                //    String Css = exporter.GetCssString();
+                //    String Html = exporter.GetHtmlString();
 
-                    String finale = pdfFullPath + ".html";
+                //    String finale = pdfFullPath + ".html";
 
-                    File.Delete(finale);
+                //    File.Delete(finale);
 
-                    List<String> JudegsList = judgelist.Select(p => "<li>" + p + "</li>").ToList();
-                    String JudegsListString =  String.Join("", JudegsList);
+                //    List<String> JudegsList = judgelist.Select(p => "<li>" + p + "</li>").ToList();
+                //    String JudegsListString =  String.Join("", JudegsList);
 
-                    String judlisthtml = @"<ul style=""list-style-type:none"">" + JudegsListString + "</ul>";
+                //    String judlisthtml = @"<ul style=""list-style-type:none"">" + JudegsListString + "</ul>";
 
                    
-                    String headerTable = @" <table border=""1"" width=""100 %"">
-                                                   <tr>
-                                                    <td> Voltige-SM <br> Billdal, 2022-07-13 -> 2022-07-16</td>
-                                                    <td>" + judlisthtml + @"</td>
-                                                    <td> Country </td>
-                                                  </tr>
-                                            </table>";
+                //    String headerTable = @" <table border=""1"" width=""100 %"">
+                //                                   <tr>
+                //                                    <td> Voltige-SM <br> Billdal, 2022-07-13 -> 2022-07-16</td>
+                //                                    <td>" + judlisthtml + @"</td>
+                //                                    <td> Country </td>
+                //                                  </tr>
+                //                            </table>";
 
-                    //String header =
-                    //    "<header>" +
-                    //    "Voltige-SM" +
-                    //    "Billdal, 2022-07-13 -> 2022-07-16" + JudegsListString+
-                    //    "</header>";
+                //    //String header =
+                //    //    "<header>" +
+                //    //    "Voltige-SM" +
+                //    //    "Billdal, 2022-07-13 -> 2022-07-16" + JudegsListString+
+                //    //    "</header>";
 
-                    File.AppendAllText(finale, "<html>");
-                    File.AppendAllText(finale, "<style>");
-                    File.AppendAllText(finale, Css);
-                    File.AppendAllText(finale, "</style>");
-                    File.AppendAllText(finale, headerTable);
+                //    File.AppendAllText(finale, "<html>");
+                //    File.AppendAllText(finale, "<style>");
+                //    File.AppendAllText(finale, Css);
+                //    File.AppendAllText(finale, "</style>");
+                //    File.AppendAllText(finale, headerTable);
 
-                    File.AppendAllText(finale, Html);
-                    File.AppendAllText(finale, "</html>");
+                //    File.AppendAllText(finale, Html);
+                //    File.AppendAllText(finale, "</html>");
                   
-                }
+                //}
 
                 createHtml(className);
 
@@ -1063,13 +1097,49 @@ namespace WindowsFormsApplication1
           return null;
         }
 
+        private void createIndex()
+        {
+
+            String indexfile = Path.Combine(htmlResultsFolder, "index.html");
+            File.Delete(indexfile);
+
+            String headfile  = Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
+            String mallIndex = Path.Combine(Environment.CurrentDirectory, "html/mallIndex.html");
+
+
+            String head = File.ReadAllText(headfile);
+            String text = File.ReadAllText(mallIndex);
+
+            text = text.Replace("{HEAD}", head);
+
+            var folder = Form1.htmlResultsFolder;
+            var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
+            htmlfiles.Sort(new PDFtoHTML.Comparer());
+
+            String ulLista = "";
+            ulLista = "<ul class=\"b\">" + Environment.NewLine;
+            foreach(String htmlFile in htmlfiles)
+            {
+                String f = Path.GetFileName(htmlFile);
+
+                String f2 = Path.GetFileNameWithoutExtension(htmlFile);
+                String li = "<li><a href=\""+ f +"\">"+ f2 +"</a></li>" + Environment.NewLine;
+                ulLista = ulLista + li;
+            }
+            ulLista = ulLista + "</ul>" + Environment.NewLine;
+
+            text = text.Replace("{BODY}",ulLista);
+
+            File.WriteAllText(indexfile, text);
+        }
+
 
         private void createHtml(String className)
         {
 
-                var deltagare = readVaulters();
-                var classes = readClasses();
-                var max = deltagare.Count();
+              //  var deltagare = readVaulters();
+              var classes = readClasses();
+              //  var max = deltagare.Count();
                              
 
                 //UpdateProgressBarHandler(0);
@@ -1083,11 +1153,7 @@ namespace WindowsFormsApplication1
                 // keep track of first vaulter / class so we know if we shall copy range or not 
                 List<string> set = new List<string>();
                 Dictionary<string, int> vaulterInClassCounter = new Dictionary<string, int>();
-                foreach (Klass c in classes)
-                {
-                    vaulterInClassCounter[c.Name] = 0;
-                }
-
+             
 
                 ExcelRange toRange;
                 ExcelRange fromRange;
@@ -1282,221 +1348,7 @@ namespace WindowsFormsApplication1
 
                 int h = 5;
 
-              //  String club = sheet.Cells[row, 6].GetValue<String>();// = d.Klubb;
-              //  String horse = sheet.Cells[row +1, 6].GetValue<String>();// = d.Hast;
-
-
-
-                //foreach ()
-
-                //        // We have more than 1 competitor in the class and need to copy the ekipage range
-                //        //if (set.Contains(klass))
-                //        if (vaulterInClassCounter[klass] > 0)
-                //        {
-                //            toRange = sheet.Cells[row + 1, 1, row + 4, fromRange.End.Column];
-                //            fromRange.Copy(toRange);
-
-
-
-
-                // }
-
-
-
-                //int deltagarCounter = 0;
-
-                //    foreach (Deltagare d in deltagare)
-                //    {
-                //        deltagarCounter++;
-                //        var klass = d.Klass;
-
-
-
-                //        var sheet = results.Workbook.Worksheets[klass];
-
-                //        int row = sheet.Dimension.End.Row;
-
-                //        fromRange = sheet.Cells["ekipage"];
-
-
-                //        // We have more than 1 competitor in the class and need to copy the ekipage range
-                //        //if (set.Contains(klass))
-                //        if (vaulterInClassCounter[klass] > 0)
-                //        {
-                //            toRange = sheet.Cells[row + 1, 1, row + 4, fromRange.End.Column];
-                //            fromRange.Copy(toRange);
-
-
-                //            //Set formatting
-                //            for (int i = 1; i < 5; i++)
-                //            {
-                //                var theclass = classes.Single(c => c.Name == klass);
-                //                var endcol = 11;
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("1"))
-                //                {
-                //                    endcol = 8;
-                //                    ExcelAddress _formatRangeAddress_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond1_2 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress_2);
-                //                    _cond1_2.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1_2.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond2_2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2_2);
-                //                    _cond2_2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2_2.Style.Fill.BackgroundColor.Index = 3;
-                //                }
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("1B"))
-                //                {
-                //                    endcol = 9;
-                //                    ExcelAddress _formatRangeAddress_2 = new ExcelAddress(row + i, 9, row + i, endcol);
-                //                    var _cond1_2 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress_2);
-                //                    _cond1_2.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1_2.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2_2 = new ExcelAddress(row + i, 9, row + i, endcol);
-                //                    var _cond2_2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2_2);
-                //                    _cond2_2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2_2.Style.Fill.BackgroundColor.Index = 3;
-                //                }
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("2"))
-                //                {
-                //                    endcol = 9;
-                //                    ExcelAddress _formatRangeAddress_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond1_2 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress_2);
-                //                    _cond1_2.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1_2.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond2_2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2_2);
-                //                    _cond2_2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2_2.Style.Fill.BackgroundColor.Index = 3;
-                //                }
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("M3"))
-                //                {
-                //                    endcol = 10;
-                //                    ExcelAddress _formatRangeAddress_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond1_2 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress_2);
-                //                    _cond1_2.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1_2.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2_2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond2_2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2_2);
-                //                    _cond2_2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2_2.Style.Fill.BackgroundColor.Index = 3;
-                //                }
-
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("K3"))
-                //                {
-                //                    endcol = 10;
-
-                //                    ExcelAddress _formatRangeAddress = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond1 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress);
-                //                    _cond1.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2);
-                //                    _cond2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2.Style.Fill.BackgroundColor.Index = 3;
-
-                //                    endcol = 11;
-                //                    ExcelAddress _formatRangeAddressB = new ExcelAddress(row + i, endcol, row + i, endcol);
-                //                    var _cond1B = sheet.ConditionalFormatting.AddExpression(_formatRangeAddressB);
-                //                    _cond1B.Formula = $"COUNTBLANK($G{row + i})=0";
-                //                    _cond1B.StopIfTrue = false;
-                //                    _cond1B.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    var color = System.Drawing.ColorTranslator.FromHtml("#E2EBD5");
-                //                    //_cond1B.Style.Fill.BackgroundColor.Index = -4142;
-                //                    _cond1B.Style.Fill.BackgroundColor.Color = color;
-
-                //                    //ExcelAddress _formatRangeAddress2B = new ExcelAddress(row + i, endcol, row + i, endcol);
-                //                    //var _cond2B = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2B);
-                //                    //_cond2B.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    //_cond2B.Style.Fill.BackgroundColor.Index = 35;
-
-                //                }
-
-                //                if (theclass.ResultTemplate.Trim().EndsWith("ResultTemplate"))
-                //                {
-                //                    endcol = 11;
-
-                //                    ExcelAddress _formatRangeAddress = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond1 = sheet.ConditionalFormatting.AddExpression(_formatRangeAddress);
-                //                    _cond1.Formula = $"COUNTBLANK($G{row + i})=1";
-                //                    _cond1.StopIfTrue = true;
-
-                //                    ExcelAddress _formatRangeAddress2 = new ExcelAddress(row + i, 8, row + i, endcol);
-                //                    var _cond2 = sheet.ConditionalFormatting.AddContainsBlanks(_formatRangeAddress2);
-                //                    _cond2.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                //                    _cond2.Style.Fill.BackgroundColor.Index = 3;
-
-                //                }
-
-                //            }
-                //        }
-                //        else
-                //        {
-                //            // First competitor can use predefined "ekipage" range that exists on sheet
-                //            set.Add(klass);
-                //            string adress = fromRange.Address;
-                //            toRange = fromRange;
-
-                //        }
-
-                //        // Names, horses etc
-                //        var startrow = toRange.Start.Row;
-                //        sheet.Cells[startrow + 1, 4].Value = d.Name;
-                //        sheet.Cells[startrow + 2, 4].Value = d.Linforare;
-                //        sheet.Cells[startrow + 1, 6].Value = d.Klubb;
-                //        sheet.Cells[startrow + 2, 6].Value = d.Hast;
-
-                //        // The Id of the ekipage
-                //        sheet.Cells[startrow, 2].Value = d.Id;
-                //        sheet.Cells[startrow + 1, 2].Value = d.Id;
-                //        sheet.Cells[startrow + 2, 2].Value = d.Id;
-                //        sheet.Cells[startrow + 3, 2].Value = d.Id;
-
-                //        // We need the klass to get the Table name
-                //        var tklass = classes.Single(c => c.Name == klass);
-
-                //        startrow = toRange.Start.Row;
-                //        int momentIndex = 0; // ID
-                //        foreach (Moment moment in tklass.Moments)
-                //        {
-                //            // ID generation
-                //            var colnum = 8;
-                //            momentIndex++;
-                //            foreach (SubMoment submoment in moment.SubMoments)
-                //            {
-                //                // ID
-                //                //string id = d.Id + "_" + klass + "_" + moment.Name.Replace(' ', '_') + "_" + submoment.Table.Name;
-                //                string id = d.Id + "_" + momentIndex + "_" + submoment.Table.Name; //ID
-
-                //                var rng = sheet.Cells[startrow, colnum];
-                //                sheet.Names.Add(id, rng);
-                //                colnum++;
-                //            }
-                //            startrow++;
-                //        }
-                //        UpdateProgressBarHandler(deltagarCounter);
-                //        UpdateProgressBarLabel("Added " + d.Name);
-                //        vaulterInClassCounter[klass]++;
-
-                //        var modCounter = vaulterInClassCounter[klass] % 9;
-
-                //        // Pagebreak every 9 vaulter / class
-                //        if (modCounter == 0)
-                //        {
-                //            int lastRow = toRange.End.Row;
-                //            sheet.Row(lastRow).PageBreak = true;
-                //        }
-                //    }
-                //    results.Save();
+          
             }
 
             UpdateProgressBarLabel("All vaulters added to result file");
@@ -1690,6 +1542,7 @@ namespace WindowsFormsApplication1
             string value = sel.Value;
             string text = sel.Text;
             printResults(value, text);
+            createIndex();
         }
 
         // Export Results for all classes
@@ -1700,6 +1553,9 @@ namespace WindowsFormsApplication1
             {   
                 printResults(cl.Name, cl.Name+" "+cl.Description);
             }
+
+            createIndex();
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

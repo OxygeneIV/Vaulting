@@ -215,3 +215,13 @@ td.left-label, th.left-label {
 .result-table .noborder_down {
     border-bottom: none;
 }
+
+ul.b {
+    list-style-type: square;
+    display: inline-block;
+    text-align: left;
+}
+
+html {
+    overflow-y: scroll;
+}
