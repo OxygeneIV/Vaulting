@@ -1124,15 +1124,21 @@ namespace WindowsFormsApplication1
 
                 if (klass.ResultTemplate.Equals("GK2"))
                 {
-                    file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
-                    file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
+                     file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
+                     file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
                     _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
                 } else if (klass.ResultTemplate.Equals("ResultTemplate"))
                    {
-                    if (moments == 3)
+                    if (moments == 2)
                     {
-                        file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare3moment.html");
-                        file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare3moment.html");
+                         file  = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare2moment.html");
+                         file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare2moment.html");
+                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare2moment.html");
+                    }
+                    else if (moments == 3)
+                    {
+                         file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare3moment.html");
+                         file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare3moment.html");
                         _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare3moment.html");
                     }
                     else if (moments == 4)
@@ -1149,12 +1155,14 @@ namespace WindowsFormsApplication1
                 _text3 = File.ReadAllText(_file3);
                 _text4 = File.ReadAllText(_file4);
 
+                bool preliminiaryResults = checkBox1.Checked;
+                resultatheadertext = preliminiaryResults ? resultatheadertext.Replace("{HIDDEN}", "") : resultatheadertext.Replace("{HIDDEN}", "hidden");
 
                 var sheet = results.Workbook.Worksheets[klass.Name];
 
 
 
-                text = text.Replace("{KLASS}", "Klass" + klass.Name + " - "+ klass.Description);
+                text = text.Replace("{KLASS}", "Klass " + klass.Name + " - "+ klass.Description);
                 int counter = 0;
                     foreach (Moment moment in klass.Moments)
                     {
