@@ -19,6 +19,9 @@ using Color = System.Drawing.Color;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Threading;
+using SelectPdf;
+using FluentFTP;
+using System.Net;
 
 namespace WindowsFormsApplication1
 {
@@ -807,9 +810,6 @@ namespace WindowsFormsApplication1
 
             List<String> noresultsList = noresults.Split(',').ToList();
 
-
-
-
             // Domare
             int counter = 0;
             Klass klass = readClasses().Find(c => c.Name.Equals(className));
@@ -869,126 +869,12 @@ namespace WindowsFormsApplication1
                     range.NumberFormat = ";;;";               
                 }
 
-                //MySheet.Activate();
-                
-                //if (checkBox1.Checked)
-                //{
-                //    MySheet.PageSetup.RightHeaderPicture.Filename = preliminaryResults;
-                //}
-                //else
-                //{
-                //    MySheet.PageSetup.RightHeaderPicture.Filename = logovoid;
-                //}
-
-                //MyApp.Visible = true;
-                //string fullpath = Path.Combine(printedresultsFolder, filename);
                 MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
-                //MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
-
-
-
-
-                //Excel.Range range2 = MySheet.UsedRange.SpecialCells(Excel.XlCellType.xlCellTypeAllFormatConditions);
-
-                // foreach (Excel.Range c in range2.Cells)
-                // {
-
-                //     var color = c.DisplayFormat.Interior.Color;
-                //     if(color==65280)
-                //     {
-                //         c.Interior.Color = 65280;
-                //     }
-                //     var t2 = c.Value2;
-                //     var t1 = c.Value;
-
-                // }
-
-
-
-
-
-                //  MySheet.SaveAs(pdfFullPath + ".html", Excel.XlFileFormat.xlHtml);
-
-                //Microsoft.Office.Interop.Excel.XlHtmlType t = Excel.XlHtmlType.xlHtmlCalc;
-
-                //FileInfo excelfile = new FileInfo(sortedresultsfile);
-                //String myName = MySheet.Name;
-
-                //var WorksheetHtml = new ExcelToHtml.ToHtml(excelfile,myName);
-                //WorksheetHtml.
-                //string html = WorksheetHtml.GetHtml();
-
-
-
-                //Excel.PublishObject p= MyBook.PublishObjects.Add(Excel.XlSourceType.xlSourceSheet, pdfFullPath + "AAA.html", MySheet.Name,null, t,MySheet.Name);
-                //p.Publish();
-
 
                 MyApp.DisplayAlerts = false;
                 MyBook.Close();
                 MyApp.DisplayAlerts = true;
                 MyApp.Quit();
-
-
-
-               // var fileinfo = new FileInfo(sortedresultsfile);
-
-                //using (var pck = new ExcelPackage(fileinfo))
-                //{
-                //    ExcelWorksheet sheet = pck.Workbook.Worksheets[className];
-
-                //    var strUsedRange = sheet.Rows;
-                //    var dim =  sheet.Dimension;
-                //    String ddim = dim.ToString();
-                //    //var tableRange = sheet.Cells[strUsedRange];//.LoadFromDataTable(_dataTable, true, style);
-
-                //    var exporter = sheet.Cells[ddim].CreateHtmlExporter();
-                //    var settings = exporter.Settings;
-
-                //    settings.Culture = CultureInfo.InvariantCulture;
-                //    settings.TableId = "voltige-table";
-                //    settings.Accessibility.TableSettings.AriaLabel = "Voltige";
-                //    settings.SetColumnWidth = true;
-
-                //    // Export Html and CSS
-                //    exporter.Settings.Minify = true;
-                //    String Css = exporter.GetCssString();
-                //    String Html = exporter.GetHtmlString();
-
-                //    String finale = pdfFullPath + ".html";
-
-                //    File.Delete(finale);
-
-                //    List<String> JudegsList = judgelist.Select(p => "<li>" + p + "</li>").ToList();
-                //    String JudegsListString =  String.Join("", JudegsList);
-
-                //    String judlisthtml = @"<ul style=""list-style-type:none"">" + JudegsListString + "</ul>";
-
-                   
-                //    String headerTable = @" <table border=""1"" width=""100 %"">
-                //                                   <tr>
-                //                                    <td> Voltige-SM <br> Billdal, 2022-07-13 -> 2022-07-16</td>
-                //                                    <td>" + judlisthtml + @"</td>
-                //                                    <td> Country </td>
-                //                                  </tr>
-                //                            </table>";
-
-                //    //String header =
-                //    //    "<header>" +
-                //    //    "Voltige-SM" +
-                //    //    "Billdal, 2022-07-13 -> 2022-07-16" + JudegsListString+
-                //    //    "</header>";
-
-                //    File.AppendAllText(finale, "<html>");
-                //    File.AppendAllText(finale, "<style>");
-                //    File.AppendAllText(finale, Css);
-                //    File.AppendAllText(finale, "</style>");
-                //    File.AppendAllText(finale, headerTable);
-
-                //    File.AppendAllText(finale, Html);
-                //    File.AppendAllText(finale, "</html>");
-                  
-                //}
 
                 createHtml(className);
 
@@ -1022,11 +908,11 @@ namespace WindowsFormsApplication1
             var datelogo = Path.Combine(Form1.logosFolder, "date.png");
               var noresultlogo = Path.Combine(Form1.logosFolder, "nopoints.png");
 
-                PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
+                PdfSharp.Pdf.PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
 
             for (int i = 0; i < document.Pages.Count; ++i)
             {
-              PdfPage page = document.Pages[i];
+                    PdfSharp.Pdf.PdfPage page = document.Pages[i];
 
               // Make a layout rectangle.  
               //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
@@ -1097,11 +983,51 @@ namespace WindowsFormsApplication1
           return null;
         }
 
-        private void createIndex()
+
+        private static string MakeFileNameWebSafe(string filename)
         {
+            return filename.Replace(",", "-").Replace(" ", "-").Replace("å", "a").Replace("ü", "y");
+        }
+
+        public static void publish()
+        {
+            var folder = Form1.htmlResultsFolder;
+            var files = Directory.GetFiles(folder).ToList();
+            var folders = Directory.GetDirectories(folder).ToList();
+       
+            // Test FTP
+            var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
+            var FTPuser = ConfigurationManager.AppSettings["ftpuser"];
+            var FTPpwd = ConfigurationManager.AppSettings["ftppwd"];
+            var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
+            var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
+
+
+            FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+            client.Connect();
+            client.SetWorkingDirectory(remoteworkingfolder);
+            //UploadFiles(localPaths, remoteDir, existsMode, createRemoteDir, verifyOptions, errorHandling)
+            //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
+            client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update,FtpRemoteExists.Overwrite);
+            client.Disconnect();
+    }
+
+
+
+
+
+    private void createIndex()
+        {
+
+            this.UpdateMessageTextBox($"Creating Indexfile and PDFs...");
 
             String indexfile = Path.Combine(htmlResultsFolder, "index.html");
             File.Delete(indexfile);
+
+            // Ta bort gamla pdf'er
+            string[] filePaths = Directory.GetFiles(htmlResultsFolder,"*.pdf");
+            foreach (string filePath in filePaths)
+                File.Delete(filePath);
 
             String headfile  = Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
             String mallIndex = Path.Combine(Environment.CurrentDirectory, "html/mallIndex.html");
@@ -1116,21 +1042,58 @@ namespace WindowsFormsApplication1
             var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
             htmlfiles.Sort(new PDFtoHTML.Comparer());
 
+            HtmlToPdf converter = new HtmlToPdf();
+            converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+          
+
+            foreach (String htmlFile in htmlfiles)
+            {
+                String shortFile = Path.GetFileName(htmlFile);
+
+                // convert the url to pdf
+                SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+
+                // save pdf document
+                doc.Save(htmlFile + ".pdf");
+
+                // close pdf document
+                doc.Close();
+            }
+            
+
             String ulLista = "";
-            ulLista = "<ul class=\"b\">" + Environment.NewLine;
+            //ulLista = ulLista+ @"<table class=""table table-sm"">";
+            //ulLista = ulLista + "<tbody>";
+
             foreach(String htmlFile in htmlfiles)
             {
+                ulLista = ulLista+"<tr>" + Environment.NewLine;
                 String f = Path.GetFileName(htmlFile);
-
                 String f2 = Path.GetFileNameWithoutExtension(htmlFile);
-                String li = "<li><a href=\""+ f +"\">"+ f2 +"</a></li>" + Environment.NewLine;
-                ulLista = ulLista + li;
+                String klassnum = f2.Split(' ')[0].Trim();
+
+                String lnkformat = @"<td><a href=""" + f + 
+                                   @""">" + f2 + @"</a></td>" + Environment.NewLine;
+
+
+                ulLista = ulLista + lnkformat + Environment.NewLine; ;
+
+                    String lnkformat2 = @"<td><a href=""" + f+".pdf" +
+                    @""">" + "PDF" + @"</a></td>" + Environment.NewLine;
+            
+                ulLista = ulLista + lnkformat2 + Environment.NewLine; ;
+                ulLista = ulLista + "</tr>" + Environment.NewLine;
+ 
             }
-            ulLista = ulLista + "</ul>" + Environment.NewLine;
+     
+            //ulLista = ulLista + "</table>" + Environment.NewLine;
 
             text = text.Replace("{BODY}",ulLista);
 
             File.WriteAllText(indexfile, text);
+
+            this.UpdateMessageTextBox($"Creating Indexfile and PDFs completed...");
+
         }
 
 
@@ -1186,6 +1149,9 @@ namespace WindowsFormsApplication1
 
                 _file4 = Path.Combine(Environment.CurrentDirectory, "html/mallMain.html");
                 headfile= Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
+
+                String competition = Path.Combine(Environment.CurrentDirectory, "html/HTML_topCompetition.html");
+
                 //cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
 
                 if (klass.ResultTemplate.Equals("GK2"))
@@ -1220,6 +1186,9 @@ namespace WindowsFormsApplication1
                 resultatheadertext = File.ReadAllText(file2);
                 _text3 = File.ReadAllText(_file3);
                 _text4 = File.ReadAllText(_file4);
+                String textCompetition = File.ReadAllText(competition);
+                
+
 
                 bool preliminiaryResults = checkBox1.Checked;
                 resultatheadertext = preliminiaryResults ? resultatheadertext.Replace("{HIDDEN}", "") : resultatheadertext.Replace("{HIDDEN}", "hidden");
@@ -1340,6 +1309,7 @@ namespace WindowsFormsApplication1
 
                 // Skapa fil
                 _text4=_text4.Replace("{HEAD}", head);
+                _text4 = _text4.Replace("{COMPETITION}", textCompetition);
                 _text4=_text4.Replace("{TOP}", text);
                 _text4=_text4.Replace("{HEADER}", resultatheadertext);
                 _text4=_text4.Replace("{DATA}", textrows);
@@ -1519,9 +1489,11 @@ namespace WindowsFormsApplication1
         {
           try
           {
-            UpdateMessageTextBox($"Saving class '{className}' to PDF");
-            printResultsExcelHandler(className, description);
-            UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+                UpdateMessageTextBox($"Saving class '{className}' to HTML");
+                createHtml(className);
+                UpdateMessageTextBox($"Saving class '{className}' to PDF");
+                printResultsExcelHandler(className, description);
+                UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
       }
           catch (Exception ee)
           {
@@ -1542,7 +1514,7 @@ namespace WindowsFormsApplication1
             string value = sel.Value;
             string text = sel.Text;
             printResults(value, text);
-            createIndex();
+            
         }
 
         // Export Results for all classes
@@ -1554,7 +1526,7 @@ namespace WindowsFormsApplication1
                 printResults(cl.Name, cl.Name+" "+cl.Description);
             }
 
-            createIndex();
+           
 
         }
 
@@ -1592,31 +1564,36 @@ namespace WindowsFormsApplication1
 
         }
 
+        //Publicera
         private void button1_Click(object sender, EventArgs e)
         {
-          try
-          {
-            UpdateMessageTextBox("Merging PDFs...");
-            pdf.Merge(printedresultsFolder);
-            UpdateMessageTextBox("Merging PDFs done...");
-          }
-          catch (Exception ee)
-          {
-            UpdateMessageTextBox("Failed to Merge PDFs ...");
-            UpdateMessageTextBox(ee.Message);
-          }
 
-          try
-          {
-            UpdateMessageTextBox("Publishing results...");
-            PDFtoHTML.GenerateHTML();
-            UpdateMessageTextBox("Publish done...");
-          }
-          catch(Exception ee)
-          {
-            UpdateMessageTextBox("Failed to Publish ...");
-            UpdateMessageTextBox(ee.Message);
-          }
+            createIndex();
+            publish();
+
+          //try
+          //{
+          //  UpdateMessageTextBox("Merging PDFs...");
+          //  pdf.Merge(printedresultsFolder);
+          //  UpdateMessageTextBox("Merging PDFs done...");
+          //}
+          //catch (Exception ee)
+          //{
+          //  UpdateMessageTextBox("Failed to Merge PDFs ...");
+          //  UpdateMessageTextBox(ee.Message);
+          //}
+
+          //try
+          //{
+          //  UpdateMessageTextBox("Publishing results...");
+          //  PDFtoHTML.GenerateHTML();
+          //  UpdateMessageTextBox("Publish done...");
+          //}
+          //catch(Exception ee)
+          //{
+          //  UpdateMessageTextBox("Failed to Publish ...");
+          //  UpdateMessageTextBox(ee.Message);
+          //}
     }
 
 

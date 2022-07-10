@@ -70,6 +70,8 @@ namespace WindowsFormsApplication1
 
     }
 
+
+
     public static void GenerateHTML()
     {
       var folder = Form1.printedresultsFolder;
