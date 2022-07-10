@@ -1072,13 +1072,13 @@ namespace WindowsFormsApplication1
                 String f2 = Path.GetFileNameWithoutExtension(htmlFile);
                 String klassnum = f2.Split(' ')[0].Trim();
 
-                String lnkformat = @"<td><a href=""" + f + 
+                String lnkformat = @"<td class=""indexunderline""><a href=""" + f + 
                                    @""">" + f2 + @"</a></td>" + Environment.NewLine;
 
 
                 ulLista = ulLista + lnkformat + Environment.NewLine; ;
 
-                    String lnkformat2 = @"<td><a href=""" + f+".pdf" +
+                    String lnkformat2 = @"<td class=""indexunderline""><a href=""" + f+".pdf" +
                     @""">" + "PDF" + @"</a></td>" + Environment.NewLine;
             
                 ulLista = ulLista + lnkformat2 + Environment.NewLine; ;

@@ -118,12 +118,18 @@ col.ekipage {
 
 td.empty {
     background: #00ff00;
-    border-left-style: solid;
+    border-width: thin;
+    border-style:solid;
+    /*border-left-style: solid;
     border-left-width: thin;
     border-right-style: solid;
-    border-right-width: thin;
+    border-right-width: thin;*/
 }
 
+td.indexunderline {
+    border-bottom-width: thin;
+    border-bottom-style: solid;
+}
 col.moment {
     width: 10%;
 }
@@ -148,6 +154,11 @@ colgroup col.klass {
     width: 60%;
 }
 
+
+img.billdal {
+    width: 15%;
+    object-fit: contain;
+}
 
 img.ridsport {
     width: 50%;
@@ -192,6 +203,7 @@ td.resultdata {
 
 table.result-table tr th, table.result-table tr td {
     vertical-align: middle;
+    padding:0.1rem;
 }
 
 td.left-label, th.left-label {
@@ -238,4 +250,28 @@ html {
 img.preliminaryResults {
     max-width: 80%;
     max-height: 80%;
+}
+
+@media only screen and (max-width: 680px) {
+    th.klassnamn {
+        font-size: 14pt;
+    }
+
+    th.tavlingsnamn {
+        font-size: 12pt;
+    }
+
+    table.result-table td {
+        font-size: 8pt;
+    }
+
+    table.result-table th {
+        font-size: 8pt;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    table.domare-table {
+        font-size: 11pt;
+    }
 }
