@@ -58,7 +58,8 @@ namespace WindowsFormsApplication1
 
 		}
 
-		public void extractFromSortedFile()
+
+        public void extractFromSortedFile_org()
 		{
 
 			List<string> omvandsklass = new List<string>();
@@ -206,6 +207,8 @@ namespace WindowsFormsApplication1
 
             List<String> horsenames = new List<string>();
 
+            Dictionary<String, List<ResultObject>> horseVsVoltigor = new Dictionary<String, List<ResultObject>>();
+
 			while (goodPeople.Count > 0)
 			{
 				File.AppendAllText(extracted, "Main Loop - Got " + goodPeople.Count + "  competitors" +Environment.NewLine);
@@ -227,6 +230,7 @@ namespace WindowsFormsApplication1
 					}
 
 					ResultObject r = goodPeople.First(p => p.clazz == startordningsClass.klass.Name);
+
 					String horse = r.horse;
 				    File.AppendAllText(extracted,
 				        "Selected top ranked competitor from klass " + startordningsClass.klass.Name + " = " +
@@ -237,7 +241,10 @@ namespace WindowsFormsApplication1
 					List<ResultObject> removable = goodPeople.FindAll(p => p.horse == horse);
 					File.AppendAllText(extracted, "Got totally " + removable.Count + " competitors with that horse " + Environment.NewLine);
 
-				    int g = removable.Count;
+                    horseVsVoltigor[horse] = removable;
+
+
+                    int g = removable.Count;
                     // The rest
                     for (int i = 0; i < g; i++)
 					{
@@ -262,7 +269,22 @@ namespace WindowsFormsApplication1
 			{
 			    UpdateMessageTextBox("Horse : " + hname);
                 File.AppendAllText(extracted, hname + Environment.NewLine);
-			}
+
+                // Voltigörer
+                List<ResultObject> vresults = horseVsVoltigor[hname];
+                var result = from m in vresults
+                             orderby m.rank, m.clazz
+                             select m;
+                var resRevered = result.Reverse();
+
+                File.AppendAllText(extracted,"Voltigörer med denna häst..." + Environment.NewLine);
+                foreach (ResultObject r in resRevered)
+                {
+                    File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
+
+                }
+
+            }
 
 		    File.AppendAllText(extracted, "Eliminated..." + Environment.NewLine+ Environment.NewLine);
 
@@ -293,6 +315,249 @@ namespace WindowsFormsApplication1
 
 		    File.AppendAllText(extracted, "END of reverse order calc..." + Environment.NewLine);
 		    UpdateMessageTextBox("END of reverse order calc...");
+
+        }
+
+        public void extractFromSortedFile()
+        {
+
+            List<string> omvandsklass = new List<string>();
+            List<int> maxPerClass = new List<int>();
+            var classes = readClasses();
+
+            //var escamilo = ConfigurationManager.AppSettings["escamilo"];
+
+            var omvandclasses = ConfigurationManager.AppSettings["omvandclasses"].Split(',').Select(s => s.Trim()).ToList();
+            var maxomvandclasses = ConfigurationManager.AppSettings["maxomvandclasses"].Split(',').Select(s => s.Trim()).ToList();
+
+            omvandsklass.AddRange(omvandclasses);
+            maxPerClass.AddRange(maxomvandclasses.Select(s => Int32.Parse(s)));
+
+            List<omvandStartordningsClass> omvandStartordningsClasses = new List<omvandStartordningsClass>();
+
+            for (int i = 0; i < omvandclasses.Count(); i++)
+            {
+                omvandStartordningsClass o = new omvandStartordningsClass();
+                o.klass = classes.Single(c => c.Name == omvandclasses[i]);
+                o.max = maxPerClass[i];
+                omvandStartordningsClasses.Add(o);
+            }
+
+
+            String extracted = omvandfile + ".txt";
+            if (File.Exists(sortedresultsfile))
+            {
+                File.Delete(omvandfile);
+                File.Copy(sortedresultsfile, omvandfile);
+            }
+            else
+            {
+                UpdateMessageTextBox("Need sorted results for omvänd startordning...");
+                return;
+            }
+
+            if (File.Exists(extracted))
+            {
+                File.Delete(extracted);
+            }
+
+            // var classes = readClasses();
+
+
+            var max = classes.Count();
+
+            UpdateProgressBarHandler(0);
+            UpdateProgressBarMax(max);
+            UpdateProgressBarLabel("");
+            UpdateProgressBarLabel("Starting Result Extract!!");
+            UpdateMessageTextBox("omvänd startordning...");
+
+
+            var MyApp = new Application();
+            MyApp.Visible = false;
+            var workbooks = MyApp.Workbooks;
+            var MyBook = workbooks.Open(omvandfile);
+
+            int counter = 0;
+
+
+            List<ResultObject> goodPeople = new List<ResultObject>();
+            List<ResultObject> eliminated = new List<ResultObject>();
+
+            foreach (omvandStartordningsClass klass in omvandStartordningsClasses)
+            {
+
+                string className = klass.klass.Name;
+                var MySheet = MyBook.Sheets[className];
+
+                MySheet.Activate();
+                UpdateMessageTextBox($"Looking at {className}");
+
+                int startrow = 7;
+                int rank = 0;
+                while (true) // still readable
+                {
+                    //if (rank < klass.max)
+                    //{ 
+                    counter++;
+
+
+                    int namerow = startrow + 1;
+                    int horserow = startrow + 2;
+                    if (MySheet.Cells[namerow, 4].Value2 != null)
+                    {
+
+                        string name = MySheet.Cells[namerow, 4].Value.ToString();
+                        string horse = MySheet.Cells[horserow, 6].Value.ToString();
+                        //if (escamilo == "1" && horse.ToLower().Contains("escamilo"))
+                        //{
+                        //    horse = horse.Replace("  ", " ");
+                        //}
+
+                        rank = rank + 1;
+
+                        ResultObject r = new ResultObject();
+                        r.clazz = className;
+                        r.description = klass.klass.Description;
+                        r.horse = horse;
+                        r.name = name;
+                        r.rank = rank;
+
+
+                        File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
+
+                        if (rank <= klass.max)
+                        {
+                            goodPeople.Add(r);
+                        }
+                        else
+                        {
+                            eliminated.Add(r);
+                        }
+                        startrow = startrow + 4;
+                    }
+                    else
+                    {
+                        File.AppendAllText(extracted, "NO more competitors in Class " + className + " startrow = " + startrow + Environment.NewLine);
+                        break;
+                    }
+                    //}
+
+                }
+            }
+
+            MyBook.Close(true);
+            workbooks.Close();
+            MyApp.Quit();
+
+            Marshal.ReleaseComObject(MyBook);
+            Marshal.ReleaseComObject(workbooks);
+            Marshal.ReleaseComObject(MyApp);
+            MyBook = null;
+            workbooks = null;
+            MyApp = null;
+            counter = 0;
+
+            UpdateMessageTextBox("Reading SortedResults completed , got PASSED=" + goodPeople.Count() +
+                                 "   ELIMINATED=" + eliminated.Count());
+
+            File.AppendAllText(extracted, "Reading SortedResults completed, got PASSED=" + goodPeople.Count() +
+                                          "   ELIMINATED=" + eliminated.Count() + Environment.NewLine);
+
+            List<String> horsenames = new List<string>();
+
+            Dictionary<String, List<ResultObject>> horseVsVoltigor = new Dictionary<String, List<ResultObject>>();
+
+
+
+            while (goodPeople.Count > 0)
+            {
+
+                // Hitta top
+
+                var result = from m in goodPeople
+                             orderby m.rank, m.clazz
+                             select m;
+
+                ResultObject r = result.First();
+                String horse = r.horse;
+                horsenames.Add(horse);
+                List<ResultObject> removable = goodPeople.FindAll(p => p.horse == horse);
+                File.AppendAllText(extracted, "Got totally " + removable.Count + " competitors with that horse " + Environment.NewLine);
+
+                horseVsVoltigor[horse] = removable;
+
+
+                int g = removable.Count;
+                // The rest
+                for (int i = 0; i < g; i++)
+                {
+                    ResultObject people = removable[i];
+                    File.AppendAllText(extracted, "Removing  " + people.toFileStyle() + Environment.NewLine);
+                    goodPeople.Remove(people);
+                }
+
+                File.AppendAllText(extracted, "After removal, got " + goodPeople.Count() + " competitors left " + Environment.NewLine);
+                UpdateMessageTextBox("After removal, got " + goodPeople.Count() + " voltigörer");
+
+
+                File.AppendAllText(extracted, "Main Loop - Got " + goodPeople.Count + "  competitors" + Environment.NewLine);
+            }
+
+
+            horsenames.Reverse();
+            File.AppendAllText(extracted, "Final Horse reverse order..." + Environment.NewLine);
+            UpdateMessageTextBox("Final Horse reverse order...");
+            foreach (String hname in horsenames)
+            {
+                UpdateMessageTextBox("Horse : " + hname);
+                File.AppendAllText(extracted, hname + Environment.NewLine);
+
+                // Voltigörer
+                List<ResultObject> vresults = horseVsVoltigor[hname];
+                var result = from m in vresults
+                             orderby m.rank, m.clazz
+                             select m;
+                var resRevered = result.Reverse();
+
+                File.AppendAllText(extracted, "Voltigörer med denna häst..." + Environment.NewLine);
+                foreach (ResultObject r in resRevered)
+                {
+                    File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
+
+                }
+
+            }
+
+            File.AppendAllText(extracted, "Eliminated..." + Environment.NewLine + Environment.NewLine);
+
+            foreach (omvandStartordningsClass startordningsClass in omvandStartordningsClasses)
+            {
+                List<ResultObject> removable = eliminated.FindAll(p => p.clazz == startordningsClass.klass.Name);
+
+                if (!removable.Any())
+                {
+                    UpdateMessageTextBox("No one eliminated in class : " + startordningsClass.klass.Name);
+                    File.AppendAllText(extracted, "No one eliminated in class : " + startordningsClass.klass.Name + Environment.NewLine);
+                    File.AppendAllText(extracted, "" + Environment.NewLine);
+                    continue;
+                }
+
+                UpdateMessageTextBox($"Got {removable.Count} eliminated from class  " + startordningsClass.klass.Name);
+                File.AppendAllText(extracted, $"Got {removable.Count} eliminated from class  " + startordningsClass.klass.Name + Environment.NewLine);
+                foreach (ResultObject r in removable)
+                {
+                    UpdateMessageTextBox(r.toFileStyle());
+                    File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
+
+                }
+                File.AppendAllText(extracted, "" + Environment.NewLine);
+            }
+
+
+
+            File.AppendAllText(extracted, "END of reverse order calc..." + Environment.NewLine);
+            UpdateMessageTextBox("END of reverse order calc...");
 
         }
 
