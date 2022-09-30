@@ -160,6 +160,16 @@ img.billdal {
     object-fit: contain;
 }
 
+img.uppsala {
+  width: 15%;
+  object-fit: contain;
+}
+
+img.hamre {
+  width: 100%;
+  object-fit: contain;
+}
+
 img.ridsport {
     width: 50%;
     object-fit: contain;

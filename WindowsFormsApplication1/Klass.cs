@@ -69,13 +69,16 @@ namespace WindowsFormsApplication1
 
                 var submomentsText = range.ElementAt(i+4).Text;
 
-                //judges
-                var submomentsJudgesText = range.ElementAt(i + 8).Text;
+
+       //judges
+       var submomentsJudgesText = range.ElementAt(i + 8).Text;
                 var submomentsJudges = submomentsJudgesText.Split(',');
 
                 var submoments = submomentsText.Split(',');
                 int count = 65;
                 int judgeindex = 0;
+
+                
 
                 foreach (var s in submoments.ToList().GetRange(0, submomentsJudges.Count()))
                 {
