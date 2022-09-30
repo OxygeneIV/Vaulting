@@ -876,7 +876,7 @@ namespace WindowsFormsApplication1
                 MyApp.DisplayAlerts = true;
                 MyApp.Quit();
 
-                createHtml(className);
+                //createHtml(className);
 
             }
             catch(Exception e)
@@ -1152,34 +1152,61 @@ namespace WindowsFormsApplication1
 
                 String competition = Path.Combine(Environment.CurrentDirectory, "html/HTML_topCompetition.html");
 
-                //cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
+        //cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
 
-                if (klass.ResultTemplate.Equals("GK2"))
-                {
-                     file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
-                     file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
-                    _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
-                } else if (klass.ResultTemplate.Equals("ResultTemplate"))
-                   {
-                    if (moments == 2)
-                    {
-                         file  = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare2moment.html");
-                         file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare2moment.html");
-                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare2moment.html");
-                    }
-                    else if (moments == 3)
-                    {
-                         file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare3moment.html");
-                         file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare3moment.html");
-                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare3moment.html");
-                    }
-                    else if (moments == 4)
-                    {
-                        file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare4moment.html");
-                        file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare4moment.html");
-                        _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare4moment.html");
-                    }
-                }
+        if (klass.ResultTemplate.Equals("GK2"))
+        {
+          file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
+          file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
+          _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
+        }
+        else if (klass.ResultTemplate.Equals("ResultTemplate"))
+        {
+          if (moments == 2)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare2moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare2moment.html");
+          }
+          else if (moments == 3)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare3moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare3moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare3moment.html");
+          }
+          else if (moments == 4)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top4domare4moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4domare4moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4domare4moment.html");
+          }
+        }
+        else if (klass.ResultTemplate.Equals("GK3"))
+        {
+          if (moments == 2)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare2moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4_GK3_domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4_GK3_domare2moment.html");
+          }
+          else if (moments == 3)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare3moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare3moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare3moment.html");
+          }
+          else if (moments == 4)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare4moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare4moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare4moment.html");
+          }
+
+        }
+        else
+        {
+          throw new Exception(" no matching templates found for klass " + klass);
+        }
 
                 head= File.ReadAllText(headfile);
                 text = File.ReadAllText(file);
@@ -1204,6 +1231,8 @@ namespace WindowsFormsApplication1
                         counter++;
                         text = text.Replace("{MOMENT_"+counter+"}",moment.Name); 
                         resultatheadertext = resultatheadertext.Replace("{MOMENT_" + counter + "}", moment.Name);
+
+
 
                     foreach (SubMoment submoment in moment.SubMoments)
                      {
@@ -1274,7 +1303,7 @@ namespace WindowsFormsApplication1
 
                         var tt = toRange[row, 1, row, 15];
 
-                        int subcounter = 0;
+                       int subcounter = 0;
                         foreach (SubMoment submoment in moment.SubMoments)
                         {
                             subcounter++;
@@ -1309,7 +1338,7 @@ namespace WindowsFormsApplication1
 
                 // Skapa fil
                 _text4=_text4.Replace("{HEAD}", head);
-                _text4 = _text4.Replace("{COMPETITION}", textCompetition);
+                _text4=_text4.Replace("{COMPETITION}", textCompetition);
                 _text4=_text4.Replace("{TOP}", text);
                 _text4=_text4.Replace("{HEADER}", resultatheadertext);
                 _text4=_text4.Replace("{DATA}", textrows);
@@ -1491,17 +1520,31 @@ namespace WindowsFormsApplication1
           {
                 UpdateMessageTextBox($"Saving class '{className}' to HTML");
                 createHtml(className);
-                UpdateMessageTextBox($"Saving class '{className}' to PDF");
-                printResultsExcelHandler(className, description);
-                UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+                UpdateMessageTextBox($"Saving class '{className}' to HTML done...");
       }
           catch (Exception ee)
           {
-            UpdateMessageTextBox($"Saving class {className} to PDF failed...");
+            UpdateMessageTextBox($"Saving class {className} to HTML failed...");
             UpdateMessageTextBox(ee.Message);
       }
 
-          GC.Collect();
+      try
+      {
+ 
+        UpdateMessageTextBox($"Saving class '{className}' to PDF");
+        printResultsExcelHandler(className, description);
+        UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+      }
+      catch (Exception ee)
+      {
+        UpdateMessageTextBox($"Saving class {className} to PDF failed...");
+        UpdateMessageTextBox(ee.Message);
+      }
+
+
+
+
+      GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();

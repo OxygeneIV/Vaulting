@@ -170,6 +170,11 @@ img.folksam {
     object-fit: contain;
 }
 
+.shadowed
+{
+  background-color: antiquewhite
+}
+
 /*colgroup.domartabell {
     width: 1%;
 }*/

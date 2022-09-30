@@ -121,22 +121,23 @@ namespace Tests.Voltige
             // Login
             string tdbUrl = "https://tdb.ridsport.se/login";
 
-            //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
-            // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
-            //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+      //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
+      // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
+      //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
 
-            // SM https://tdb.ridsport.se/meetings/63485
+      // SM https://tdb.ridsport.se/meetings/63485
 
-           // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
+      string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
 
             // Open Browser
             var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -147,11 +148,11 @@ namespace Tests.Voltige
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
 
-            l.email.SetText("helena.heuman@billdalsridklubb.com");
-            l.password.SetText("1492");
+           // l.email.SetText("helena.heuman@billdalsridklubb.com");
+           //  l.password.SetText("1492");
 
-            //l.email.SetText("annaomagnus@hotmail.com");
-            //l.password.SetText("berlin96");
+            l.email.SetText("annaomagnus@hotmail.com");
+            l.password.SetText("berlin96");
             //l.email.SetText("oxygeneiv@hotmail.com");
             //l.password.SetText("xfiles67");
             l.SubmitButton.Click();
@@ -172,10 +173,10 @@ namespace Tests.Voltige
             var rows = c.ClassesTable.Rows.ToList();
             var numberOfClasses = rows.Count;
 
-            var rows2 = c.ClassesTable2.Rows.ToList();
-            var numberOfClasses2 = rows2.Count;
+      //var rows2 = c.ClassesTable2.Rows.ToList();
+      //var numberOfClasses2 = rows2.Count;
 
-            numberOfClasses = numberOfClasses + numberOfClasses2;
+      numberOfClasses = numberOfClasses;// + numberOfClasses2;
 
             // All ints are DB Ids, not what is diaplyed in the table 1, 2, 3.1, 3.2, 4  etc
 
@@ -197,7 +198,7 @@ namespace Tests.Voltige
 
                 // Get the classes table
                 Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
-                Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
+                //Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
 
 
                   
@@ -206,16 +207,16 @@ namespace Tests.Voltige
                 // Set current row
                 var curClassrow =rows[0];
 
-                if (i==(numberOfClasses-1))
-                {
-                    rows = c.ClassesTable2.Rows.ToList();
-                    curClassrow = rows[0];
-                }
-                else
-                {
+                //if (i==(numberOfClasses-1))
+                //{
+                //    rows = c.ClassesTable2.Rows.ToList();
+                //    curClassrow = rows[0];
+                //}
+                //else
+                //{
                      curClassrow = rows[i];
 
-                }
+                //  }
 
 
                 curClassrow.ScrollIntoView();
