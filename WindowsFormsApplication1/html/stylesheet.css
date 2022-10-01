@@ -126,6 +126,17 @@ td.empty {
     border-right-width: thin;*/
 }
 
+td.emptyExtra {
+  /*background: #00ff00;*/
+  background-color: antiquewhite;
+  border-width: thin;
+  border-style: solid;
+  /*border-left-style: solid;
+    border-left-width: thin;
+    border-right-style: solid;
+    border-right-width: thin;*/
+}
+
 td.indexunderline {
     border-bottom-width: thin;
     border-bottom-style: solid;

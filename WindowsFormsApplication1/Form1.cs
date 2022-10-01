@@ -1355,6 +1355,9 @@ namespace WindowsFormsApplication1
               if (point == "")
               {
                 text3 = text3.Replace(keycell, "empty");
+              }else if(point==null)
+              {
+                text3 = text3.Replace(keycell, "emptyExtra");
               }
               else
               {
