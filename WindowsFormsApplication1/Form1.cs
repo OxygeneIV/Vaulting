@@ -533,10 +533,10 @@ namespace WindowsFormsApplication1
             var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
 
             var rand = Math.Round(new Random().NextDouble() * 10, 3);
-            if (f1.FullName.Contains("_A_") && woody)
-            {
-              rand = 6.5;
-            }
+            //if (f1.FullName.Contains("_A_") && woody)
+            //{
+            //  rand = 6.5;
+            //}
 
 
             var range = ws.NamedRange("result");
@@ -1188,6 +1188,27 @@ namespace WindowsFormsApplication1
           }
         }
         else if (klass.ResultTemplate.Equals("GK3"))
+        {
+          if (moments == 2)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare2moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4_GK3_domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4_GK3_domare2moment.html");
+          }
+          else if (moments == 3)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare3moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare3moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare3moment.html");
+          }
+          else if (moments == 4)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare4moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare4moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare4moment.html");
+          }
+        }
+        else if (klass.ResultTemplate.Equals("TRAGK2"))
         {
           if (moments == 2)
           {
