@@ -178,45 +178,50 @@ namespace WindowsFormsApplication1
 
 
 
-                                   // SM & NM
-                                    if (refid.Contains(".2")) // add results to 0 and 1
-                                    {                                      
-                                        var klassMain = refsplit[3].Trim().Split('.').First();
-                                        
-                                        var zero = refid.Replace(".2", "");
-                                        results.Workbook.Worksheets[klassMain].Cells[zero].Value = res;
+                  // SM & NM
+                  if (refid.Contains(".2")) // add results to 0 and 1
+                  {
+                    var klassMain = refsplit[3].Trim().Split('.').First();
 
-                                        var one = refid.Replace(".2", ".1");
-                                        results.Workbook.Worksheets[klassMain+".1"].Cells[one].Value = res;
+                    var zero = refid.Replace(".2", "");
+                    results.Workbook.Worksheets[klassMain].Cells[zero].Value = res;
 
-                                      if (horsename != null)
-                                      {
-                                        File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
-                                        File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain+".1"};{res}{Environment.NewLine}");
-                                       }
+                    var one = refid.Replace(".2", ".1");
+                    results.Workbook.Worksheets[klassMain + ".1"].Cells[one].Value = res;
 
-                                    }
-                                    else
-                                    {
- 
-                                        var klassMain = refsplit[2].Trim();
+                    if (horsename != null)
+                    {
+                      File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
+                      File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain + ".1"};{res}{Environment.NewLine}");
+                    }
 
-                                        // Escamilo
-                                        /*
-                                        if (klassMain == "5" || klassMain == "6")
-                                        {
-                                            if (horsenumber == "")  // New Common Escamilo
-                                            {
+                  }
+                  else
+                  {
 
-                                                // Update refid for class 5 and 6
-                                                var newRefsplit = refsplit;
-                                                newRefsplit[3]  = oldHorseNumber; // Old escamilo for class 5 and 6
-                                                refid = String.Join("_", newRefsplit).Trim();
-                                            }
-                                        }
-                                        */
+                    var klassMain = refsplit[2].Trim();
 
+                    // Escamilo
+                    /*
+                    if (klassMain == "5" || klassMain == "6")
+                    {
+                        if (horsenumber == "")  // New Common Escamilo
+                        {
+
+                            // Update refid for class 5 and 6
+                            var newRefsplit = refsplit;
+                            newRefsplit[3]  = oldHorseNumber; // Old escamilo for class 5 and 6
+                            refid = String.Join("_", newRefsplit).Trim();
+                        }
+                    }
+                    */
+                                       try { 
                                         results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
+                                        }
+                                        catch(Exception herr)
+                                        {
+                                             UpdateMessageTextBox("Failed to add result to ref "+klassMain + " " + refid);
+                                        }
                                         if (horsename != null)
                                         {
                                           File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");

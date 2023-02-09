@@ -270,7 +270,13 @@
     <Content Include="html\HTML_header2domare1moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\HTML_header3domare1moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\HTML_header3domare3moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_header3_GKM3_domare1moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="html\HTML_header3_GKM3_domare2moment.html">

@@ -1225,11 +1225,11 @@ namespace WindowsFormsApplication1
             file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
             _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare2moment.html");
           }
-          else if (moments == 1)
+          else if (moments == 1) //Kyr
           {
             file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
-            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare1moment.html");
-            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare1moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare1moment.html");
           }
           else if (moments == 3)
           {
