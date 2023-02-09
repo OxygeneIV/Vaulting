@@ -805,7 +805,10 @@ namespace WindowsFormsApplication1
       Excel.Worksheet MySheet = null;
       bool preliminiaryResults = checkBox1.Checked;
       string fullpath = Path.Combine(printedresultsFolder, filename);
+      fullpath = fullpath.Replace("*", "_star_");
+      
       string pdfFullPath = fullpath + ".pdf";
+     
       String noresults = ConfigurationManager.AppSettings["noresults"];
 
       List<String> noresultsList = noresults.Split(',').ToList();
@@ -1210,17 +1213,29 @@ namespace WindowsFormsApplication1
         }
         else if (klass.ResultTemplate.Equals("TRAGK2"))
         {
-          if (moments == 2)
+          if (moments == 2)  //HTML_resultat_tra_2-3domare1moment
           {
-            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare2moment.html");
-            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4_GK3_domare2moment.html");
-            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4_GK3_domare2moment.html");
+            //file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare2moment.html");
+            //file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header4_GK3_domare2moment.html");
+            //_file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat4_GK3_domare2moment.html");
+            //HTML_resultat3_GKM3_domare2moment
+            //HTML_header3_GKM3_domare2moment.html
+
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare2moment.html");
+          }
+          else if (moments == 1)
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare1moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare1moment.html");
           }
           else if (moments == 3)
           {
-            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare3moment.html");
-            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare3moment.html");
-            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare3moment.html");
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare3moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare3moment.html");
           }
           else if (moments == 4)
           {
@@ -1406,7 +1421,8 @@ namespace WindowsFormsApplication1
         _text4 = _text4.Replace("{TOP}", text);
         _text4 = _text4.Replace("{HEADER}", resultatheadertext);
         _text4 = _text4.Replace("{DATA}", textrows);
-        File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + klass.Description + ".html"), _text4);
+        String desc = klass.Description.Replace("*", "_star_");
+        File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
 
 
         int h = 5;

@@ -267,6 +267,12 @@
     <Content Include="html\HTML_head.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\HTML_header2domare1moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_header3domare3moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\HTML_header3_GKM3_domare2moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -291,6 +297,18 @@
     <Content Include="html\HTML_header4domare4moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\HTML_resultat2domare1moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_resultat_tra_2-3domare1moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_resultat_tra_2-3domare3moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_resultat_tra_2-3domare2moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\HTML_resultat3_GKM3_domare2moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -312,10 +330,16 @@
     <Content Include="html\HTML_resultat4domare4moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\HTML_top2domare1moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\HTML_top2domare2moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="html\HTML_top3domare2moment.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\HTML_top2domare3moment.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="html\HTML_top3domare3moment.html">
