@@ -47,6 +47,8 @@ namespace WindowsFormsApplication1
     public static string mergedresultsFolder;
     public static string horseResultsFolder;
     public static string htmlResultsFolder;
+    public static string htmlNoResultsFolder;
+
     public static string cssFolder;
     public static string logosFolder;
     private static string workingDirectory;
@@ -125,6 +127,9 @@ namespace WindowsFormsApplication1
 
         htmlResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["htmlresultsfolder"]);
         foldersToCreate.Add(htmlResultsFolder);
+
+        htmlNoResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["htmlNoResultsfolder"]);
+        foldersToCreate.Add(htmlNoResultsFolder);
 
         cssFolder = Path.Combine(htmlResultsFolder, ConfigurationManager.AppSettings["cssfolder"]);
         foldersToCreate.Add(cssFolder);
@@ -1035,13 +1040,93 @@ namespace WindowsFormsApplication1
       String headfile = Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
       String mallIndex = Path.Combine(Environment.CurrentDirectory, "html/mallIndex.html");
 
+      String head = File.ReadAllText(headfile);
+      String text = File.ReadAllText(mallIndex);
+
+
+      text = text.Replace("{HEAD}", head);
+
+      var folder = Form1.htmlResultsFolder;
+      var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
+      htmlfiles.Sort(new PDFtoHTML.Comparer());
+
+      HtmlToPdf converter = new HtmlToPdf();
+      converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+
+
+      foreach (String htmlFile in htmlfiles)
+      {
+        String shortFile = Path.GetFileName(htmlFile);
+
+        // convert the url to pdf
+        SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+
+        // save pdf document
+        doc.Save(htmlFile + ".pdf");
+
+        // close pdf document
+        doc.Close();
+      }
+
+
+      String ulLista = "";
+      //ulLista = ulLista+ @"<table class=""table table-sm"">";
+      //ulLista = ulLista + "<tbody>";
+
+      foreach (String htmlFile in htmlfiles)
+      {
+        ulLista = ulLista + "<tr>" + Environment.NewLine;
+        String f = Path.GetFileName(htmlFile);
+        String f2 = Path.GetFileNameWithoutExtension(htmlFile);
+        String klassnum = f2.Split(' ')[0].Trim();
+
+        String lnkformat = @"<td class=""indexunderline""><a href=""" + f +
+                           @""">" + f2 + @"</a></td>" + Environment.NewLine;
+
+
+        ulLista = ulLista + lnkformat + Environment.NewLine; ;
+
+        String lnkformat2 = @"<td class=""indexunderline""><a href=""" + f + ".pdf" +
+        @""">" + "PDF" + @"</a></td>" + Environment.NewLine;
+
+        ulLista = ulLista + lnkformat2 + Environment.NewLine; ;
+        ulLista = ulLista + "</tr>" + Environment.NewLine;
+
+      }
+
+      //ulLista = ulLista + "</table>" + Environment.NewLine;
+
+      text = text.Replace("{BODY}", ulLista);
+
+      File.WriteAllText(indexfile, text,System.Text.Encoding.Unicode);
+
+      this.UpdateMessageTextBox($"Creating Indexfile and PDFs completed...");
+
+    }
+
+    private void createIndexNoPublish()
+    {
+
+      this.UpdateMessageTextBox($"Creating Indexfile and PDFs...");
+
+      String indexfile = Path.Combine(htmlNoResultsFolder, "index.html");
+      File.Delete(indexfile);
+
+      // Ta bort gamla pdf'er
+      string[] filePaths = Directory.GetFiles(htmlNoResultsFolder, "*.pdf");
+      foreach (string filePath in filePaths)
+        File.Delete(filePath);
+
+      String headfile = Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
+      String mallIndex = Path.Combine(Environment.CurrentDirectory, "html/mallIndex.html");
+
 
       String head = File.ReadAllText(headfile);
       String text = File.ReadAllText(mallIndex);
 
       text = text.Replace("{HEAD}", head);
 
-      var folder = Form1.htmlResultsFolder;
+      var folder = Form1.htmlNoResultsFolder;
       var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
       htmlfiles.Sort(new PDFtoHTML.Comparer());
 
@@ -1107,6 +1192,8 @@ namespace WindowsFormsApplication1
       var classes = readClasses();
       //  var max = deltagare.Count();
 
+      String nopublishString = ConfigurationManager.AppSettings["nopublish"];
+      List<String> nopublishList = nopublishString.Split(',').ToList();
 
       //UpdateProgressBarHandler(0);
       //UpdateProgressBarMax(deltagare.Count);
@@ -1227,9 +1314,9 @@ namespace WindowsFormsApplication1
           }
           else if (moments == 1) //Kyr
           {
-            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
             file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
-            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare1moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare2moment.html");
           }
           else if (moments == 3)
           {
@@ -1242,6 +1329,15 @@ namespace WindowsFormsApplication1
             file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare4moment.html");
             file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3domare4moment.html");
             _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3domare4moment.html");
+          }
+        }
+        else if (klass.ResultTemplate.Equals("TRAK1"))
+        {
+          if (moments == 1) //Kyr
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare1moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare1moment.html");
           }
         }
         else if (klass.ResultTemplate.Equals("GTK3"))
@@ -1391,7 +1487,8 @@ namespace WindowsFormsApplication1
               if (point == "")
               {
                 text3 = text3.Replace(keycell, "empty");
-              }else if(point==null)
+              }
+              else if (point == null)
               {
                 text3 = text3.Replace(keycell, "emptyExtra");
               }
@@ -1422,8 +1519,15 @@ namespace WindowsFormsApplication1
         _text4 = _text4.Replace("{HEADER}", resultatheadertext);
         _text4 = _text4.Replace("{DATA}", textrows);
         String desc = klass.Description.Replace("*", "_star_");
-        File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
 
+        if (nopublishList.Contains(klass.Name.Trim()))
+        {
+          File.WriteAllText(Path.Combine(htmlNoResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
+        }
+        else 
+        { 
+          File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
+        }
 
         int h = 5;
 
@@ -1692,6 +1796,7 @@ namespace WindowsFormsApplication1
     {
 
       createIndex();
+      createIndexNoPublish();
       publish();
 
       //try
