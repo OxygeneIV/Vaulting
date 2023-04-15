@@ -220,7 +220,7 @@ namespace WindowsFormsApplication1
                                         }
                                         catch(Exception herr)
                                         {
-                                             UpdateMessageTextBox("Failed to add result to ref "+klassMain + " " + refid);
+                                             UpdateMessageTextBox("Failed to add result to ref "+klassMain + " " + refid+ " "+ f.Name);
                                         }
                                         if (horsename != null)
                                         {
