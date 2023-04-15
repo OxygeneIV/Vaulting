@@ -1107,7 +1107,7 @@ namespace WindowsFormsApplication1
     private void createIndexNoPublish()
     {
 
-      this.UpdateMessageTextBox($"Creating Indexfile and PDFs...");
+      this.UpdateMessageTextBox($"Creating Indexfile and PDFs for No Publish...");
 
       String indexfile = Path.Combine(htmlNoResultsFolder, "index.html");
       File.Delete(indexfile);
@@ -1180,7 +1180,7 @@ namespace WindowsFormsApplication1
 
       File.WriteAllText(indexfile, text);
 
-      this.UpdateMessageTextBox($"Creating Indexfile and PDFs completed...");
+      this.UpdateMessageTextBox($"Creating Indexfile and PDFs completed for No Publish...");
 
     }
 
