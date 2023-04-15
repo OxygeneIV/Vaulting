@@ -1501,6 +1501,7 @@ namespace WindowsFormsApplication1
         Boolean noresultsInClass = noresultsList.Contains(klassnamn);
 
         int currentRowInTable = 0;
+        int numberOfVaulters = (endrow - rowbase + 1 ) / 4;
 
         for (int row = rowbase; row < endrow; row += 4)
         {
@@ -1524,6 +1525,20 @@ namespace WindowsFormsApplication1
 
 
           if (noresultsInClass) tot = "-";
+
+          if(noresultsInClass && (placering.Trim() != "1"))
+          {
+            if(numberOfVaulters < 5)
+            {
+              if (currentRowInTable > 1)
+                placering = "2";
+            }
+            else
+            {
+              if (currentRowInTable > 3)
+                placering = "4";
+            }
+          }
 
 
           text3 = text3.Replace("{PLACERING}", placering);
