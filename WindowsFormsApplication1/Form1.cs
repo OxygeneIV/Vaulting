@@ -999,6 +999,7 @@ namespace WindowsFormsApplication1
 
     public static void publish()
     {
+      
       var folder = Form1.htmlResultsFolder;
       var files = Directory.GetFiles(folder).ToList();
       var folders = Directory.GetDirectories(folder).ToList();
@@ -1010,7 +1011,7 @@ namespace WindowsFormsApplication1
       var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
       var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
 
-
+      
       FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
       client.Connect();
       client.SetWorkingDirectory(remoteworkingfolder);
@@ -1021,21 +1022,69 @@ namespace WindowsFormsApplication1
     }
 
 
+    private void createPdfFromHtml(String htmlFile)
+    {
+      bool pdfgeneration = createPdfsCheckBox.Checked;
+
+      if (!pdfgeneration)
+      {
+        this.UpdateMessageTextBox("PDF creation not requested...");
+        return;
+      }
+      String fullPdfName = htmlFile + ".pdf";
+      String shortFile = Path.GetFileName(htmlFile);
+      String pdfName = shortFile + ".pdf";
+      this.UpdateMessageTextBox($"Creating PDF '{pdfName}' from HTML...");
 
 
 
-    private void createIndex()
+      // Ta bort gamla pdf'er
+      if (File.Exists(fullPdfName))
+      {
+        try
+        {
+          this.UpdateMessageTextBox($"Removing old PDF: {fullPdfName}");
+          File.Delete(fullPdfName);
+        }catch(Exception d)
+        {
+          this.UpdateMessageTextBox($"Delete old pdf failed...{d.Message}");
+          return;
+        }
+      }
+
+        this.UpdateMessageTextBox("Creating PDF...");
+      try
+      {
+        HtmlToPdf converter = new HtmlToPdf();
+        converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+
+        // convert the url to pdf
+        SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+
+        // save pdf document
+        doc.Save(fullPdfName);
+
+        // close pdf document
+        doc.Close();
+
+        this.UpdateMessageTextBox("Creating PDF from HTML completed...");
+      }
+      catch(Exception d)
+      {
+        this.UpdateMessageTextBox($"Creating PDF from HTML failed... {d.Message}");
+      }
+    }
+
+
+      private void createIndex()
     {
 
-      this.UpdateMessageTextBox($"Creating Indexfile and PDFs...");
+      this.UpdateMessageTextBox("Creating Indexfile...");
 
       String indexfile = Path.Combine(htmlResultsFolder, "index.html");
       File.Delete(indexfile);
 
-      // Ta bort gamla pdf'er
-      string[] filePaths = Directory.GetFiles(htmlResultsFolder, "*.pdf");
-      foreach (string filePath in filePaths)
-        File.Delete(filePath);
+ 
 
       String headfile = Path.Combine(Environment.CurrentDirectory, "html/HTML_head.html");
       String mallIndex = Path.Combine(Environment.CurrentDirectory, "html/mallIndex.html");
@@ -1050,34 +1099,56 @@ namespace WindowsFormsApplication1
       var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
       htmlfiles.Sort(new PDFtoHTML.Comparer());
 
-      HtmlToPdf converter = new HtmlToPdf();
-      converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
-
-
-      foreach (String htmlFile in htmlfiles)
+      bool pdfgeneration = createPdfsCheckBox.Checked;
+      pdfgeneration = false;
+     
+      if (pdfgeneration)
       {
-        String shortFile = Path.GetFileName(htmlFile);
+        this.UpdateMessageTextBox("Creating PDFs...");
 
-        // convert the url to pdf
-        SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+        // Ta bort gamla pdf'er
+        string[] filePaths = Directory.GetFiles(htmlResultsFolder, "*.pdf");
+        foreach (string filePath in filePaths)
+          File.Delete(filePath);
 
-        // save pdf document
-        doc.Save(htmlFile + ".pdf");
+        HtmlToPdf converter = new HtmlToPdf();
+        converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
 
-        // close pdf document
-        doc.Close();
+
+        foreach (String htmlFile in htmlfiles)
+        {
+          String shortFile = Path.GetFileName(htmlFile);
+
+          // convert the url to pdf
+          SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+
+          // save pdf document
+          doc.Save(htmlFile + ".pdf");
+
+          // close pdf document
+          doc.Close();
+        }
       }
-
+      else
+      {
+        this.UpdateMessageTextBox("Skipping PDFs...");
+      }
 
       String ulLista = "";
       //ulLista = ulLista+ @"<table class=""table table-sm"">";
       //ulLista = ulLista + "<tbody>";
 
+      long ticks = DateTime.Now.Ticks;
+      String tickString = ticks.ToString();
+
       foreach (String htmlFile in htmlfiles)
       {
         ulLista = ulLista + "<tr>" + Environment.NewLine;
         String f = Path.GetFileName(htmlFile);
+        f = f + "?" + tickString;
+
         String f2 = Path.GetFileNameWithoutExtension(htmlFile);
+        f2 = f2.Replace("_star_", "*");
         String klassnum = f2.Split(' ')[0].Trim();
 
         String lnkformat = @"<td class=""indexunderline""><a href=""" + f +
@@ -1085,11 +1156,12 @@ namespace WindowsFormsApplication1
 
 
         ulLista = ulLista + lnkformat + Environment.NewLine; ;
-
+        /*
         String lnkformat2 = @"<td class=""indexunderline""><a href=""" + f + ".pdf" +
         @""">" + "PDF" + @"</a></td>" + Environment.NewLine;
 
         ulLista = ulLista + lnkformat2 + Environment.NewLine; ;
+        */
         ulLista = ulLista + "</tr>" + Environment.NewLine;
 
       }
@@ -1130,24 +1202,34 @@ namespace WindowsFormsApplication1
       var htmlfiles = Directory.GetFiles(folder, "*.html").ToList();
       htmlfiles.Sort(new PDFtoHTML.Comparer());
 
-      HtmlToPdf converter = new HtmlToPdf();
-      converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
+      bool pdfgeneration = createPdfsCheckBox.Checked;
+      pdfgeneration = false;
 
-
-      foreach (String htmlFile in htmlfiles)
+      if (pdfgeneration)
       {
-        String shortFile = Path.GetFileName(htmlFile);
+        this.UpdateMessageTextBox("Creating PDFs...");
+        HtmlToPdf converter = new HtmlToPdf();
+        converter.Options.AutoFitWidth = HtmlToPdfPageFitMode.ShrinkOnly;
 
-        // convert the url to pdf
-        SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
 
-        // save pdf document
-        doc.Save(htmlFile + ".pdf");
+        foreach (String htmlFile in htmlfiles)
+        {
+          String shortFile = Path.GetFileName(htmlFile);
 
-        // close pdf document
-        doc.Close();
+          // convert the url to pdf
+          SelectPdf.PdfDocument doc = converter.ConvertUrl(htmlFile);
+
+          // save pdf document
+          doc.Save(htmlFile + ".pdf");
+
+          // close pdf document
+          doc.Close();
+        }
       }
-
+      else
+      {
+        this.UpdateMessageTextBox("Skipping PDFs...");
+      }
 
       String ulLista = "";
       //ulLista = ulLista+ @"<table class=""table table-sm"">";
@@ -1158,6 +1240,7 @@ namespace WindowsFormsApplication1
         ulLista = ulLista + "<tr>" + Environment.NewLine;
         String f = Path.GetFileName(htmlFile);
         String f2 = Path.GetFileNameWithoutExtension(htmlFile);
+        f2 = f2.Replace("_star_", "*");
         String klassnum = f2.Split(' ')[0].Trim();
 
         String lnkformat = @"<td class=""indexunderline""><a href=""" + f +
@@ -1165,11 +1248,12 @@ namespace WindowsFormsApplication1
 
 
         ulLista = ulLista + lnkformat + Environment.NewLine; ;
-
+        /*
         String lnkformat2 = @"<td class=""indexunderline""><a href=""" + f + ".pdf" +
         @""">" + "PDF" + @"</a></td>" + Environment.NewLine;
 
         ulLista = ulLista + lnkformat2 + Environment.NewLine; ;
+        */
         ulLista = ulLista + "</tr>" + Environment.NewLine;
 
       }
@@ -1185,9 +1269,9 @@ namespace WindowsFormsApplication1
     }
 
 
-    private void createHtml(String className)
+    private String createHtml(String className)
     {
-
+      String htmlFilePath = null;
       //  var deltagare = readVaulters();
       var classes = readClasses();
       //  var max = deltagare.Count();
@@ -1404,8 +1488,8 @@ namespace WindowsFormsApplication1
           }
         }
 
-        File.WriteAllText("test.html", text);
-        File.WriteAllText("test2.html", resultatheadertext);
+        //File.WriteAllText("test.html", text);
+        //File.WriteAllText("test2.html", resultatheadertext);
 
         int rowbase = 7;
         int endrow = sheet.Dimension.End.Row;
@@ -1417,6 +1501,7 @@ namespace WindowsFormsApplication1
         Boolean noresultsInClass = noresultsList.Contains(klassnamn);
 
         int currentRowInTable = 0;
+        int numberOfVaulters = (endrow - rowbase + 1 ) / 4;
 
         for (int row = rowbase; row < endrow; row += 4)
         {
@@ -1440,6 +1525,20 @@ namespace WindowsFormsApplication1
 
 
           if (noresultsInClass) tot = "-";
+
+          if(noresultsInClass && (placering.Trim() != "1"))
+          {
+            if(numberOfVaulters < 5)
+            {
+              if (currentRowInTable > 1)
+                placering = "2";
+            }
+            else
+            {
+              if (currentRowInTable > 3)
+                placering = "4";
+            }
+          }
 
 
           text3 = text3.Replace("{PLACERING}", placering);
@@ -1509,7 +1608,7 @@ namespace WindowsFormsApplication1
           textrows = textrows + text3;
         }
 
-        File.WriteAllText("test3.html", textrows);
+       // File.WriteAllText("test3.html", textrows);
 
 
         // Skapa fil
@@ -1520,12 +1619,16 @@ namespace WindowsFormsApplication1
         _text4 = _text4.Replace("{DATA}", textrows);
         String desc = klass.Description.Replace("*", "_star_");
 
+        
+
         if (nopublishList.Contains(klass.Name.Trim()))
         {
+          htmlFilePath = Path.Combine(htmlNoResultsFolder, klass.Name + " - " + desc + ".html");
           File.WriteAllText(Path.Combine(htmlNoResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
         }
         else 
-        { 
+        {
+          htmlFilePath = Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html");
           File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
         }
 
@@ -1535,6 +1638,10 @@ namespace WindowsFormsApplication1
       }
 
       UpdateProgressBarLabel("All vaulters added to result file");
+
+   
+      return htmlFilePath;
+
 
     }
 
@@ -1700,10 +1807,11 @@ namespace WindowsFormsApplication1
     // Export Results for class
     private void printResults(string className, string description)
     {
+      String htmlPath = null;
       try
       {
         UpdateMessageTextBox($"Saving class '{className}' to HTML");
-        createHtml(className);
+        htmlPath = createHtml(className);
         UpdateMessageTextBox($"Saving class '{className}' to HTML done...");
       }
       catch (Exception ee)
@@ -1712,23 +1820,35 @@ namespace WindowsFormsApplication1
         UpdateMessageTextBox(ee.Message);
       }
 
-      try
+      if (htmlPath != null)
       {
-
-        UpdateMessageTextBox($"Saving class '{className}' to PDF");
-        printResultsExcelHandler(className, description);
-        UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+        createPdfFromHtml(htmlPath);
       }
-      catch (Exception ee)
+      else
       {
-        UpdateMessageTextBox($"Saving class {className} to PDF failed...");
-        UpdateMessageTextBox(ee.Message);
+        UpdateMessageTextBox($"Could not create PDF from HTML...");
       }
+      /*
+      bool pdfgeneration = createPdfsCheckBox.Checked;
+
+      if (pdfgeneration)
+      {
+        try
+        {
+          UpdateMessageTextBox($"Saving class '{className}' to PDF");
+          printResultsExcelHandler(className, description);
+          UpdateMessageTextBox($"Saving class '{className}' to PDF done...");
+        }
+        catch (Exception ee)
+        {
+          UpdateMessageTextBox($"Saving class {className} to PDF failed...");
+          UpdateMessageTextBox(ee.Message);
+        }   
+      }
+      */
 
 
-
-
-      GC.Collect();
+        GC.Collect();
       GC.WaitForPendingFinalizers();
       GC.Collect();
       GC.WaitForPendingFinalizers();
@@ -1797,7 +1917,9 @@ namespace WindowsFormsApplication1
 
       createIndex();
       createIndexNoPublish();
+      UpdateMessageTextBox("Publishing results");
       publish();
+      UpdateMessageTextBox("Publishing results completed");
 
       //try
       //{
@@ -2246,6 +2368,11 @@ namespace WindowsFormsApplication1
     private void button6_Click(object sender, EventArgs e)
     {
       extractFromSortedFile();
+    }
+
+    private void checkBox2_CheckedChanged(object sender, EventArgs e)
+    {
+
     }
   }
   public static class Extension
