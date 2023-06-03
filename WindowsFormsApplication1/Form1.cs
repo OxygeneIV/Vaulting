@@ -254,8 +254,8 @@ namespace WindowsFormsApplication1
         }
         classes = cellvals.Select(r => Klass.RowToClass(r)).ToList();
 
-        // Remove .2-classes SM & NM
-        classes.RemoveAll(c => c.Name.EndsWith(".2"));
+        // Remove SM & NM
+        classes.RemoveAll(c => c.Name.Contains("."));
       }
       UpdateMessageTextBox($"Found {classes.Count} classes");
       return classes;
@@ -301,18 +301,23 @@ namespace WindowsFormsApplication1
 
       foreach (var d in deltagare)
       {
-
-
-        if (d.Klass.EndsWith(".2"))
+        
+        if (d.Klass.Contains("."))
         {
+          List<String> theIds = d.Id.Split(',').ToList();
+          List<String> theClasses = d.Klass.Split('.').ToList();
+
+          if (theIds.Count != theClasses.Count)
+            throw new Exception("Wrong sizes for klass and id " + d.Id);
+
           var d1 = d.Duplicate();
-          d1.Klass = d.Klass.Replace(".2", "");
-          d1.Id = d.Id.Replace(".2", "");
+          d1.Klass = theClasses[0];
+          d1.Id = theIds[0];
           deltagare2.Add(d1);
 
           var d2 = d.Duplicate();
-          d2.Klass = d2.Klass.Replace(".2", ".1");
-          d2.Id = d2.Id.Replace(".2", ".1");
+          d2.Klass = theClasses[1];
+          d2.Id = theIds[1];
           deltagare2.Add(d2);
         }
         else

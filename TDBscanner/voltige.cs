@@ -9,6 +9,7 @@ using Framework.WebDriver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Base;
 using Viedoc.viedoc.pages.components.elements;
+using OpenQA.Selenium;
 
 namespace Tests.Voltige
 {
@@ -138,10 +139,11 @@ namespace Tests.Voltige
       // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
       //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
       //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
-      string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
+      string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
 
-            // Open Browser
-            var driver = CreateBrowserInstance(Driver.Browser.Chrome);
+      // Open Browser
+      var driver = CreateBrowserInstance(Driver.Browser.Chrome);
 
             // Goto TDB
             driver.Navigate().GoToUrl(tdbUrl);
@@ -232,6 +234,11 @@ namespace Tests.Voltige
                 classnamn = classnamn.Replace(System.Environment.NewLine, " ");
 
                 var classanmalda = curClassrow.GetCellText("Anmälda");
+                if (classanmalda.Contains("av"))
+                {
+                   var tokens = System.Text.RegularExpressions.Regex.Split(classanmalda, "av");
+                   classanmalda = tokens.First().Trim();
+                }
                 int anm = Int32.Parse(classanmalda);
 
 
@@ -276,7 +283,10 @@ namespace Tests.Voltige
                         if (status.Text.ToLower().Contains("avanmäld"))
                             continue;
 
-                        var linfCell = curCompsrow.GetCell("Linförare");
+                        if (status.Text.ToLower().Contains("reserv"))
+                          continue;
+
+            var linfCell = curCompsrow.GetCell("Linförare");
                         var horseCell = curCompsrow.GetCell("Häst");
                         var clubCell = curCompsrow.GetCell("Klubb");
 
@@ -285,11 +295,22 @@ namespace Tests.Voltige
 
                         var linfId = linfCell.LinkUrl;
                         var horseId = horseCell.LinkUrl;
+                        
+                        //  Use link url for horse
+                        driver.Navigate().GoToUrl(horseId);
+                         String xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
+                         By by = By.XPath(xpath);
+                         var horseref = driver.WrappedDriver.FindElement(by);
+                         var horseIdNum = Int32.Parse(horseref.Text);
+                         driver.Navigate().Back();
+
+
+
                         var clubId = clubCell.LinkUrl;
                         var ekipageId = curCompsrow.GetCell(6).LinkUrl;
 
                         var linfIdNum = Int32.Parse(linfId.Split('/').Last());
-                        var horseIdNum = Int32.Parse(horseId.Split('/').Last());
+                        //var horseIdNum = Int32.Parse(horseId.Split('/').Last());
                         var clubIdNum = Int32.Parse(clubId.Split('/').Last());
                         var ekipageIdNum = Int32.Parse(ekipageId.Split('/').Last());
 
