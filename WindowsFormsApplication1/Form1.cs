@@ -325,11 +325,17 @@ namespace WindowsFormsApplication1
           deltagare2.Add(d.Duplicate());
         }
       }
-
+      var allIds = deltagare2.Select(d => d.Id);
       var distinctIds = deltagare2.Select(d => d.Id).Distinct().Count();
       var duplicates = deltagare2.Count - distinctIds;
 
+
+
       UpdateMessageTextBox($"Found {deltagare2.Count} vaulters, {duplicates} duplicate IDs");
+      foreach (var d in deltagare2)
+      {
+        UpdateMessageTextBox($"{allIds}");
+      }
       return deltagare2;
     }
 

@@ -176,10 +176,10 @@ namespace Tests.Voltige
             var rows = c.ClassesTable.Rows.ToList();
             var numberOfClasses = rows.Count;
 
-      //var rows2 = c.ClassesTable2.Rows.ToList();
-      //var numberOfClasses2 = rows2.Count;
+      var rows2 = c.ClassesTable2.Rows.ToList();
+      var numberOfClasses2 = rows2.Count;
 
-      numberOfClasses = numberOfClasses;// + numberOfClasses2;
+      var numberOfClassesTot = numberOfClasses + numberOfClasses2;
 
             // All ints are DB Ids, not what is diaplyed in the table 1, 2, 3.1, 3.2, 4  etc
 
@@ -189,11 +189,13 @@ namespace Tests.Voltige
             Dictionary<int, string> _clubs = new Dictionary<int, string>();
             Dictionary<int, string> _comp = new Dictionary<int, string>();
             Dictionary<int, string> _ekipage = new Dictionary<int, string>();
+            Dictionary<int, string> _horsereserve = new Dictionary<int, string>();
 
 
-            // Loop through the classes
 
-            for (int i = 0; i < numberOfClasses; i++)
+      // Loop through the classes
+
+      for (int i = 0; i < numberOfClassesTot; i++)
             {
                 c = PageObjectFactory.Init<CompetitionPage>(driver);
 
@@ -201,7 +203,7 @@ namespace Tests.Voltige
 
                 // Get the classes table
                 Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
-                //Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
+                Wait.UntilOrThrow(() => c.ClassesTable2.Displayed);
 
 
                   
@@ -210,16 +212,17 @@ namespace Tests.Voltige
                 // Set current row
                 var curClassrow =rows[0];
 
-                //if (i==(numberOfClasses-1))
-                //{
-                //    rows = c.ClassesTable2.Rows.ToList();
-                //    curClassrow = rows[0];
-                //}
-                //else
-                //{
-                     curClassrow = rows[i];
+        if (i > (numberOfClasses - 1))
+        {
+          rows = c.ClassesTable2.Rows.ToList();
+          int index=(i- (numberOfClasses - 1)) - 1;
+          curClassrow = rows[index];
+        }
+        else
+        {
+          curClassrow = rows[i];
 
-                //  }
+                  }
 
 
                 curClassrow.ScrollIntoView();
@@ -286,7 +289,7 @@ namespace Tests.Voltige
                         if (status.Text.ToLower().Contains("reserv"))
                           continue;
 
-            var linfCell = curCompsrow.GetCell("Linförare");
+                         var linfCell = curCompsrow.GetCell("Linförare");
                         var horseCell = curCompsrow.GetCell("Häst");
                         var clubCell = curCompsrow.GetCell("Klubb");
 
@@ -340,7 +343,27 @@ namespace Tests.Voltige
 
                         var table = ekipagePage.EkipageTable;
                         var ekrows = table.Rows;
-                        var voltigorercell = ekrows.Last().GetCell(2);
+
+            // reservhäst
+            var reservhorse = ekrows.Last().GetCell(1);
+            var reservehorseCellText = reservhorse.Text.Trim();
+            Int32 horseIdNumReserve = 0;
+            _horsereserve[horseIdNumReserve] = "-";
+            if (reservehorseCellText.Length > 0)
+            {
+              var reservlink = reservhorse.LinkUrl;
+              driver.Navigate().GoToUrl(reservlink);
+              xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
+              by = By.XPath(xpath);
+              horseref = driver.WrappedDriver.FindElement(by);
+              horseIdNumReserve = Int32.Parse(horseref.Text);
+              _horsereserve[horseIdNumReserve] = reservehorseCellText;
+              driver.Navigate().Back();
+            }
+            
+
+
+            var voltigorercell = ekrows.Last().GetCell(2);
                         var links = voltigorercell.Links;
                         var n = links.Count();
 
@@ -384,7 +407,11 @@ namespace Tests.Voltige
 
                         Trace.WriteLine(classIdNum + "|" + _classes[classIdNum] + "|" + linfIdNum + "|" +
                                         _linf[linfIdNum] +
-                                        "|" + horseIdNum + "|" + _horse[horseIdNum] + "|" + clubIdNum + "|" +
+                                        "|" + horseIdNum + "|" 
+                                        + _horse[horseIdNum] +
+                                          "|" + horseIdNumReserve + "|"
+                                        + _horsereserve[horseIdNumReserve]
+                                        + "|" + clubIdNum + "|" +
                                         _clubs[clubIdNum] + "|" + notetext + nnn);
 
                         driver.Navigate().Back();
@@ -412,6 +439,11 @@ namespace Tests.Voltige
                 Trace.WriteLine(kvp.Key + "|" + kvp.Value);
             }
             Trace.WriteLine("---------------------------");
+            foreach (KeyValuePair<int, string> kvp in _horsereserve)
+            {
+              Trace.WriteLine(kvp.Key + "|" + kvp.Value);
+            }
+      Trace.WriteLine("---------------------------");
             foreach (KeyValuePair<int, string> kvp in _clubs)
             {
                 string country = "SE";
