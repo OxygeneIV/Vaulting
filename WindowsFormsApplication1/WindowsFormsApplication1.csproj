@@ -393,6 +393,7 @@
     <Content Include="html\img\uppsala.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\Uppsala_SM_NM_Voltage_RGB.png" />
     <Content Include="html\mallMain.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
