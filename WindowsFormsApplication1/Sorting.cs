@@ -409,10 +409,6 @@ namespace WindowsFormsApplication1
 
                         string name = MySheet.Cells[namerow, 4].Value.ToString();
                         string horse = MySheet.Cells[horserow, 6].Value.ToString();
-                        //if (escamilo == "1" && horse.ToLower().Contains("escamilo"))
-                        //{
-                        //    horse = horse.Replace("  ", " ");
-                        //}
 
                         rank = rank + 1;
 

@@ -332,10 +332,10 @@ namespace WindowsFormsApplication1
 
 
       UpdateMessageTextBox($"Found {deltagare2.Count} vaulters, {duplicates} duplicate IDs");
-      foreach (var d in deltagare2)
-      {
-        UpdateMessageTextBox($"{allIds}");
-      }
+      //foreach (var d in deltagare2)
+      //{
+      //  UpdateMessageTextBox($"{allIds}");
+      //}
       return deltagare2;
     }
 
