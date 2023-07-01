@@ -2008,9 +2008,9 @@ namespace WindowsFormsApplication1
       public string Klass;
       public float point;
 
-      public bool IsSM => !Klass.Contains(".");
-      public bool IsNM => Klass.Contains(".1");
-      public bool IsSMNM => Id.Contains(".2");
+      public bool IsSM => Int32.Parse(Klass)<20;
+      public bool IsNM => Int32.Parse(Klass) >= 20;
+      public bool IsSMNM => Id.Contains("A");
 
       public static HPclass Create(string hpline)
       {
@@ -2147,220 +2147,220 @@ namespace WindowsFormsApplication1
 
 
 
-    public void CalculateHorsePoints()
-    {
-      var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
+    //public void CalculateHorsePoints()
+    //{
+    //  var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
 
-      UpdateMessageTextBox($"Starting horse point calculation");
-      var resultfile = Form1.sortedresultsfile;
-      var horsefile = horseresultfile;
+    //  UpdateMessageTextBox($"Starting horse point calculation");
+    //  var resultfile = Form1.sortedresultsfile;
+    //  var horsefile = horseresultfile;
 
-      if (!File.Exists(resultfile))
-      {
-        UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
-        return;
-      }
+    //  if (!File.Exists(resultfile))
+    //  {
+    //    UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
+    //    return;
+    //  }
 
-      FileInfo resultat = new FileInfo(resultfile);
-      FileInfo horsefileInfo = new FileInfo(horsefile);
+    //  FileInfo resultat = new FileInfo(resultfile);
+    //  FileInfo horsefileInfo = new FileInfo(horsefile);
 
-      List<string> horses = new List<string>();
+    //  List<string> horses = new List<string>();
 
-      List<Horse> definedHorses = new List<Horse>();
-      List<Horse> definedHorsesTeam = new List<Horse>();
-      List<Horse> definedHorsesInd = new List<Horse>();
+    //  List<Horse> definedHorses = new List<Horse>();
+    //  List<Horse> definedHorsesTeam = new List<Horse>();
+    //  List<Horse> definedHorsesInd = new List<Horse>();
 
-      var classes = readClasses();
+    //  var classes = readClasses();
 
-      using (ExcelPackage results = new ExcelPackage(resultat))
-      {
-        try
-        {
-          foreach (var cl in classes)
-          {
-            UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
-            int startRow = 7;
-            ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
-            var maxrow = ws.Dimension.End.Row;
+    //  using (ExcelPackage results = new ExcelPackage(resultat))
+    //  {
+    //    try
+    //    {
+    //      foreach (var cl in classes)
+    //      {
+    //        UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
+    //        int startRow = 7;
+    //        ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
+    //        var maxrow = ws.Dimension.End.Row;
 
-            int ekipages = (maxrow - startRow + 1) / 4;
+    //        int ekipages = (maxrow - startRow + 1) / 4;
 
-            for (int ekipage = 0; ekipage < ekipages; ekipage++)
-            {
-              var currentStartRow = startRow + (ekipage * 4);
-              var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
-              horses.Add(horsename);
+    //        for (int ekipage = 0; ekipage < ekipages; ekipage++)
+    //        {
+    //          var currentStartRow = startRow + (ekipage * 4);
+    //          var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
+    //          horses.Add(horsename);
 
-              if (!definedHorses.Any(h => h.Name == horsename))
-              {
-                Horse h1 = new Horse();
-                h1.Name = horsename;
-                definedHorses.Add(h1);
-              }
+    //          if (!definedHorses.Any(h => h.Name == horsename))
+    //          {
+    //            Horse h1 = new Horse();
+    //            h1.Name = horsename;
+    //            definedHorses.Add(h1);
+    //          }
 
 
-              // TEAM
-              if (teamclasses.Contains(ws.Name))
-              {
-                if (!definedHorsesTeam.Any(h => h.Name == horsename))
-                {
-                  Horse h1 = new Horse();
-                  h1.Name = horsename;
-                  definedHorsesTeam.Add(h1);
-                }
-              }
-              // IND
-              else
-              {
-                if (!definedHorsesInd.Any(h => h.Name == horsename))
-                {
-                  Horse h1 = new Horse();
-                  h1.Name = horsename;
-                  definedHorsesInd.Add(h1);
-                }
-              }
+    //          // TEAM
+    //          if (teamclasses.Contains(ws.Name))
+    //          {
+    //            if (!definedHorsesTeam.Any(h => h.Name == horsename))
+    //            {
+    //              Horse h1 = new Horse();
+    //              h1.Name = horsename;
+    //              definedHorsesTeam.Add(h1);
+    //            }
+    //          }
+    //          // IND
+    //          else
+    //          {
+    //            if (!definedHorsesInd.Any(h => h.Name == horsename))
+    //            {
+    //              Horse h1 = new Horse();
+    //              h1.Name = horsename;
+    //              definedHorsesInd.Add(h1);
+    //            }
+    //          }
 
-              var curhorse = definedHorses.Single(h => h.Name == horsename);
+    //          var curhorse = definedHorses.Single(h => h.Name == horsename);
 
-              for (int arow = 0; arow < 4; arow++)
-              {
-                var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
-                if (momenttext.Length > 1) // we may have points
-                {
-                  var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
-                  if (point > 0)
-                  {
-                    curhorse.Points.Add(point);
+    //          for (int arow = 0; arow < 4; arow++)
+    //          {
+    //            var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
+    //            if (momenttext.Length > 1) // we may have points
+    //            {
+    //              var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
+    //              if (point > 0)
+    //              {
+    //                curhorse.Points.Add(point);
 
-                    // TEAM
-                    if (teamclasses.Contains(ws.Name))
-                    {
-                      var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
-                      curhorse1.Points.Add(point);
+    //                // TEAM
+    //                if (teamclasses.Contains(ws.Name))
+    //                {
+    //                  var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
+    //                  curhorse1.Points.Add(point);
 
-                    }
-                    // IND
-                    else
-                    {
-                      var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
-                      curhorse2.Points.Add(point);
-                    }
-                  }
-                }
-              }
-            }
-          }
+    //                }
+    //                // IND
+    //                else
+    //                {
+    //                  var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
+    //                  curhorse2.Points.Add(point);
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
 
-        }
-        catch (Exception ex)
-        {
-          var str = ex.Message;
-          UpdateMessageTextBox(str);
-        }
-        finally
-        {
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      var str = ex.Message;
+    //      UpdateMessageTextBox(str);
+    //    }
+    //    finally
+    //    {
 
-        }
-      }
+    //    }
+    //  }
 
-      UpdateMessageTextBox($"Getting horse points from all classes done");
-      var all = horses.Distinct().ToList();
-      all.RemoveAll(s => s == "A4");
-      definedHorses.RemoveAll(h => h.Name == "A4");
-      definedHorsesTeam.RemoveAll(h => h.Name == "A4");
-      definedHorsesInd.RemoveAll(h => h.Name == "A4");
+    //  UpdateMessageTextBox($"Getting horse points from all classes done");
+    //  var all = horses.Distinct().ToList();
+    //  all.RemoveAll(s => s == "A4");
+    //  definedHorses.RemoveAll(h => h.Name == "A4");
+    //  definedHorsesTeam.RemoveAll(h => h.Name == "A4");
+    //  definedHorsesInd.RemoveAll(h => h.Name == "A4");
 
-      definedHorses.Sort();
-      definedHorsesTeam.Sort();
-      definedHorsesInd.Sort();
+    //  definedHorses.Sort();
+    //  definedHorsesTeam.Sort();
+    //  definedHorsesInd.Sort();
 
-      File.Delete(horsefileInfo.FullName);
+    //  File.Delete(horsefileInfo.FullName);
 
-      using (ExcelPackage results = new ExcelPackage(horsefileInfo))
-      {
-        try
-        {
-          var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
-          var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
-          var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
-          sheet.Cells.Style.Numberformat.Format = @"0.000";
-          sheet.Cells[1, 1].Value = "Häst";
-          sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet.Cells[1, 2].Value = "Medelpoäng";
-          sheet.Cells[1, 4].Value = "Samtliga poäng";
+    //  using (ExcelPackage results = new ExcelPackage(horsefileInfo))
+    //  {
+    //    try
+    //    {
+    //      var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
+    //      var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
+    //      var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
+    //      sheet.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet.Cells[1, 1].Value = "Häst";
+    //      sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet.Cells[1, 4].Value = "Samtliga poäng";
 
-          sheet2.Cells.Style.Numberformat.Format = @"0.000";
-          sheet2.Cells[1, 1].Value = "Häst";
-          sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet2.Cells[1, 2].Value = "Medelpoäng";
-          sheet2.Cells[1, 4].Value = "Samtliga poäng";
+    //      sheet2.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet2.Cells[1, 1].Value = "Häst";
+    //      sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet2.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet2.Cells[1, 4].Value = "Samtliga poäng";
 
-          sheet3.Cells.Style.Numberformat.Format = @"0.000";
-          sheet3.Cells[1, 1].Value = "Häst";
-          sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet3.Cells[1, 2].Value = "Medelpoäng";
-          sheet3.Cells[1, 4].Value = "Samtliga poäng";
+    //      sheet3.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet3.Cells[1, 1].Value = "Häst";
+    //      sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet3.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet3.Cells[1, 4].Value = "Samtliga poäng";
 
-          int row = 1;
+    //      int row = 1;
 
-          foreach (Horse h in definedHorses)
-          {
-            row = row + 1;
-            sheet.Cells[row, 1].Value = h.Name;
-            sheet.Cells[row, 3].Value = h.Max;
-            sheet.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      foreach (Horse h in definedHorses)
+    //      {
+    //        row = row + 1;
+    //        sheet.Cells[row, 1].Value = h.Name;
+    //        sheet.Cells[row, 3].Value = h.Max;
+    //        sheet.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet.Cells.AutoFitColumns();
+    //      }
+    //      sheet.Cells.AutoFitColumns();
 
-          row = 1;
-          foreach (Horse h in definedHorsesTeam)
-          {
-            row = row + 1;
-            sheet2.Cells[row, 1].Value = h.Name;
-            sheet2.Cells[row, 3].Value = h.Max;
-            sheet2.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet2.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      row = 1;
+    //      foreach (Horse h in definedHorsesTeam)
+    //      {
+    //        row = row + 1;
+    //        sheet2.Cells[row, 1].Value = h.Name;
+    //        sheet2.Cells[row, 3].Value = h.Max;
+    //        sheet2.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet2.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet2.Cells.AutoFitColumns();
+    //      }
+    //      sheet2.Cells.AutoFitColumns();
 
-          row = 1;
-          foreach (Horse h in definedHorsesInd)
-          {
-            row = row + 1;
-            sheet3.Cells[row, 1].Value = h.Name;
-            sheet3.Cells[row, 3].Value = h.Max;
-            sheet3.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet3.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      row = 1;
+    //      foreach (Horse h in definedHorsesInd)
+    //      {
+    //        row = row + 1;
+    //        sheet3.Cells[row, 1].Value = h.Name;
+    //        sheet3.Cells[row, 3].Value = h.Max;
+    //        sheet3.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet3.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet3.Cells.AutoFitColumns();
-          UpdateMessageTextBox($"{horsefile} created ! ");
-        }
-        catch (Exception ex)
-        {
-          UpdateMessageTextBox($"Horse point Error! ");
-          UpdateMessageTextBox(ex.Message);
-        }
-        finally
-        {
-          results.Save();
-          UpdateMessageTextBox($"{horsefile} saves ! ");
-        }
-      }
+    //      }
+    //      sheet3.Cells.AutoFitColumns();
+    //      UpdateMessageTextBox($"{horsefile} created ! ");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      UpdateMessageTextBox($"Horse point Error! ");
+    //      UpdateMessageTextBox(ex.Message);
+    //    }
+    //    finally
+    //    {
+    //      results.Save();
+    //      UpdateMessageTextBox($"{horsefile} saves ! ");
+    //    }
+    //  }
 
-    }
+    //}
 
     private void button3_Click(object sender, EventArgs e)
     {
