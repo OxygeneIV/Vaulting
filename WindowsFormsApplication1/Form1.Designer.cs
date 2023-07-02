@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+      this.components = new System.ComponentModel.Container();
       this.panel1 = new System.Windows.Forms.Panel();
       this.button6 = new System.Windows.Forms.Button();
       this.label4 = new System.Windows.Forms.Label();
@@ -56,6 +57,7 @@
       this.button5 = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
       this.panel4 = new System.Windows.Forms.Panel();
+      this.createPdfsCheckBox = new System.Windows.Forms.CheckBox();
       this.button3 = new System.Windows.Forms.Button();
       this.button1 = new System.Windows.Forms.Button();
       this.label5 = new System.Windows.Forms.Label();
@@ -67,7 +69,8 @@
       this.backgroundWorker5 = new System.ComponentModel.BackgroundWorker();
       this.backgroundWorkerSortResults = new System.ComponentModel.BackgroundWorker();
       this.printDialog1 = new System.Windows.Forms.PrintDialog();
-      this.createPdfsCheckBox = new System.Windows.Forms.CheckBox();
+      this.timer1 = new System.Windows.Forms.Timer(this.components);
+      this.timer2 = new System.Windows.Forms.Timer(this.components);
       this.panel1.SuspendLayout();
       this.panel3.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -266,7 +269,7 @@
       this.tabPage1.Controls.Add(this.dataGridView1);
       this.tabPage1.Location = new System.Drawing.Point(4, 22);
       this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
       this.tabPage1.Size = new System.Drawing.Size(1417, 352);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "tabPage1";
@@ -292,7 +295,7 @@
       this.tabPage2.Controls.Add(this.dataGridView2);
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
-      this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
       this.tabPage2.Size = new System.Drawing.Size(1417, 352);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "tabPage2";
@@ -316,7 +319,7 @@
       this.tabPage3.Controls.Add(this.dataGridView3);
       this.tabPage3.Location = new System.Drawing.Point(4, 22);
       this.tabPage3.Name = "tabPage3";
-      this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+      this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
       this.tabPage3.Size = new System.Drawing.Size(1417, 352);
       this.tabPage3.TabIndex = 2;
       this.tabPage3.Text = "tabPage3";
@@ -404,6 +407,17 @@
       this.panel4.Size = new System.Drawing.Size(992, 92);
       this.panel4.TabIndex = 14;
       // 
+      // createPdfsCheckBox
+      // 
+      this.createPdfsCheckBox.AutoSize = true;
+      this.createPdfsCheckBox.Location = new System.Drawing.Point(373, 43);
+      this.createPdfsCheckBox.Name = "createPdfsCheckBox";
+      this.createPdfsCheckBox.Size = new System.Drawing.Size(150, 17);
+      this.createPdfsCheckBox.TabIndex = 16;
+      this.createPdfsCheckBox.Text = "Create PDFs during export";
+      this.createPdfsCheckBox.UseVisualStyleBackColor = true;
+      this.createPdfsCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+      // 
       // button3
       // 
       this.button3.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -490,16 +504,15 @@
       // 
       this.printDialog1.UseEXDialog = true;
       // 
-      // createPdfsCheckBox
+      // timer1
       // 
-      this.createPdfsCheckBox.AutoSize = true;
-      this.createPdfsCheckBox.Location = new System.Drawing.Point(373, 43);
-      this.createPdfsCheckBox.Name = "createPdfsCheckBox";
-      this.createPdfsCheckBox.Size = new System.Drawing.Size(150, 17);
-      this.createPdfsCheckBox.TabIndex = 16;
-      this.createPdfsCheckBox.Text = "Create PDFs during export";
-      this.createPdfsCheckBox.UseVisualStyleBackColor = true;
-      this.createPdfsCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+      this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+      // 
+      // timer2
+      // 
+      this.timer2.Enabled = true;
+      this.timer2.Interval = 15000;
+      this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
       // 
       // Form1
       // 
@@ -570,6 +583,8 @@
     private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button6;
     private System.Windows.Forms.CheckBox createPdfsCheckBox;
+    private System.Windows.Forms.Timer timer1;
+    private System.Windows.Forms.Timer timer2;
   }
 }
 

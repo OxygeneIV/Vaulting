@@ -85,7 +85,184 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void ReadResultsFromInbox()
+
+
+    private void ReadResultsFromInbox_batch()
+    {
+      DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
+      var files = dirinfo.EnumerateFiles("*.xls*");
+      var max = files.Count();
+      UpdateProgressBarHandler(0);
+      UpdateProgressBarMax(max);
+      UpdateProgressBarLabel("");
+
+      if (files.Count() == 0)
+      {
+        UpdateMessageTextBox("No result files available");
+        return;
+      }
+
+      UpdateMessageTextBox("Beginning import of results");
+      UpdateProgressBarHandler(0);
+      UpdateProgressBarMax(max);
+      UpdateProgressBarLabel("");
+
+      var horseFileName = Form1.horseresultfile;
+      FileInfo resultat = new FileInfo(resultfile);
+      using (ExcelPackage results = new ExcelPackage(resultat))
+      {
+        try
+        {
+          int counter = 0;
+          foreach (var f in files)
+          {
+            var toFile1 = Path.Combine(outboxFolder, f.Name);
+            if (File.Exists(toFile1))
+            {
+              string date1 = DateTime.Now.ToString("yyyyMMddHHmmss");
+              string newfile1 = $"{toFile1}_{date1}";
+              File.Move(toFile1, newfile1);
+
+              // Overwrite
+              //var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
+              //if (msg == DialogResult.Yes)
+              //{
+              //    // continue using a backup
+              //    string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+              //    string newfile = $"{toFile1}_{date}";
+              //    File.Move(toFile1,newfile);
+              //}
+              //else
+              //{
+              //    UpdateMessageTextBox($"Ignoring file {f.Name}");
+              //    continue;
+              //}
+
+            }
+
+            // First copy the file before trying anything stupid.
+            var newPath = Path.Combine(backupFolder, f.Name);
+            File.Copy(f.FullName, newPath, true);
+
+            counter++;
+            try
+            {
+              using (ExcelPackage p = new ExcelPackage(new FileInfo(f.FullName)))
+              {
+                ExcelWorksheet ws = p.Workbook.Worksheets.Single(s => s.Hidden == eWorkSheetHidden.Visible);
+                bool omd = ws.Name.ToLower().EndsWith(" omd");
+                if (omd)
+                {
+
+                }
+                else
+                {
+
+                  var res = ws.Cells["result"].GetValue<float>();
+                  var idrefs = ws.Cells["id"].Value.ToString();
+
+                  System.Collections.Generic.List<String> ids = idrefs.Split(',').ToList();
+
+                  foreach (var id in ids)
+                  {
+                    string refid = id;
+                    var refsplit = refid.Split('_');
+
+                    // Horse analysis
+                    // SM & NM HorsePointStoring
+                    string horsename = null;
+                    try
+                    {
+                      var table = refsplit.Last().Trim();
+                      if (table.ToLower() == "a")
+                      {
+                        var datumcell = ws.Cells["datum"];
+                        var horsecell = datumcell.Offset(5, 0);
+                        horsename = horsecell.GetValue<string>().Trim();
+                      }
+                    }
+                    catch (Exception g)
+                    {
+                      UpdateMessageTextBox($"Failed to add horse point for {f.Name} , {g.Message}");
+                    }
+
+                    var klassMain = refsplit[2].Trim();
+
+                    try
+                    {
+                      results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
+                    }
+                    catch (Exception herr)
+                    {
+                      UpdateMessageTextBox("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
+                    }
+                    if (horsename != null)
+                    {
+                      File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
+                    }
+                  }
+                }
+              }
+              var toFile = Path.Combine(outboxFolder, f.Name);
+              File.Move(f.FullName, toFile);
+            }
+            catch (Exception e)
+            {
+              UpdateMessageTextBox("Error reading result from " + f.FullName);
+              UpdateMessageTextBox("  -> " + e.Message);
+              UpdateMessageTextBox("  -> " + e.StackTrace);
+            }
+
+            UpdateProgressBarHandler(counter);
+            UpdateProgressBarLabel("Read result from file ( " + counter + " / " + max + " ) " + f.Name);
+          }
+        }
+        catch (Exception e)
+        {
+          UpdateMessageTextBox("Error occured during result import !...");
+          UpdateMessageTextBox(e.Message);
+        }
+        finally
+        {
+          UpdateMessageTextBox("Completed import of results");
+          UpdateMessageTextBox("Completed import of results, saving...");
+          results.Save();
+          UpdateMessageTextBox("Save completed, wait for calculation");
+        }
+      }
+
+      UpdateMessageTextBox("Import of results, calculating points...");
+
+      bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
+      if (!docalc)
+      {
+        UpdateMessageTextBox("Import of results, calculation done...sorting...");
+        return;
+      }
+
+      var MyApp = new Microsoft.Office.Interop.Excel.Application();
+      MyApp.Visible = true;
+      var workbooks = MyApp.Workbooks;
+      var MyBook = workbooks.Open(resultfile);
+      MyApp.CalculateFull();
+      MyBook.Close(true);
+      workbooks.Close();
+      MyApp.Quit();
+      UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
+      Marshal.ReleaseComObject(MyBook);
+      Marshal.ReleaseComObject(workbooks);
+      Marshal.ReleaseComObject(MyApp);
+      MyBook = null;
+      workbooks = null;
+      MyApp = null;
+
+
+
+    }
+
+
+
+    private int ReadResultsFromInbox()
         {
             DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
             var files = dirinfo.EnumerateFiles("*.xls*");
@@ -96,8 +273,8 @@ namespace WindowsFormsApplication1
 
             if (files.Count() == 0)
             {
-                UpdateMessageTextBox("No result files available");
-                return;
+                //UpdateMessageTextBox("No result files available");
+                return 2;
             }
 
             UpdateMessageTextBox("Beginning import of results");
@@ -117,20 +294,26 @@ namespace WindowsFormsApplication1
                         var toFile1 = Path.Combine(outboxFolder, f.Name);
                         if(File.Exists(toFile1))
                         {
+       
+                              string date1 = DateTime.Now.ToString("yyyyMMddHHmmss");
+                              string newfile1 = $"{toFile1}_{date1}";
+                              UpdateMessageTextBox($"File exists - Overwriting {f.Name} and old = {newfile1}");
+                              File.Move(toFile1, newfile1);
+
                             // Overwrite
-                            var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
-                            if (msg == DialogResult.Yes)
-                            {
-                                // continue using a backup
-                                string date = DateTime.Now.ToString("yyyyMMddHHmmss");
-                                string newfile = $"{toFile1}_{date}";
-                                File.Move(toFile1,newfile);
-                            }
-                            else
-                            {
-                                UpdateMessageTextBox($"Ignoring file {f.Name}");
-                                continue;
-                            }
+                            //var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
+                            //if (msg == DialogResult.Yes)
+                            //{
+                            //    // continue using a backup
+                            //    string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+                            //    string newfile = $"{toFile1}_{date}";
+                            //    File.Move(toFile1,newfile);
+                            //}
+                            //else
+                            //{
+                            //    UpdateMessageTextBox($"Ignoring file {f.Name}");
+                            //    continue;
+                            //}
                            
                         }
 
@@ -178,6 +361,7 @@ namespace WindowsFormsApplication1
                                                 catch (Exception g)
                                                 {
                                                   UpdateMessageTextBox($"Failed to add horse point for {f.Name} , {g.Message}");
+                                                   UpdateMessageTextBoxColor();
                                                 }
 
                                                 var klassMain = refsplit[2].Trim();
@@ -189,7 +373,8 @@ namespace WindowsFormsApplication1
                                                 catch (Exception herr)
                                                 {
                                                   UpdateMessageTextBox("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
-                                                }
+                                                  UpdateMessageTextBoxColor();
+                                               }
                                                 if (horsename != null)
                                                 {
                                                   File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
@@ -205,7 +390,8 @@ namespace WindowsFormsApplication1
                             UpdateMessageTextBox("Error reading result from " + f.FullName);
                             UpdateMessageTextBox("  -> " + e.Message);
                             UpdateMessageTextBox("  -> " + e.StackTrace);
-                        }
+                             UpdateMessageTextBoxColor();
+                             }
 
                         UpdateProgressBarHandler(counter);
                         UpdateProgressBarLabel("Read result from file ( " + counter + " / " + max + " ) " + f.Name);
@@ -215,23 +401,22 @@ namespace WindowsFormsApplication1
                  {
                     UpdateMessageTextBox("Error occured during result import !...");
                     UpdateMessageTextBox(e.Message);
-                }
+                    UpdateMessageTextBoxColor();
+                 }
                 finally
                 {
                     UpdateMessageTextBox("Completed import of results");
                     UpdateMessageTextBox("Completed import of results, saving...");
                     results.Save();
-                    UpdateMessageTextBox("Save completed, wait for calculation");
+                    UpdateMessageTextBox("Save completed");
                 }
             }
-
-            UpdateMessageTextBox("Import of results, calculating points...");
        
               bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
               if (!docalc)
               {
-                UpdateMessageTextBox("Import of results, calculation done...sorting...");
-                return;
+                //UpdateMessageTextBox("Import of results, calculation done...sorting...");
+                return 0;
               }
     
                 var MyApp = new Microsoft.Office.Interop.Excel.Application();
@@ -250,7 +435,7 @@ namespace WindowsFormsApplication1
                 workbooks = null;
                 MyApp = null;
 
-
+               return 0;
 
         }
     }

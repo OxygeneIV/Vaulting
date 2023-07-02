@@ -22,6 +22,7 @@ using System.Threading;
 using SelectPdf;
 using FluentFTP;
 using System.Net;
+using DocumentFormat.OpenXml.InkML;
 
 namespace WindowsFormsApplication1
 {
@@ -62,6 +63,7 @@ namespace WindowsFormsApplication1
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       InitializeComponent();
       setPathes();
+     // startWatcher();
 
       dataGridView1.AutoGenerateColumns = true;
       dataGridView2.AutoGenerateColumns = true;
@@ -70,6 +72,53 @@ namespace WindowsFormsApplication1
       tabPage1.Text = "Klasser";
       tabPage2.Text = "Deltagare";
       tabPage3.Text = "Resultat";
+    }
+
+    private void startWatcher()
+    {
+
+      FileSystemWatcher fsw = new FileSystemWatcher(inboxFolder);
+      fsw.EnableRaisingEvents = true;
+      fsw.Created += async (s, a) =>
+      {
+        while (FileIsLocked(a.FullPath))
+        {
+          Console.WriteLine($"File {a.Name} is locked!");
+          await Task.Delay(TimeSpan.FromSeconds(5)); // 5 seconds delay between checks
+        }
+
+        Console.WriteLine($"File {a.Name} available!");
+
+        await Task.Run(() => ReadResultsFromInbox());
+
+        // You can put here another delay to be 102% sure that file is free,
+        // but I suppose this is too much.
+        //using (FileStream fs = File.OpenRead(a.FullPath))
+        //{
+        //  Console.WriteLine($"File {a.Name} opened for reading.");
+        //  // Do what you need
+
+        //}
+
+        Console.WriteLine($"File {a.Name} handled");
+      };
+
+    }
+
+
+    static bool FileIsLocked(string filePath)
+    {
+      if (!File.Exists(filePath))
+        return false;
+
+      try
+      {
+        using (FileStream fs = File.OpenRead(filePath)) { }
+        return false;
+      }
+      catch { }
+
+      return true;
     }
 
     private void setPathes()
@@ -635,6 +684,7 @@ namespace WindowsFormsApplication1
     private delegate void UpdateProgressBarLabelCallback(string text);
     private delegate void UpdateProgressBarMaxCallback(int barValue);
     private delegate void UpdateMessageTextBoxCallback(string text);
+    private delegate void UpdateMessageTextBoxColorCallback();
 
     private void UpdateProgressBarHandler(int barValue)
     {
@@ -681,6 +731,17 @@ namespace WindowsFormsApplication1
       {
         // change your text
         this.textBox1.AppendText(text + System.Environment.NewLine);// (char)13);
+      }
+    }
+
+    public void UpdateMessageTextBoxColor()
+    {
+      if (this.textBox1.InvokeRequired)
+        this.BeginInvoke(new UpdateMessageTextBoxColorCallback(this.UpdateMessageTextBoxColor), new object[] {  });
+      else
+      {
+        // change your color
+        this.textBox1.BackColor = Color.Red;
       }
     }
 
@@ -1909,6 +1970,7 @@ namespace WindowsFormsApplication1
     // Clear messages 
     private void buttonClear_Click(object sender, EventArgs e)
     {
+      textBox1.BackColor = Color.White;
       textBox1.Clear();
     }
 
@@ -2385,6 +2447,56 @@ namespace WindowsFormsApplication1
     {
 
     }
+    
+    private static object _locker = new object();
+
+    private void timer2_Tick(object sender, EventArgs e)
+    {
+
+      bool lockTaken = false;
+      var timeout = TimeSpan.FromMilliseconds(50);
+
+      try
+      {
+        Monitor.TryEnter(_locker, timeout, ref lockTaken);
+
+        if (!lockTaken)
+        {
+          return;
+        }
+        else
+        {
+          int res = ReadResultsFromInbox();
+          if (res != 2)
+          {
+            SortResults();
+            createIndex();
+            //createIndexNoPublish();
+            UpdateMessageTextBox("Publishing results");
+            publish();
+            UpdateMessageTextBox("Publishing results completed");
+          }
+        }
+      }
+      catch(Exception e2)
+      {
+        UpdateMessageTextBox("Timer error "+ e2.Message);
+      }
+      finally
+      {
+        if (lockTaken)
+        {
+          Monitor.Exit(_locker);
+        }
+      }
+
+    }
+
+    private void timer1_Tick(object sender, EventArgs e)
+    {
+
+    }
+
   }
   public static class Extension
   {

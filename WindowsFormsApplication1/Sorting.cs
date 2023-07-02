@@ -607,10 +607,11 @@ namespace WindowsFormsApplication1
 			UpdateProgressBarLabel("Starting Sort!!");
 			UpdateMessageTextBox("Starting Sort of results...");
 			File.Copy(resultfile, sortedresultsfile);
+      UpdateMessageTextBox("Copied results to sortedresults...");
 
-            // Sätt färger på cellerna
+      // Sätt färger på cellerna
 
-            var MyApp = new Application();
+      var MyApp = new Application();
             var workbooks = MyApp.Workbooks;
 
             Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
@@ -652,9 +653,10 @@ namespace WindowsFormsApplication1
 
 			MyBook.Close(true);
 			workbooks.Close();
+      UpdateMessageTextBox("Workbook closed...");
 
-
-            MyApp.Visible = false;
+      UpdateMessageTextBox("Special edit start...");
+      MyApp.Visible = false;
             workbooks = MyApp.Workbooks;
 
             MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
@@ -702,8 +704,9 @@ namespace WindowsFormsApplication1
 
 
             MyApp.Quit();
+      UpdateMessageTextBox("Special edit completed...");
 
-			Marshal.ReleaseComObject(MyBook);
+      Marshal.ReleaseComObject(MyBook);
 			Marshal.ReleaseComObject(workbooks);
 			Marshal.ReleaseComObject(MyApp);
 			MyBook = null;
