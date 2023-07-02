@@ -43,6 +43,7 @@ namespace WindowsFormsApplication1
 			public int rank;
 			public string name;
 			public string horse;
+      public int klassRank;
 
 			public string toFileStyle()
 			{
@@ -55,6 +56,7 @@ namespace WindowsFormsApplication1
 		{
 			public Klass klass;
 			public Int32 max;
+      public Int32 omvandRank;
 
 		}
 
@@ -340,6 +342,7 @@ namespace WindowsFormsApplication1
                 omvandStartordningsClass o = new omvandStartordningsClass();
                 o.klass = classes.Single(c => c.Name == omvandclasses[i]);
                 o.max = maxPerClass[i];
+                o.omvandRank = i+1;
                 omvandStartordningsClasses.Add(o);
             }
 
@@ -388,6 +391,7 @@ namespace WindowsFormsApplication1
             {
 
                 string className = klass.klass.Name;
+                int klassRank = klass.omvandRank;
                 var MySheet = MyBook.Sheets[className];
 
                 MySheet.Activate();
@@ -418,6 +422,7 @@ namespace WindowsFormsApplication1
                         r.horse = horse;
                         r.name = name;
                         r.rank = rank;
+                        r.klassRank = klassRank;
 
 
                         File.AppendAllText(extracted, r.toFileStyle() + Environment.NewLine);
@@ -472,27 +477,33 @@ namespace WindowsFormsApplication1
             {
 
         // Hitta top
+        ResultObject r = null;
 
         // En metod
-        //var result = from m in goodPeople
-        //             orderby m.rank, m.clazz
-        //             select m;
+        var result = from m in goodPeople
+                             orderby m.rank, m.klassRank
+                             select m;
+
+
+        UpdateMessageTextBox("Omvänd select size = " + result.Count());
+        r = result.First();
+
 
         // En annan metod
 
-                 ResultObject r = null;
-                foreach (omvandStartordningsClass klass in omvandStartordningsClasses)
-                {
-                      if(goodPeople.Count > 0)
-                      {
-                         var result = from m in goodPeople
-                         where m.clazz == klass.klass.Name
-                         orderby m.rank
-                         select m;
+        //ResultObject r = null;
+        //        foreach (omvandStartordningsClass klass in omvandStartordningsClasses)
+        //        {
+        //              if(goodPeople.Count > 0)
+        //              {
+        //                 var result = from m in goodPeople
+        //                 where m.clazz == klass.klass.Name
+        //                 orderby m.rank
+        //                 select m;
 
-                         if (!result.Any()) continue;
+        //                 if (!result.Any()) continue;
 
-                          r = result.First();
+        //                  r = result.First();
 
 
 
@@ -520,8 +531,7 @@ namespace WindowsFormsApplication1
 
 
                 File.AppendAllText(extracted, "Main Loop - Got " + goodPeople.Count + "  competitors" + Environment.NewLine);
-            }
-        }
+
       }
 
 
@@ -611,14 +621,13 @@ namespace WindowsFormsApplication1
             // Sätt färger på cellerna
 
             var MyApp = new Application();
+            MyApp.Visible = false;
             var workbooks = MyApp.Workbooks;
-
             Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
 
             //MyApp = new Application();
-            MyApp.Visible = false;
-			 workbooks = MyApp.Workbooks;
-			 MyBook = workbooks.Open(sortedresultsfile);
+ 		        // workbooks = MyApp.Workbooks;
+			      // MyBook = workbooks.Open(sortedresultsfile);
 			
 			int counter = 0;
 
@@ -654,50 +663,50 @@ namespace WindowsFormsApplication1
 			workbooks.Close();
 
 
-            MyApp.Visible = false;
-            workbooks = MyApp.Workbooks;
+            //MyApp.Visible = false;
+            //workbooks = MyApp.Workbooks;
 
-            MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+            //MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
 
-            foreach (Klass className in classes)
-            {
+            //foreach (Klass className in classes)
+            //{
 
-                Worksheet sss=  MyBook.Sheets[className.Name];
-                Range r =  sss.UsedRange;
-                int g = r.Rows.Count;
-
-
-                var MySheet = MyBook.Sheets[className.Name];
+            //    Worksheet sss=  MyBook.Sheets[className.Name];
+            //    Range r =  sss.UsedRange;
+            //    int g = r.Rows.Count;
 
 
-               Range range2 = MySheet.UsedRange.SpecialCells(XlCellType.xlCellTypeAllFormatConditions);
-                int hhh= range2.Cells.Count;
+            //    var MySheet = MyBook.Sheets[className.Name];
 
-                foreach (Range c in range2.Cells)
-                {
 
-                    var color = c.DisplayFormat.Interior.Color;
+            //   Range range2 = MySheet.UsedRange.SpecialCells(XlCellType.xlCellTypeAllFormatConditions);
+            //    int hhh= range2.Cells.Count;
 
-                    if (color == 65280)
-                    {
-                        c.Interior.Color = 65280;
-                    }
-                    else
-                    {
-                        if (color == 14348258  || color == 14019554)
-                        {
-                            c.Interior.Color = 14348258;
-                        }
-                    }
-                    var t2 = c.Value2;
-                    var t1 = c.Value;
+            //    foreach (Range c in range2.Cells)
+            //    {
 
-                }
+            //        var color = c.DisplayFormat.Interior.Color;
 
-            }
+            //        if (color == 65280)
+            //        {
+            //            c.Interior.Color = 65280;
+            //        }
+            //        else
+            //        {
+            //            if (color == 14348258  || color == 14019554)
+            //            {
+            //                c.Interior.Color = 14348258;
+            //            }
+            //        }
+            //        var t2 = c.Value2;
+            //        var t1 = c.Value;
 
-            MyBook.Save();
-            MyBook.Close();
+            //    }
+
+            //}
+
+            //MyBook.Save();
+            //MyBook.Close();
 
 
 

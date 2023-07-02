@@ -636,6 +636,7 @@ namespace WindowsFormsApplication1
     private delegate void UpdateProgressBarMaxCallback(int barValue);
     private delegate void UpdateMessageTextBoxCallback(string text);
 
+
     private void UpdateProgressBarHandler(int barValue)
     {
       if (this.progressBar1.InvokeRequired)
@@ -684,6 +685,19 @@ namespace WindowsFormsApplication1
       }
     }
 
+    public void UpdateMessageTextBoxWarn(string text)
+    {
+      if (this.textBox1.InvokeRequired)
+        this.BeginInvoke(new UpdateMessageTextBoxCallback(this.UpdateMessageTextBoxWarn), new object[] { text });
+      else
+      {
+        // change your text
+        this.textBox1.ForeColor = System.Drawing.Color.Red;
+        this.textBox1.AppendText(text + System.Environment.NewLine);// (char)13);
+        this.textBox1.ForeColor = System.Drawing.Color.Black;
+
+      }
+    }
 
     // Here are the background workers...
     private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -1008,7 +1022,38 @@ namespace WindowsFormsApplication1
       return filename.Replace(",", "-").Replace(" ", "-").Replace("å", "a").Replace("ü", "y");
     }
 
-    public static void publish()
+
+
+    private void backgroundWorkerPublish_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      UpdateMessageTextBox($"Publish Results BackgroundWorker Start...");
+      createIndex();
+      //createIndexNoPublish();
+      UpdateMessageTextBox("Publishing results");
+      publish();
+      UpdateMessageTextBox("Publishing results completed");
+      UpdateMessageTextBox($"Publish Results BackgroundWorker End...");
+    }
+
+    private void backgroundWorkerPublish_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("Publish Results completed");
+      }
+    }
+
+
+
+    public void publish()
     {
       
       var folder = Form1.htmlResultsFolder;
@@ -1022,14 +1067,21 @@ namespace WindowsFormsApplication1
       var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
       var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
 
-      
-      FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
-      client.Connect();
-      client.SetWorkingDirectory(remoteworkingfolder);
-      //UploadFiles(localPaths, remoteDir, existsMode, createRemoteDir, verifyOptions, errorHandling)
-      //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
-      client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
-      client.Disconnect();
+      try
+      {
+        FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+        client.Connect();
+        client.SetWorkingDirectory(remoteworkingfolder);
+        //UploadFiles(localPaths, remoteDir, existsMode, createRemoteDir, verifyOptions, errorHandling)
+        //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
+        client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
+        client.Disconnect();
+      }catch(Exception e)
+      {
+       
+        UpdateMessageTextBox($"FTP failed...{e.Message}");
+
+      }
     }
 
 
@@ -1875,14 +1927,58 @@ namespace WindowsFormsApplication1
 
     }
 
-    // Export Results for all classes
-    private void button5_Click(object sender, EventArgs e)
+    private void backgroundWorkerPrintResults_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      UpdateMessageTextBox($"Print Results BackgroundWorker Start...");
+      this.doPrintResults();
+      UpdateMessageTextBox($"Print Results BackgroundWorker End...");
+    }
+
+    private void backgroundWorkerPrintResults_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("Print Results completed");
+      }
+    }
+
+    private void doPrintResults()
     {
       var allClasses = readClasses();
       foreach (var cl in allClasses)
       {
         printResults(cl.Name, cl.Name + " " + cl.Description);
       }
+    }
+
+    // Export Results for all classes
+    private void button5_Click(object sender, EventArgs e)
+    {
+
+      backgroundWorkerPrintResults.RunWorkerAsync();
+      bool hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPrintResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+      //var allClasses = readClasses();
+      //foreach (var cl in allClasses)
+      //{
+      //  printResults(cl.Name, cl.Name + " " + cl.Description);
+      //}
 
 
 

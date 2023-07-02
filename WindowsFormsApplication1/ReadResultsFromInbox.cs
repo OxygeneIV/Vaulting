@@ -44,6 +44,10 @@ namespace WindowsFormsApplication1
         // Populate results
         private void btnReadResultsFromInbox_Click(object sender, EventArgs e)
         {
+
+            processResults();
+
+      /*
             backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
             bool hasAllThreadsFinished = false;
             while (!hasAllThreadsFinished)
@@ -66,10 +70,63 @@ namespace WindowsFormsApplication1
                                                         //re-checking.
             }
 
-
+      */
         }
 
-        private void doSort()
+         // Do all
+     private void processResults()
+    {
+
+      backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
+      bool hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerReadResultsFromInbox.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+      backgroundWorkerSortResults.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerSortResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+
+
+      backgroundWorkerPrintResults.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPrintResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+      backgroundWorkerPublish.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPublish.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+    }
+
+
+    private void doSort()
         {
             bool hasAllThreadsFinished = false;
             backgroundWorkerSortResults.RunWorkerAsync();
