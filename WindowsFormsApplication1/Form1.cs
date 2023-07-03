@@ -2594,6 +2594,18 @@ namespace WindowsFormsApplication1
 
       try
       {
+        // Create Index
+        this.createIndex(); ;
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn("AutoProcess - Failed to create Index");
+        return;
+      }
+        
+
+      try
+      {
         // Publish
         this.publish();
       }

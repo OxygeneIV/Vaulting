@@ -211,21 +211,12 @@ namespace WindowsFormsApplication1
                         var toFile1 = Path.Combine(outboxFolder, f.Name);
                         if(File.Exists(toFile1))
                         {
-                            // Overwrite
-                            var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
-                            if (msg == DialogResult.Yes)
-                            {
-                                // continue using a backup
-                                string date = DateTime.Now.ToString("yyyyMMddHHmmss");
-                                string newfile = $"{toFile1}_{date}";
-                                File.Move(toFile1,newfile);
-                            }
-                            else
-                            {
-                                UpdateMessageTextBox($"Ignoring file {f.Name}");
-                                continue;
-                            }
-                           
+
+                              // Overwrite
+                              UpdateMessageTextBoxWarn($"{f.Name} already exists in outbox!  Createing backup first...");
+                              string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+                              string newfile = $"{toFile1}_{date}.{f.Extension}";
+                              File.Move(toFile1, newfile);           
                         }
 
                         // First copy the file before trying anything stupid.
@@ -248,7 +239,7 @@ namespace WindowsFormsApplication1
 
                                     var res = ws.Cells["result"].GetValue<float>();
                                     var idrefs = ws.Cells["id"].Value.ToString();
-
+                                    bool horseSet = false;
                                     System.Collections.Generic.List<String> ids = idrefs.Split(',').ToList();
 
                                               foreach (var id in ids)
@@ -262,7 +253,7 @@ namespace WindowsFormsApplication1
                                                 try
                                                 {
                                                   var table = refsplit.Last().Trim();
-                                                  if (table.ToLower() == "a")
+                                                  if (table.ToLower() == "a" && !horseSet)
                                                   {
                                                     var datumcell = ws.Cells["datum"];
                                                     var horsecell = datumcell.Offset(5, 0);
@@ -271,7 +262,7 @@ namespace WindowsFormsApplication1
                                                 }
                                                 catch (Exception g)
                                                 {
-                                                  UpdateMessageTextBox($"Failed to add horse point for {f.Name} , {g.Message}");
+                                                  UpdateMessageTextBoxWarn($"Failed to add horse point for {f.Name} , {g.Message}");
                                                 }
 
                                                 var klassMain = refsplit[2].Trim();
@@ -282,12 +273,14 @@ namespace WindowsFormsApplication1
                                                 }
                                                 catch (Exception herr)
                                                 {
-                                                  UpdateMessageTextBox("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
+                                                  UpdateMessageTextBoxWarn("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
                                                 }
-                                                if (horsename != null)
+                                                if (horsename != null && !horseSet)
                                                 {
+                                                  horseSet = true;
                                                   File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
                                                 }
+                                               
                                               }
                                 }
                             }
