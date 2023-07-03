@@ -239,7 +239,7 @@ namespace WindowsFormsApplication1
 
                                     var res = ws.Cells["result"].GetValue<float>();
                                     var idrefs = ws.Cells["id"].Value.ToString();
-                                    bool horseSet = false;
+                                    //bool horseSet = false;
                                     System.Collections.Generic.List<String> ids = idrefs.Split(',').ToList();
 
                                               foreach (var id in ids)
@@ -253,7 +253,7 @@ namespace WindowsFormsApplication1
                                                 try
                                                 {
                                                   var table = refsplit.Last().Trim();
-                                                  if (table.ToLower() == "a" && !horseSet)
+                                                  if (table.ToLower() == "a")
                                                   {
                                                     var datumcell = ws.Cells["datum"];
                                                     var horsecell = datumcell.Offset(5, 0);
@@ -275,9 +275,8 @@ namespace WindowsFormsApplication1
                                                 {
                                                   UpdateMessageTextBoxWarn("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
                                                 }
-                                                if (horsename != null && !horseSet)
+                                                if (horsename != null)
                                                 {
-                                                  horseSet = true;
                                                   File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
                                                 }
                                                

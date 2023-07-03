@@ -1567,6 +1567,15 @@ namespace WindowsFormsApplication1
 
 
         bool preliminiaryResults = checkBox1.Checked;
+
+        // If completed competition ignore Checked
+        String completedCompetitions = ConfigurationManager.AppSettings["completed"];
+        List<String> completedCompetitionsList = nopublishString.Split(',').ToList();
+        if(completedCompetitionsList.Contains(klassnamn))
+        {
+          preliminiaryResults = false;
+        }
+
         resultatheadertext = preliminiaryResults ? resultatheadertext.Replace("{HIDDEN}", "") : resultatheadertext.Replace("{HIDDEN}", "hidden");
 
         var sheet = results.Workbook.Worksheets[klass.Name];
