@@ -62,6 +62,7 @@ namespace WindowsFormsApplication1
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       InitializeComponent();
       setPathes();
+     // setWatcher();
 
       dataGridView1.AutoGenerateColumns = true;
       dataGridView2.AutoGenerateColumns = true;
@@ -70,6 +71,43 @@ namespace WindowsFormsApplication1
       tabPage1.Text = "Klasser";
       tabPage2.Text = "Deltagare";
       tabPage3.Text = "Resultat";
+    }
+
+
+    private void setWatcher()
+    {
+      var watcher = new FileSystemWatcher(inboxFolder);
+      watcher.NotifyFilter = NotifyFilters.LastAccess;
+      watcher.EnableRaisingEvents = true;
+      watcher.Changed += WatchOnChanged;
+      watcher.Renamed += WatchOnChanged;
+    
+      watcher.Error += OnError;
+    }
+    private void WatchOnChanged(object sender, FileSystemEventArgs e)
+    {
+
+      UpdateMessageTextBox($"Change type : {e.ChangeType} {DateTime.Now.ToLongTimeString()}");
+      if (e.ChangeType != WatcherChangeTypes.Changed)
+      {
+        return;
+      }
+      UpdateMessageTextBox($"Changed : {e.FullPath} {DateTime.Now.ToLongTimeString()}");      
+    }
+
+    private static void OnError(object sender, ErrorEventArgs e) =>
+            PrintException(e.GetException());
+
+    private static void PrintException(Exception ex)
+    {
+      if (ex != null)
+      {
+        Console.WriteLine($"Message: {ex.Message}");
+        Console.WriteLine("Stacktrace:");
+        Console.WriteLine(ex.StackTrace);
+        Console.WriteLine();
+        PrintException(ex.InnerException);
+      }
     }
 
     private void setPathes()
@@ -1055,7 +1093,7 @@ namespace WindowsFormsApplication1
 
     public void publish()
     {
-      
+      UpdateMessageTextBox($"Publishing...");
       var folder = Form1.htmlResultsFolder;
       var files = Directory.GetFiles(folder).ToList();
       var folders = Directory.GetDirectories(folder).ToList();
@@ -1076,7 +1114,10 @@ namespace WindowsFormsApplication1
         //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
         client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
         client.Disconnect();
-      }catch(Exception e)
+        UpdateMessageTextBox($"Publishing completed...");
+
+      }
+      catch (Exception e)
       {
        
         UpdateMessageTextBox($"FTP failed...{e.Message}");
@@ -2481,6 +2522,109 @@ namespace WindowsFormsApplication1
     {
 
     }
+
+    private void checkBoxProcessTimer_CheckedChanged(object sender, EventArgs e)
+    {
+      this.processResultsTimer.Enabled = false;
+      if (int.TryParse(textBoxProcessInterval.Text, out int interval))
+      {
+        this.processResultsTimer.Interval = interval*1000;
+      }
+      this.processResultsTimer.Enabled = checkBoxProcessTimer.Checked;
+      this.textBoxProcessInterval.Enabled = !checkBoxProcessTimer.Checked;
+      UpdateMessageTextBox($"Auto process Timer status = {this.processResultsTimer.Enabled}, period = {this.processResultsTimer.Interval} ms");
+    }
+
+    private void textBoxProcessInterval_TextChanged(object sender, EventArgs e)
+    {
+      this.checkBoxProcessTimer.Enabled = (int.TryParse(textBoxProcessInterval.Text, out int interval) && interval > 0);
+    }
+
+    private void processResultsTimer_Tick(object sender, EventArgs e)
+    {
+      if(backgroundWorkerFullAutoProcess.IsBusy)
+      {
+        UpdateMessageTextBox($"backgroundWorker - FullAutoProcess is Busy...");
+        return;
+      }
+      UpdateMessageTextBox($"Launching processResults at {DateTime.Now}");
+      backgroundWorkerFullAutoProcess.RunWorkerAsync();
+    }
+
+
+
+    private void backgroundWorkerFullAutoProcess_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      try
+      {
+        // Read inbox
+        int ret = this.ReadResultsFromInbox();
+        if(ret == -1) 
+        {
+          UpdateMessageTextBoxWarn("AutoProcess - Returning at ReadResultsFromInbox...");
+          return;
+        }
+      }catch(Exception ex)
+      {
+        UpdateMessageTextBoxWarn("AutoProcess - Failed to read inbox");
+        return;
+      }
+
+      try
+      {
+        // Sort
+        this.SortResults();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn("AutoProcess - Failed to sort");
+        return;
+      }
+
+      try
+      {
+        // Print
+        this.doPrintResults();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn("AutoProcess - Failed to print results");
+        return;
+      }
+
+      try
+      {
+        // Publish
+        this.publish();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn("AutoProcess - Failed to publish results");
+        return;
+      }
+    }
+
+    private void backgroundWorkerFullAutoProcess_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      // Enable timer
+      UpdateMessageTextBox("AutoProcess - Completed");
+
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("FullAutoProcess completed");
+      }
+    }
+
+
+
   }
   public static class Extension
   {

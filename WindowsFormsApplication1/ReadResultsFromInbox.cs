@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -45,9 +46,9 @@ namespace WindowsFormsApplication1
         private void btnReadResultsFromInbox_Click(object sender, EventArgs e)
         {
 
-            processResults();
+  
 
-      /*
+      
             backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
             bool hasAllThreadsFinished = false;
             while (!hasAllThreadsFinished)
@@ -70,25 +71,35 @@ namespace WindowsFormsApplication1
                                                         //re-checking.
             }
 
-      */
+      
         }
 
          // Do all
      private void processResults()
     {
 
-      backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
       bool hasAllThreadsFinished = false;
-      while (!hasAllThreadsFinished)
+      try
       {
-        hasAllThreadsFinished = backgroundWorkerReadResultsFromInbox.IsBusy == false;
-        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
-                                //from the Progress event of the background worker.
-        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
-                                                //re-checking.
+        backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
+        hasAllThreadsFinished = false;
+        while (!hasAllThreadsFinished)
+        {
+          hasAllThreadsFinished = backgroundWorkerReadResultsFromInbox.IsBusy == false;
+          Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                  //from the Progress event of the background worker.
+          System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                  //re-checking.
+        }
+      }catch(Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - ReadResultsFromInbox Failed: {e.Message}");
+        return;
       }
 
-      backgroundWorkerSortResults.RunWorkerAsync();
+      try
+      {
+        backgroundWorkerSortResults.RunWorkerAsync();
       hasAllThreadsFinished = false;
       while (!hasAllThreadsFinished)
       {
@@ -98,10 +109,16 @@ namespace WindowsFormsApplication1
         System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
                                                 //re-checking.
       }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - SortResults Failed: { e.Message}");
+        return;
+      }
 
-
-
-      backgroundWorkerPrintResults.RunWorkerAsync();
+      try
+      {
+        backgroundWorkerPrintResults.RunWorkerAsync();
       hasAllThreadsFinished = false;
       while (!hasAllThreadsFinished)
       {
@@ -111,8 +128,16 @@ namespace WindowsFormsApplication1
         System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
                                                 //re-checking.
       }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - PrintResults Failed: { e.Message}");
+        return;
+      }
 
-      backgroundWorkerPublish.RunWorkerAsync();
+      try
+      {
+        backgroundWorkerPublish.RunWorkerAsync();
       hasAllThreadsFinished = false;
       while (!hasAllThreadsFinished)
       {
@@ -121,6 +146,12 @@ namespace WindowsFormsApplication1
                                 //from the Progress event of the background worker.
         System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
                                                 //re-checking.
+      }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - Publish Failed: { e.Message}");
+        return;
       }
 
     }
@@ -142,19 +173,25 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void ReadResultsFromInbox()
+
+        private int ReadResultsFromInbox()
         {
+            // Set timestamp that files should have been created to not get misbehaved files
+            DateTime maxDateTime = DateTime.Now.AddSeconds(-95);
             DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
-            var files = dirinfo.EnumerateFiles("*.xls*");
+            var files = dirinfo.EnumerateFiles("*.xls*").ToList();
+            
+
+          // var files = dirinfo.EnumerateFiles("*.xls*").Where(p=> DateTime.Compare(p.LastAccessTime,maxDateTime)<0);
             var max = files.Count();
             UpdateProgressBarHandler(0);
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
-            if (files.Count() == 0)
+            if (max == 0)
             {
                 UpdateMessageTextBox("No result files available");
-                return;
+                return -1;
             }
 
             UpdateMessageTextBox("Beginning import of results");
@@ -282,13 +319,13 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            UpdateMessageTextBox("Import of results, calculating points...");
+             UpdateMessageTextBox("Import of results, calculating points...");
        
               bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
               if (!docalc)
               {
                 UpdateMessageTextBox("Import of results, calculation done...sorting...");
-                return;
+                return 0;
               }
     
                 var MyApp = new Microsoft.Office.Interop.Excel.Application();
@@ -307,7 +344,7 @@ namespace WindowsFormsApplication1
                 workbooks = null;
                 MyApp = null;
 
-
+      return 0;
 
         }
     }

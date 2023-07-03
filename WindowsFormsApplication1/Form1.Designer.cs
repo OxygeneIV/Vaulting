@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+      this.components = new System.ComponentModel.Container();
       this.panel1 = new System.Windows.Forms.Panel();
       this.button6 = new System.Windows.Forms.Button();
       this.label4 = new System.Windows.Forms.Label();
@@ -53,6 +54,8 @@
       this.dataGridView3 = new System.Windows.Forms.DataGridView();
       this.button4 = new System.Windows.Forms.Button();
       this.panel2 = new System.Windows.Forms.Panel();
+      this.textBoxProcessInterval = new System.Windows.Forms.TextBox();
+      this.checkBoxProcessTimer = new System.Windows.Forms.CheckBox();
       this.button5 = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
       this.panel4 = new System.Windows.Forms.Panel();
@@ -70,6 +73,8 @@
       this.printDialog1 = new System.Windows.Forms.PrintDialog();
       this.backgroundWorkerPrintResults = new System.ComponentModel.BackgroundWorker();
       this.backgroundWorkerPublish = new System.ComponentModel.BackgroundWorker();
+      this.processResultsTimer = new System.Windows.Forms.Timer(this.components);
+      this.backgroundWorkerFullAutoProcess = new System.ComponentModel.BackgroundWorker();
       this.panel1.SuspendLayout();
       this.panel3.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -357,6 +362,8 @@
       this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel2.Controls.Add(this.textBoxProcessInterval);
+      this.panel2.Controls.Add(this.checkBoxProcessTimer);
       this.panel2.Controls.Add(this.button5);
       this.panel2.Controls.Add(this.button2);
       this.panel2.Controls.Add(this.button4);
@@ -366,6 +373,27 @@
       this.panel2.Name = "panel2";
       this.panel2.Size = new System.Drawing.Size(1458, 495);
       this.panel2.TabIndex = 8;
+      // 
+      // textBoxProcessInterval
+      // 
+      this.textBoxProcessInterval.Location = new System.Drawing.Point(310, 76);
+      this.textBoxProcessInterval.Name = "textBoxProcessInterval";
+      this.textBoxProcessInterval.Size = new System.Drawing.Size(100, 20);
+      this.textBoxProcessInterval.TabIndex = 15;
+      this.textBoxProcessInterval.Text = "30";
+      this.textBoxProcessInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+      this.textBoxProcessInterval.TextChanged += new System.EventHandler(this.textBoxProcessInterval_TextChanged);
+      // 
+      // checkBoxProcessTimer
+      // 
+      this.checkBoxProcessTimer.AutoSize = true;
+      this.checkBoxProcessTimer.Location = new System.Drawing.Point(310, 53);
+      this.checkBoxProcessTimer.Name = "checkBoxProcessTimer";
+      this.checkBoxProcessTimer.Size = new System.Drawing.Size(102, 17);
+      this.checkBoxProcessTimer.TabIndex = 9;
+      this.checkBoxProcessTimer.Text = "Auto processing";
+      this.checkBoxProcessTimer.UseVisualStyleBackColor = true;
+      this.checkBoxProcessTimer.CheckedChanged += new System.EventHandler(this.checkBoxProcessTimer_CheckedChanged);
       // 
       // button5
       // 
@@ -507,12 +535,22 @@
       // 
       this.backgroundWorkerPrintResults.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerPrintResults_DoWork);
       this.backgroundWorkerPrintResults.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerPrintResults_RunWorkerCompleted);
-
       // 
       // backgroundWorkerPublish
       // 
       this.backgroundWorkerPublish.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerPublish_DoWork);
       this.backgroundWorkerPublish.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerPublish_RunWorkerCompleted);
+      // 
+      // processResultsTimer
+      // 
+      this.processResultsTimer.Interval = 30000;
+      this.processResultsTimer.Tick += new System.EventHandler(this.processResultsTimer_Tick);
+      // 
+      // backgroundWorkerFullAutoProcess
+      // 
+      this.backgroundWorkerFullAutoProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerFullAutoProcess_DoWork);
+      this.backgroundWorkerFullAutoProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerFullAutoProcess_RunWorkerCompleted);
+
       // 
       // Form1
       // 
@@ -535,6 +573,7 @@
       this.tabPage3.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
       this.panel2.ResumeLayout(false);
+      this.panel2.PerformLayout();
       this.panel4.ResumeLayout(false);
       this.panel4.PerformLayout();
       this.ResumeLayout(false);
@@ -586,6 +625,10 @@
     private System.Windows.Forms.CheckBox createPdfsCheckBox;
     private System.ComponentModel.BackgroundWorker backgroundWorkerPrintResults;
     private System.ComponentModel.BackgroundWorker backgroundWorkerPublish;
+    private System.Windows.Forms.Timer processResultsTimer;
+    private System.Windows.Forms.CheckBox checkBoxProcessTimer;
+    private System.Windows.Forms.TextBox textBoxProcessInterval;
+    private System.ComponentModel.BackgroundWorker backgroundWorkerFullAutoProcess;
   }
 }
 
