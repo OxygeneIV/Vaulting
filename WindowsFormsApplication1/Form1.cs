@@ -1665,11 +1665,32 @@ namespace WindowsFormsApplication1
                 placering = "4";
             }
           }
+          var arr = club.Split('(');
 
+          String clubName = arr.FirstOrDefault();
+          String country =   arr.Last().Replace(")", string.Empty).ToLower();
+          
+          String flagname = "";
+          switch (country)
+          {
+            case "se":
+            case "est":
+            case "no":
+            case "usa":
+            case "dk":
+            case "fi":
+             // flagname = $"<img src=\"./{country}-result.jpg\" style=\"margin-right:4px;width:20px;height:auto\">";
+              flagname = $"<img src=\"./{country}-result.jpg\" style=\"margin-right:4px;width:auto;height:12px\">";
+              break;
+
+            default: 
+              break;
+          }
 
           text3 = text3.Replace("{PLACERING}", placering);
           text3 = text3.Replace("{NAMN}", name);
-          text3 = text3.Replace("{KLUBB}", club);
+          text3 = text3.Replace("{KLUBB}", string.IsNullOrEmpty(clubName) ? "-" : clubName );
+          text3 = text3.Replace("{FLAG}", flagname);
           text3 = text3.Replace("{LINFORARE}", linforare);
           text3 = text3.Replace("{HAST}", horse);
           text3 = text3.Replace("{TOT}", tot);

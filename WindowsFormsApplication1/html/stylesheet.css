@@ -294,6 +294,11 @@ img.preliminaryResults {
     table.result-table th {
         font-size: 8pt;
     }
+
+    table.result-table td img {
+      width: auto;
+      height: 8px;
+    }
 }
 
 @media only screen and (max-width: 400px) {
