@@ -184,15 +184,17 @@ namespace WindowsFormsApplication1
 
           // var files = dirinfo.EnumerateFiles("*.xls*").Where(p=> DateTime.Compare(p.LastAccessTime,maxDateTime)<0);
             var max = files.Count();
+            if (max == 0)
+            {
+              UpdateMessageTextBox("No result files available");
+              return -1;
+            }
+
             UpdateProgressBarHandler(0);
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
-            if (max == 0)
-            {
-                UpdateMessageTextBox("No result files available");
-                return -1;
-            }
+
 
             UpdateMessageTextBox("Beginning import of results");
             UpdateProgressBarHandler(0);

@@ -22,6 +22,10 @@ using System.Threading;
 using SelectPdf;
 using FluentFTP;
 using System.Net;
+using static WindowsFormsApplication1.Form1.Horse;
+using System.Collections.Specialized;
+using System.Collections;
+using System.Web.UI;
 
 namespace WindowsFormsApplication1
 {
@@ -1255,9 +1259,18 @@ namespace WindowsFormsApplication1
         f2 = f2.Replace("_star_", "*");
         String klassnum = f2.Split(' ')[0].Trim();
 
-        String lnkformat = @"<td class=""indexunderline""><a href=""" + f +
-                           @""">" + f2 + @"</a></td>" + Environment.NewLine;
+        bool isNumber = Int32.TryParse(klassnum, out int result);
 
+        String lnkformat;
+        if (isNumber && result < 10)
+        {
+           lnkformat = @"<td class=""indexunderline""><a href=""" + f +
+                             @""">" + f2 + @"</a> <img src=""./sweden-framed-flag.jpg"" width=""20px"" height=""auto"" alt=""Flag""></td>" + Environment.NewLine;
+        }else
+        {
+           lnkformat = @"<td class=""indexunderline""><a href=""" + f +
+                         @""">" + f2 + @"</a></td>" + Environment.NewLine;
+        }
 
         ulLista = ulLista + lnkformat + Environment.NewLine; ;
         /*
@@ -2164,7 +2177,7 @@ namespace WindowsFormsApplication1
         var hp = new HPclass
         {
           Id = data[0].Trim(),
-          Name = data[1].Trim(),
+          Name = data[1].Replace("_","").Trim(),
           Klass = data[2].Trim(),
           point = float.Parse(data[3].Trim().Replace(",", "."), CultureInfo.InvariantCulture)
         };
@@ -2172,7 +2185,99 @@ namespace WindowsFormsApplication1
       }
     }
 
+
+    private dynamic getGroup(List<HPclass> horsePoints)
+    {
+      var horsepointGroup = from so in horsePoints
+                            group so by so.Name
+          into AllHorsePoints
+                            select new
+                            {
+                              HorseName = AllHorsePoints.Key,
+                              Max = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point),
+                              Average = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point),
+                              Count = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Count()
+                            };
+      return horsepointGroup;
+    }
+
     public void CalculateHorsePoints2()
+    {
+      UpdateMessageTextBox($"Analyzing Horse points...");
+      /*
+    <add key="horse_ind" value="3,4,5,6,8,9,13,15,16,17,18,23,24,25,26" />
+    <add key="horse_team" value="1,2,21,22" />
+    <add key="horse_pdd" value="7,27,28" />
+
+    <add key="horse_sm_classes" value="1,2,3,4,5,6,7" />
+    <add key="horse_nm_classes" value="21,22,23,24,25,26,27,28" />
+    <add key="horse_rm_classes" value="8,9" />
+    <add key="horse_nationell_classes" value="13,15,16,17,18" />
+       */
+
+      var horse_team = ConfigurationManager.AppSettings["horse_team"].Split(',').Select(s => s.Trim());
+      var horse_ind = ConfigurationManager.AppSettings["horse_ind"].Split(',').Select(s => s.Trim());
+      var horse_pdd = ConfigurationManager.AppSettings["horse_pdd"].Split(',').Select(s => s.Trim());
+      var horse_sm_classes = ConfigurationManager.AppSettings["horse_sm_classes"].Split(',').Select(s => s.Trim());
+      var horse_nm_classes = ConfigurationManager.AppSettings["horse_nm_classes"].Split(',').Select(s => s.Trim());
+      var horse_rm_classes = ConfigurationManager.AppSettings["horse_rm_classes"].Split(',').Select(s => s.Trim());
+      var horse_nationell_classes = ConfigurationManager.AppSettings["horse_nationell_classes"].Split(',').Select(s => s.Trim());
+
+      var horsepoints = Form1.horseresultfile;
+      var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder, "CalculatedHorsePoints.xlsx");
+      var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_templateGeneric.xlsx");
+
+      var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
+
+      File.Delete(horsepointsCalculated);
+      File.Copy(horsepointsCalculatedTemplate, horsepointsCalculated, true);
+
+      var allSMPoints = allHPs.Where(hp => horse_sm_classes.Contains(hp.Klass)).ToList();
+      var allNMPoints = allHPs.Where(hp => horse_nm_classes.Contains(hp.Klass)).ToList();
+      var allRMPoints = allHPs.Where(hp => horse_rm_classes.Contains(hp.Klass)).ToList();
+      var allNationellPoints = allHPs.Where(hp => horse_nationell_classes.Contains(hp.Klass)).ToList();
+      var allPddPoints = allHPs.Where(hp => horse_pdd.Contains(hp.Klass)).ToList();
+
+      OrderedDictionary od = new OrderedDictionary();
+
+
+      od.Add("SM",allSMPoints);
+      od.Add("NM",allNMPoints);
+      od.Add("RM",allRMPoints);
+      od.Add("Pdd", allRMPoints);
+      od.Add("Nationell",allNationellPoints);
+      od.Add("SM - Ind", allSMPoints.Where(hp => horse_ind.Contains(hp.Klass)).ToList());
+      od.Add("SM - Lag", allSMPoints.Where(hp => horse_team.Contains(hp.Klass)).ToList());
+      od.Add("SM - Pdd", allSMPoints.Where(hp => horse_pdd.Contains(hp.Klass)).ToList());
+      od.Add("NM - Ind", allNMPoints.Where(hp => horse_ind.Contains(hp.Klass)).ToList());
+      od.Add("NM - Lag", allNMPoints.Where(hp => horse_team.Contains(hp.Klass)).ToList());
+      od.Add("NM - Pdd", allNMPoints.Where(hp => horse_pdd.Contains(hp.Klass)).ToList());
+
+      foreach (DictionaryEntry de in od)
+      {
+        var fileinfo = new FileInfo(horsepointsCalculated);
+        using (var results = new ExcelPackage(fileinfo))
+        {
+
+          object value = de.Value;
+          dynamic dynamicz = getGroup((List<HPclass>)value);
+          var ws = results.Workbook.Worksheets.Copy("HorsePoints",de.Key.ToString());
+          var row = 2;
+          foreach (var horse in dynamicz)
+          {
+            ws.Cells[row, 1].Value = horse.HorseName + $"  ({horse.Count})";
+            ws.Cells[row, 2].Value = horse.Max;
+            ws.Cells[row, 3].Value = horse.Average;
+            row++;
+          }
+          results.Save();
+        }
+      }
+      UpdateMessageTextBox($"Horse points analyzed");
+     
+    }
+
+    public void CalculateHorsePoints23()
     {
 
       UpdateMessageTextBox($"Analyzing Horse points...");

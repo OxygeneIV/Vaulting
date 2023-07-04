@@ -617,10 +617,11 @@ namespace WindowsFormsApplication1
 			UpdateProgressBarLabel("Starting Sort!!");
 			UpdateMessageTextBox("Starting Sort of results...");
 			File.Copy(resultfile, sortedresultsfile);
+      UpdateMessageTextBox("sortedresultsfile copied...");
 
-            // Sätt färger på cellerna
+      // Sätt färger på cellerna
 
-            var MyApp = new Application();
+      var MyApp = new Application();
             MyApp.Visible = false;
             var workbooks = MyApp.Workbooks;
             Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
