@@ -1692,7 +1692,7 @@ namespace WindowsFormsApplication1
           text3 = text3.Replace("{KLUBB}", string.IsNullOrEmpty(clubName) ? "-" : clubName );
           text3 = text3.Replace("{FLAG}", flagname);
           text3 = text3.Replace("{LINFORARE}", linforare);
-          text3 = text3.Replace("{HAST}", horse);
+          text3 = text3.Replace("{HAST}", horse.Replace("_"," "));
           text3 = text3.Replace("{TOT}", tot);
 
           counter = 0;
