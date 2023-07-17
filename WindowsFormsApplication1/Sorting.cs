@@ -413,6 +413,7 @@ namespace WindowsFormsApplication1
 
                         string name = MySheet.Cells[namerow, 4].Value.ToString();
                         string horse = MySheet.Cells[horserow, 6].Value.ToString();
+                        //horse = horse.Replace("_", " ");
 
                         rank = rank + 1;
 

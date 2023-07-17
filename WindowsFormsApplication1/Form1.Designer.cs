@@ -54,6 +54,7 @@
       this.dataGridView3 = new System.Windows.Forms.DataGridView();
       this.button4 = new System.Windows.Forms.Button();
       this.panel2 = new System.Windows.Forms.Panel();
+      this.checkBoxJudge = new System.Windows.Forms.CheckBox();
       this.textBoxProcessInterval = new System.Windows.Forms.TextBox();
       this.checkBoxProcessTimer = new System.Windows.Forms.CheckBox();
       this.button5 = new System.Windows.Forms.Button();
@@ -75,6 +76,9 @@
       this.backgroundWorkerPublish = new System.ComponentModel.BackgroundWorker();
       this.processResultsTimer = new System.Windows.Forms.Timer(this.components);
       this.backgroundWorkerFullAutoProcess = new System.ComponentModel.BackgroundWorker();
+      this.backgroundWorkerJudgeTables = new System.ComponentModel.BackgroundWorker();
+      this.judgeTimer = new System.Windows.Forms.Timer(this.components);
+      this.button7 = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
       this.panel3.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -94,6 +98,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel1.Controls.Add(this.button7);
       this.panel1.Controls.Add(this.button6);
       this.panel1.Controls.Add(this.label4);
       this.panel1.Controls.Add(this.label3);
@@ -362,6 +367,7 @@
       this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.panel2.Controls.Add(this.checkBoxJudge);
       this.panel2.Controls.Add(this.textBoxProcessInterval);
       this.panel2.Controls.Add(this.checkBoxProcessTimer);
       this.panel2.Controls.Add(this.button5);
@@ -374,13 +380,24 @@
       this.panel2.Size = new System.Drawing.Size(1458, 495);
       this.panel2.TabIndex = 8;
       // 
+      // checkBoxJudge
+      // 
+      this.checkBoxJudge.AutoSize = true;
+      this.checkBoxJudge.Location = new System.Drawing.Point(121, 54);
+      this.checkBoxJudge.Name = "checkBoxJudge";
+      this.checkBoxJudge.Size = new System.Drawing.Size(117, 17);
+      this.checkBoxJudge.TabIndex = 16;
+      this.checkBoxJudge.Text = "Judge Table Points";
+      this.checkBoxJudge.UseVisualStyleBackColor = true;
+      this.checkBoxJudge.CheckedChanged += new System.EventHandler(this.checkBoxJudge_CheckedChanged);
+      // 
       // textBoxProcessInterval
       // 
       this.textBoxProcessInterval.Location = new System.Drawing.Point(310, 76);
       this.textBoxProcessInterval.Name = "textBoxProcessInterval";
       this.textBoxProcessInterval.Size = new System.Drawing.Size(100, 20);
       this.textBoxProcessInterval.TabIndex = 15;
-      this.textBoxProcessInterval.Text = "30";
+      this.textBoxProcessInterval.Text = "600";
       this.textBoxProcessInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
       this.textBoxProcessInterval.TextChanged += new System.EventHandler(this.textBoxProcessInterval_TextChanged);
       // 
@@ -550,7 +567,25 @@
       // 
       this.backgroundWorkerFullAutoProcess.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerFullAutoProcess_DoWork);
       this.backgroundWorkerFullAutoProcess.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerFullAutoProcess_RunWorkerCompleted);
-
+      // 
+      // backgroundWorkerJudgeTables
+      // 
+      this.backgroundWorkerJudgeTables.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerJudgeTables_DoWork);
+      this.backgroundWorkerJudgeTables.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerJudgeTables_RunWorkerCompleted);
+      // 
+      // judgeTimer
+      // 
+      this.judgeTimer.Tick += new System.EventHandler(this.judgeTimer_Tick);
+      // 
+      // button7
+      // 
+      this.button7.Location = new System.Drawing.Point(202, 143);
+      this.button7.Name = "button7";
+      this.button7.Size = new System.Drawing.Size(75, 23);
+      this.button7.TabIndex = 15;
+      this.button7.Text = "button7";
+      this.button7.UseVisualStyleBackColor = true;
+      this.button7.Click += new System.EventHandler(this.button7_Click);
       // 
       // Form1
       // 
@@ -629,6 +664,10 @@
     private System.Windows.Forms.CheckBox checkBoxProcessTimer;
     private System.Windows.Forms.TextBox textBoxProcessInterval;
     private System.ComponentModel.BackgroundWorker backgroundWorkerFullAutoProcess;
+    private System.ComponentModel.BackgroundWorker backgroundWorkerJudgeTables;
+    private System.Windows.Forms.CheckBox checkBoxJudge;
+    private System.Windows.Forms.Timer judgeTimer;
+    private System.Windows.Forms.Button button7;
   }
 }
 

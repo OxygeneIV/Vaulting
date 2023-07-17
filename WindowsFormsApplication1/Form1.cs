@@ -26,6 +26,10 @@ using static WindowsFormsApplication1.Form1.Horse;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Web.UI;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
+using System.Web.Caching;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace WindowsFormsApplication1
 {
@@ -1385,6 +1389,76 @@ namespace WindowsFormsApplication1
 
     }
 
+    void addHorseid()
+    {
+
+      File.Copy(sortedresultsfile, "C:\\katarina\\sortedWithId.xlsx");
+      var resultat = new FileInfo("C:\\katarina\\sortedWithId.xlsx");
+
+      Dictionary<Int32, string> dict = new Dictionary<Int32, string>();
+
+
+      dict[266295] = "Apache";
+      dict[264133] = "Belvedere";
+      dict[280330] = "Calouha";
+      dict[275109] = "Caramba";
+      dict[321438] = "Carmani";
+      dict[297396] = "Charlie";
+      dict[286694] = "Corsaro V";
+      dict[293254] = "Cortesch";
+      dict[312598] = "Diamond";
+      dict[264141] = "Diesel";
+      dict[291299] = "Donald";
+      dict[306380] = "Donovan";
+      dict[293760] = "Freilene";
+      dict[308300] = "Gladiator VDH";
+      dict[279357] = "Halving";
+      dict[306606] = "Kanon";
+      dict[313507] = "Klintholms Ramstein";
+      dict[296063] = "Langaller on your marks";
+      dict[301468] = "Lucky Lover";
+      dict[265065] = "Luco Rae";
+      dict[265064] = "Lyra Rae";
+      dict[294359] = "Monte Cassino af Wasbek";
+      dict[301477] = "Normandie";
+      dict[310234] = "Sems";
+      dict[342703] = "Serenade";
+      dict[334748] = "Silver";
+      dict[285918] = "Toronto BG";
+      dict[328098] = "Turbic Boy";
+      dict[312178] = "Zeus";
+
+
+      var classes = readClasses();
+
+      using (var results = new ExcelPackage(resultat))
+      {
+        foreach (Klass klass in classes)
+        {
+          var sheet = results.Workbook.Worksheets[klass.Name];
+
+
+          
+          foreach (KeyValuePair<Int32,string> horse in dict)
+          {
+            String h=horse.Value;
+            Int32 i = horse.Key;
+
+            var query = from cell in sheet.Cells["A:XFD"]
+                        where cell.Value?.ToString().Contains(h) == true
+                        select cell;
+
+            foreach (var cell in query) { 
+              String newdata = cell.Value.ToString() + " " + i.ToString();
+              cell.Value = newdata;
+            }
+          }
+        }
+
+        results.Save();
+
+      }
+    }
 
     private String createHtml(String className)
     {
@@ -1583,7 +1657,7 @@ namespace WindowsFormsApplication1
 
         // If completed competition ignore Checked
         String completedCompetitions = ConfigurationManager.AppSettings["completed"];
-        List<String> completedCompetitionsList = nopublishString.Split(',').ToList();
+        List<String> completedCompetitionsList = completedCompetitions.Split(',').ToList();
         if(completedCompetitionsList.Contains(klassnamn))
         {
           preliminiaryResults = false;
@@ -1685,6 +1759,24 @@ namespace WindowsFormsApplication1
 
             default: 
               break;
+          }
+
+          if(klass.Name=="5")
+          {
+            if (currentRowInTable > 15)
+                placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          }
+
+          if (klass.Name == "25")
+          {
+            if (currentRowInTable > 17)
+              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          }
+
+          if (klass.Name == "26")
+          {
+            if (currentRowInTable > 15)
+              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
           }
 
           text3 = text3.Replace("{PLACERING}", placering);
@@ -2686,6 +2778,163 @@ namespace WindowsFormsApplication1
       backgroundWorkerFullAutoProcess.RunWorkerAsync();
     }
 
+    private DateTime lastJudgeHandlingTime=DateTime.MinValue;
+
+    private void checkBoxJudge_CheckedChanged(object sender, EventArgs e)
+    {
+      if (lastJudgeHandlingTime.Equals(DateTime.MinValue))
+      {
+        lastJudgeHandlingTime = DateTime.Now;
+      }
+      this.judgeTimer.Enabled = false;
+      this.judgeTimer.Interval = 5 * 1000;
+      //if (int.TryParse(textBoxProcessInterval.Text, out int interval))
+      //{
+      //  this.judgeTimer.Interval = interval * 1000;
+      //}
+      this.judgeTimer.Enabled = checkBoxJudge.Checked;
+      //this.textBoxProcessInterval.Enabled = !checkBoxProcessTimer.Checked;
+      UpdateMessageTextBox($"Judge Timer status = {this.judgeTimer.Enabled}, period = {this.judgeTimer.Interval} ms");
+    }
+    private void judgeTimer_Tick(object sender, EventArgs e)
+    {
+      if (backgroundWorkerJudgeTables.IsBusy)
+      {
+        UpdateMessageTextBox($"backgroundWorker - judgeTimer is Busy...");
+        return;
+      }
+      UpdateMessageTextBox($"Launching judgeTimer at {DateTime.Now}");
+      backgroundWorkerJudgeTables.RunWorkerAsync();
+    }
+
+
+
+    private int ReadResultsFromJudges()
+    {
+    //      < add key = "copiedFromJudgesFolder" value = "copiedFromJudges" />
+    //< add key = "judgesWorkingFolder" value = "judgesWorking" />
+
+      UpdateMessageTextBox(" Doing ReadResultsFromJudges");
+      var judgeWorkingFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["judgesWorkingFolder"]);
+      var judgeHandledFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["copiedFromJudgesFolder"]);
+      
+
+      String d = "\\\\L-8MF4PE316S60M\\Domare D\\Hanterade";
+      String c = "\\\\L-KDH4ND2LFJRGQ\\Domare C\\Hanterade";
+      String a = "\\\\L-7HEUS8D1JC3OE\\Domare A\\Hanterade";
+      String b = "\\\\L-SLBRBQA86CPS0\\Domare B\\Hanterade";
+      //a = "C:\\voltige\\sm2023\\data\\judge";
+
+
+      List<String> folders = new List<String>();
+      folders.Add(a);folders.Add(b);folders.Add(c);folders.Add(d);
+
+      foreach(String folder in folders)
+      {
+        List<String> files;
+        try
+        {
+          files = Directory.GetFiles(folder).ToList();
+          //files = Directory.EnumerateFiles(folder).ToList();            
+        }catch(Exception e)
+        {
+          UpdateMessageTextBox($"Enumerate Error for folder {folder}: {e.Message}");
+          continue;
+        }
+
+        foreach(String file in files)
+        {
+          String theFile = Path.GetFileName(file);
+          String handledFolderFilename = Path.Combine(judgeHandledFolder, theFile);
+          if(File.Exists(handledFolderFilename))
+          {
+            // Skip
+            //UpdateMessageTextBox($"Already copied {handledFolderFilename}");
+          }
+          else
+          {
+            try
+            {
+              String workingFile = Path.Combine(judgeWorkingFolder, theFile);
+              File.Copy(file, workingFile);
+              File.Copy(workingFile, handledFolderFilename);
+              //UpdateMessageTextBox($"Copied {file} to {judgeWorkingFolder}");
+            }
+            catch (Exception e)
+            {
+              UpdateMessageTextBox($"Could not copy {file} - {e.Message}");
+            }
+          }
+        }
+      }
+
+      int timeForAction = DateTime.Compare(DateTime.Now, lastJudgeHandlingTime.AddSeconds(120));
+
+      if( timeForAction>0)
+      {
+        lastJudgeHandlingTime = DateTime.Now;
+        UpdateMessageTextBox($"Time to Handle judge data");
+        var newfiles = Directory.GetFiles(judgeWorkingFolder).ToList();
+        UpdateMessageTextBox($"Got {newfiles.Count} files to move to Inbox");
+        foreach (String file in newfiles)
+        {
+          try
+          {
+            var indexfile = Path.Combine(inboxFolder, Path.GetFileName(file));
+            File.Move(file, indexfile);
+            //UpdateMessageTextBox($"Moved {file} to {indexfile}");
+          }
+          catch(Exception e)
+          {
+            UpdateMessageTextBox($"Could not move {file} to Inbox - {e.Message}");
+          }
+        }
+       }
+      else
+      {
+        //UpdateMessageTextBox($"No time for action");
+      }
+
+      return 0;
+    }
+
+
+    private void backgroundWorkerJudgeTables_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      try
+      {
+        // Read domarbord
+        int ret = this.ReadResultsFromJudges();
+        if (ret == -1)
+        {
+          UpdateMessageTextBoxWarn("ReadResultsFromJudges - Returning at ReadResultsFromJudges...");
+          return;
+        }
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"ReadResultsFromJudges - Failed to read FromJudges : {ex}");
+        return;
+      }
+    }
+
+    private void backgroundWorkerJudgeTables_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("JudgeTables completed");
+      }
+    }
+
 
 
     private void backgroundWorkerFullAutoProcess_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -2701,7 +2950,7 @@ namespace WindowsFormsApplication1
         }
       }catch(Exception ex)
       {
-        UpdateMessageTextBoxWarn("AutoProcess - Failed to read inbox");
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to read inbox : {ex.Message}");
         return;
       }
 
@@ -2712,7 +2961,7 @@ namespace WindowsFormsApplication1
       }
       catch (Exception ex)
       {
-        UpdateMessageTextBoxWarn("AutoProcess - Failed to sort");
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to sort: {ex.Message}");
         return;
       }
 
@@ -2723,7 +2972,7 @@ namespace WindowsFormsApplication1
       }
       catch (Exception ex)
       {
-        UpdateMessageTextBoxWarn("AutoProcess - Failed to print results");
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to print results: {ex.Message}");
         return;
       }
 
@@ -2734,7 +2983,7 @@ namespace WindowsFormsApplication1
       }
       catch (Exception ex)
       {
-        UpdateMessageTextBoxWarn("AutoProcess - Failed to create Index");
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to create Index {ex.Message}");
         return;
       }
         
@@ -2746,7 +2995,7 @@ namespace WindowsFormsApplication1
       }
       catch (Exception ex)
       {
-        UpdateMessageTextBoxWarn("AutoProcess - Failed to publish results");
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to publish results {ex.Message}");
         return;
       }
     }
@@ -2770,8 +3019,10 @@ namespace WindowsFormsApplication1
       }
     }
 
-
-
+    private void button7_Click(object sender, EventArgs e)
+    {
+      addHorseid();
+    }
   }
   public static class Extension
   {
