@@ -1263,10 +1263,11 @@ namespace WindowsFormsApplication1
         f2 = f2.Replace("_star_", "*");
         String klassnum = f2.Split(' ')[0].Trim();
 
+        // FLAG
         bool isNumber = Int32.TryParse(klassnum, out int result);
 
         String lnkformat;
-        if (isNumber && result < 10)
+        if (isNumber && result < 0)
         {
            lnkformat = @"<td class=""indexunderline""><a href=""" + f +
                              @""">" + f2 + @"</a> <img src=""./sweden-framed-flag.jpg"" width=""20px"" height=""auto"" alt=""Flag""></td>" + Environment.NewLine;

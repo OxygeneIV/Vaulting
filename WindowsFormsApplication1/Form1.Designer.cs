@@ -30,6 +30,7 @@
         {
       this.components = new System.ComponentModel.Container();
       this.panel1 = new System.Windows.Forms.Panel();
+      this.button7 = new System.Windows.Forms.Button();
       this.button6 = new System.Windows.Forms.Button();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
@@ -78,7 +79,6 @@
       this.backgroundWorkerFullAutoProcess = new System.ComponentModel.BackgroundWorker();
       this.backgroundWorkerJudgeTables = new System.ComponentModel.BackgroundWorker();
       this.judgeTimer = new System.Windows.Forms.Timer(this.components);
-      this.button7 = new System.Windows.Forms.Button();
       this.panel1.SuspendLayout();
       this.panel3.SuspendLayout();
       this.tabControl1.SuspendLayout();
@@ -113,6 +113,16 @@
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(1458, 248);
       this.panel1.TabIndex = 0;
+      // 
+      // button7
+      // 
+      this.button7.Location = new System.Drawing.Point(202, 143);
+      this.button7.Name = "button7";
+      this.button7.Size = new System.Drawing.Size(75, 23);
+      this.button7.TabIndex = 15;
+      this.button7.Text = "button7";
+      this.button7.UseVisualStyleBackColor = true;
+      this.button7.Click += new System.EventHandler(this.button7_Click);
       // 
       // button6
       // 
@@ -383,6 +393,7 @@
       // checkBoxJudge
       // 
       this.checkBoxJudge.AutoSize = true;
+      this.checkBoxJudge.Enabled = false;
       this.checkBoxJudge.Location = new System.Drawing.Point(121, 54);
       this.checkBoxJudge.Name = "checkBoxJudge";
       this.checkBoxJudge.Size = new System.Drawing.Size(117, 17);
@@ -576,16 +587,6 @@
       // judgeTimer
       // 
       this.judgeTimer.Tick += new System.EventHandler(this.judgeTimer_Tick);
-      // 
-      // button7
-      // 
-      this.button7.Location = new System.Drawing.Point(202, 143);
-      this.button7.Name = "button7";
-      this.button7.Size = new System.Drawing.Size(75, 23);
-      this.button7.TabIndex = 15;
-      this.button7.Text = "button7";
-      this.button7.UseVisualStyleBackColor = true;
-      this.button7.Click += new System.EventHandler(this.button7_Click);
       // 
       // Form1
       // 

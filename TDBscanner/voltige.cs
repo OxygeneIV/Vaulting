@@ -140,7 +140,8 @@ namespace Tests.Voltige
       //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
       //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
       //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
-      string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
+      string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
 
       // Open Browser
       var driver = CreateBrowserInstance(Driver.Browser.Chrome);
@@ -178,7 +179,7 @@ namespace Tests.Voltige
 
       var rows2 = c.ClassesTable2.Rows.ToList();
       var numberOfClasses2 = rows2.Count;
-
+      numberOfClasses2 = 0;
       var numberOfClassesTot = numberOfClasses + numberOfClasses2;
 
             // All ints are DB Ids, not what is diaplyed in the table 1, 2, 3.1, 3.2, 4  etc
@@ -393,7 +394,9 @@ namespace Tests.Voltige
                         clubIdNum = voltigoridsClubs.First();
 
 
-                        var compPage = PageObjectFactory.Init<CompetitorPage>(ekipagePage.WebDriver);
+            System.Threading.Thread.Sleep(1000);
+
+            var compPage = PageObjectFactory.Init<CompetitorPage>(ekipagePage.WebDriver);
                         Wait.UntilOrThrow(() => compPage.ClubLink.Displayed);
                         var clubIdName = compPage.ClubLinkText.Trim();
                         if (!_clubs.ContainsKey(clubIdNum))
