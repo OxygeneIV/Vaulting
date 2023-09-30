@@ -83,7 +83,10 @@ table.result-table {
     }
 
 
-
+  table.result-table th.spacefixer {
+    padding-left: 1.3rem;
+    padding-right: 1.1rem;
+  }
 
     table.result-table td {
         border-color: black;
@@ -103,6 +106,7 @@ tr.toprow > td {
 th.bottomrow, tr.bottomrow {
     border-bottom: 4px solid black;
 }
+
 
 col.dummy {
     width: 5%;
@@ -283,6 +287,8 @@ img.preliminaryResults {
     max-width: 80%;
     max-height: 80%;
 }
+
+
 
 @media only screen and (max-width: 680px) {
     th.klassnamn {
