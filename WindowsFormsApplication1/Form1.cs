@@ -1428,7 +1428,11 @@ namespace WindowsFormsApplication1
       dict[285918] = "Toronto BG";
       dict[328098] = "Turbic Boy";
       dict[312178] = "Zeus";
-
+      dict[316719] = "Chuck";
+      dict[308238] = "Egelunds Safie";
+      dict[345893] = "Dunhalls Julius";
+      dict[244537] = "Dario M";
+      dict[342894] = "Charlz";
 
       var classes = readClasses();
 
