@@ -72,182 +72,182 @@ namespace WindowsFormsApplication1
 
 
 
-    public static void GenerateHTML()
-    {
-      var folder = Form1.printedresultsFolder;
-      var files = Directory.GetFiles(folder, "*.pdf").ToList();
+//    public static void GenerateHTML()
+//    {
+//      var folder = Form1.printedresultsFolder;
+//      var files = Directory.GetFiles(folder, "*.pdf").ToList();
 
-      var singlefile = Path.Combine(Form1.mergedresultsFolder, "All_Results.pdf");
-      var singlefile2 = Path.Combine(Form1.mergedresultsFolder, "Startlista.pdf");
+//      var singlefile = Path.Combine(Form1.mergedresultsFolder, "All_Results.pdf");
+//      var singlefile2 = Path.Combine(Form1.mergedresultsFolder, "Startlista.pdf");
             
 
-      // Test FTP
-            var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
-      var FTPuser   = ConfigurationManager.AppSettings["ftpuser"];
-      var FTPpwd    = ConfigurationManager.AppSettings["ftppwd"];
-      var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
-      var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
+//      // Test FTP
+//            var FTPserver = ConfigurationManager.AppSettings["ftpserver"];
+//      var FTPuser   = ConfigurationManager.AppSettings["ftpuser"];
+//      var FTPpwd    = ConfigurationManager.AppSettings["ftppwd"];
+//      var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
+//      var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
 
-      try
-      {
-        FtpClient clienttest = new FtpClient(FTPserver) {Credentials = new NetworkCredential(FTPuser, FTPpwd)};
-        clienttest.Connect();
-        clienttest.SetWorkingDirectory(remoteworkingfolder);
-        if (clienttest.DirectoryExists("smnmdummyfolder"))
-        {
-          clienttest.DeleteDirectory("smnmdummyfolder");
-        }
+//      try
+//      {
+//        FtpClient clienttest = new FtpClient(FTPserver) {Credentials = new NetworkCredential(FTPuser, FTPpwd)};
+//        clienttest.Connect();
+//        clienttest.SetWorkingDirectory(remoteworkingfolder);
+//        if (clienttest.DirectoryExists("smnmdummyfolder"))
+//        {
+//          clienttest.DeleteDirectory("smnmdummyfolder");
+//        }
 
-        clienttest.CreateDirectory("smnmdummyfolder");
+//        clienttest.CreateDirectory("smnmdummyfolder");
 
-        if (!clienttest.DirectoryExists("smnmdummyfolder"))
-        {
-          clienttest.Disconnect();
-          throw new Exception($"Failed to test create a folder on ftp server");
-        }
+//        if (!clienttest.DirectoryExists("smnmdummyfolder"))
+//        {
+//          clienttest.Disconnect();
+//          throw new Exception($"Failed to test create a folder on ftp server");
+//        }
 
-        clienttest.Disconnect();
-      }
-      catch(Exception e)
-      {
-        throw new Exception($"Failed to publish {e.Message}");
-      }
+//        clienttest.Disconnect();
+//      }
+//      catch(Exception e)
+//      {
+//        throw new Exception($"Failed to publish {e.Message}");
+//      }
 
-      Dictionary<string,string> pdfLinks = new Dictionary<string, string>();
-      List<string> klasshtmlfiles = new List<string>();
+//      Dictionary<string,string> pdfLinks = new Dictionary<string, string>();
+//      List<string> klasshtmlfiles = new List<string>();
 
-      // Adjust the order for SM
-      files.Sort(new Comparer());
+//      // Adjust the order for SM
+//      files.Sort(new Comparer());
 
-      if (File.Exists(singlefile))
-      {
-        files.Insert(0, singlefile);
-      }
-            if (File.Exists(singlefile2))
-            {
-                files.Insert(0, singlefile2);
-            }
+//      if (File.Exists(singlefile))
+//      {
+//        files.Insert(0, singlefile);
+//      }
+//            if (File.Exists(singlefile2))
+//            {
+//                files.Insert(0, singlefile2);
+//            }
 
-      foreach (var f in files)
-      {
+//      foreach (var f in files)
+//      {
                
-        var PdfFilename = Path.GetFileName(f);
-        var shortFile   =  Path.GetFileNameWithoutExtension(f);
+//        var PdfFilename = Path.GetFileName(f);
+//        var shortFile   =  Path.GetFileNameWithoutExtension(f);
 
-        string safeRemotePdfFile = MakeFileNameWebSafe(PdfFilename);
-        string safeRemoteFolderName = MakeFileNameWebSafe(shortFile);
+//        string safeRemotePdfFile = MakeFileNameWebSafe(PdfFilename);
+//        string safeRemoteFolderName = MakeFileNameWebSafe(shortFile);
 
-        var HTMLfolder = $"{safeRemoteFolderName}/";
+//        var HTMLfolder = $"{safeRemoteFolderName}/";
 
-        var remotePdfFile  = HTMLfolder + safeRemotePdfFile;
-       // remotePdfFile = remotePdfFile + DateTime.Now.ToString("yyyyMMddTHHmmss")+".pdf";  // JALLA
+//        var remotePdfFile  = HTMLfolder + safeRemotePdfFile;
+//       // remotePdfFile = remotePdfFile + DateTime.Now.ToString("yyyyMMddTHHmmss")+".pdf";  // JALLA
 
-         var remoteHTMLFile = HTMLfolder + safeRemoteFolderName+".html";
+//         var remoteHTMLFile = HTMLfolder + safeRemoteFolderName+".html";
 
-        var remotePdfUrl = remotepdfurl + remotePdfFile;
+//        var remotePdfUrl = remotepdfurl + remotePdfFile;
 
-        pdfLinks[remotePdfUrl] = shortFile;
+//        pdfLinks[remotePdfUrl] = shortFile;
 
-                /*
-                 * $original_filename = '34_file.pdf';
-echo "<a href='$original_filename?version=".date("dHis")."'>
-Download the file
-</a>";
-                 */
+//                /*
+//                 * $original_filename = '34_file.pdf';
+//echo "<a href='$original_filename?version=".date("dHis")."'>
+//Download the file
+//</a>";
+//                 */
 
-                // JALLA
-                //remotePdfUrl = remotePdfUrl + "?version=\".date(\"dHis\").\"";
+//                // JALLA
+//                //remotePdfUrl = remotePdfUrl + "?version=\".date(\"dHis\").\"";
 
-        var iframeurl =  $@"https://docs.google.com/viewer?url="+ remotePdfUrl + "&embedded=true";
-        var iframe = $@"<embed src=""{iframeurl}"" style=""width:100%; height:100%;"" ></embed>";
-          //var iframeurl = $@"https://docs.google.com/viewer?url=" + remotePdfUrl;
-              // var iframe = $@"<embed src=""{iframeurl}#toolbar=0&navpanes=0&scrollbar=0"" style=""width:500px; height:1000px;"" ></embed>";
-          iframe = "<a href=" + @""""+remotePdfUrl+@""""+ ">"+shortFile+"</a>";
-          //iframe = "<a href=" + @"""" + remotePdfUrl + @"""" + ">" + shortFile + "</a>";  // JALLA
+//        var iframeurl =  $@"https://docs.google.com/viewer?url="+ remotePdfUrl + "&embedded=true";
+//        var iframe = $@"<embed src=""{iframeurl}"" style=""width:100%; height:100%;"" ></embed>";
+//          //var iframeurl = $@"https://docs.google.com/viewer?url=" + remotePdfUrl;
+//              // var iframe = $@"<embed src=""{iframeurl}#toolbar=0&navpanes=0&scrollbar=0"" style=""width:500px; height:1000px;"" ></embed>";
+//          iframe = "<a href=" + @""""+remotePdfUrl+@""""+ ">"+shortFile+"</a>";
+//          //iframe = "<a href=" + @"""" + remotePdfUrl + @"""" + ">" + shortFile + "</a>";  // JALLA
 
-                var klasshtml = klassHtml(iframe);
-                // ditlagd
-          pdfLinks[remotePdfUrl] = iframe;
+//                var klasshtml = klassHtml(iframe);
+//                // ditlagd
+//          pdfLinks[remotePdfUrl] = iframe;
 
-                var localHtml = Path.Combine(Form1.mergedresultsFolder, "klass.html");
-        File.WriteAllText(localHtml, klasshtml);
-        klasshtmlfiles.Add(remoteHTMLFile); 
-        // Create folder and klass.html
+//                var localHtml = Path.Combine(Form1.mergedresultsFolder, "klass.html");
+//        File.WriteAllText(localHtml, klasshtml);
+//        klasshtmlfiles.Add(remoteHTMLFile); 
+//        // Create folder and klass.html
 
-        FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
-        client.Connect();
-        client.SetWorkingDirectory(remoteworkingfolder);
-        client.UploadFile(f, remotePdfFile, createRemoteDir: true);
-        client.UploadFile(localHtml, remoteHTMLFile, createRemoteDir: true);
-        client.Disconnect();
-
-
-        //FtpClient client1 = new FtpClient("privat.bahnhof.se") { Credentials = new NetworkCredential("wb653561", "foo123") };
-        //client1.Connect();
+//        FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+//        client.Connect();
+//        client.SetWorkingDirectory(remoteworkingfolder);
+//        client.UploadFile(f, remotePdfFile, createRemoteDir: true);
+//        client.UploadFile(localHtml, remoteHTMLFile, createRemoteDir: true);
+//        client.Disconnect();
 
 
-        //client1.Disconnect();
-      }
-      var meta= @"
-          <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
-                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
-                   <meta http-equiv = ""Expires"" content = ""0"" >
-                ";
+//        //FtpClient client1 = new FtpClient("privat.bahnhof.se") { Credentials = new NetworkCredential("wb653561", "foo123") };
+//        //client1.Connect();
 
-      var index = @"
-      <html>
-        <head>
-                  <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
-                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
-                   <meta http-equiv = ""Expires"" content = ""0"" >
-          <title>3*, 2* och 1*, 23:e april 2022 Jälla</title>
-        </head>
-        <body bgcolor=white>
-               <h1 align=""center"">Voltige 3*, 2* och 1*<br/>Jälla, Uppsala 2022-04-23</h1>
-            <div align=""center"">
-            DATA
-           </div>
 
-        </body>
-      </html>
-      ";
+//        //client1.Disconnect();
+//      }
+//      var meta= @"
+//          <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
+//                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
+//                   <meta http-equiv = ""Expires"" content = ""0"" >
+//                ";
 
-      int i = 0;
-      var text = "";
-      foreach (KeyValuePair<string,string> kvp in pdfLinks)
-      {
-        var pdfurl = kvp.Key;
-        var klassname = kvp.Value;
-        var htmlfile = klasshtmlfiles[i];
-        i++;
+//      var index = @"
+//      <html>
+//        <head>
+//                  <meta http-equiv=""Cache-Control"" content=""no-cache, no-store, must-revalidate"">
+//                   <meta http-equiv = ""Pragma"" content = ""no-cache"" >
+//                   <meta http-equiv = ""Expires"" content = ""0"" >
+//          <title>3*, 2* och 1*, 23:e april 2022 Jälla</title>
+//        </head>
+//        <body bgcolor=white>
+//               <h1 align=""center"">Voltige 3*, 2* och 1*<br/>Jälla, Uppsala 2022-04-23</h1>
+//            <div align=""center"">
+//            DATA
+//           </div>
 
-        text = text + 
-               $@"<p>
-                     <a href=""{htmlfile}"">{klassname}</a>
-               </p>
-              ";
+//        </body>
+//      </html>
+//      ";
+
+//      int i = 0;
+//      var text = "";
+//      foreach (KeyValuePair<string,string> kvp in pdfLinks)
+//      {
+//        var pdfurl = kvp.Key;
+//        var klassname = kvp.Value;
+//        var htmlfile = klasshtmlfiles[i];
+//        i++;
+
+//        text = text + 
+//               $@"<p>
+//                     <a href=""{htmlfile}"">{klassname}</a>
+//               </p>
+//              ";
         
-      }
+//      }
 
-      index = index.Replace("DATA", text);
+//      index = index.Replace("DATA", text);
 
-      var index_html = Path.Combine(Form1.mergedresultsFolder, "index.html");
+//      var index_html = Path.Combine(Form1.mergedresultsFolder, "index.html");
 
-      File.WriteAllText(index_html,index,Encoding.Unicode);
+//      File.WriteAllText(index_html,index,Encoding.Unicode);
 
-      // create an FTP client
+//      // create an FTP client
 
-      FtpClient client1 = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
-      client1.Connect();
-      client1.SetWorkingDirectory(remoteworkingfolder);
-      client1.UploadFile(index_html, "index.html");
-      client1.Disconnect();
+//      FtpClient client1 = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+//      client1.Connect();
+//      client1.SetWorkingDirectory(remoteworkingfolder);
+//      client1.UploadFile(index_html, "index.html");
+//      client1.Disconnect();
 
 
-      //FtpClient client1 = new FtpClient("privat.bahnhof.se") {Credentials = new NetworkCredential("wb653561", "foo123")};
-      //client1.Connect();
-      //client1.UploadFile(index_html, "index.html");
-      //client1.Disconnect();
-      }
+//      //FtpClient client1 = new FtpClient("privat.bahnhof.se") {Credentials = new NetworkCredential("wb653561", "foo123")};
+//      //client1.Connect();
+//      //client1.UploadFile(index_html, "index.html");
+//      //client1.Disconnect();
+//      }
   }
 }

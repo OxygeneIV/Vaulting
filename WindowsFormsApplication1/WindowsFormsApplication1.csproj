@@ -232,6 +232,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="CalculatedHorsePoints_templateGeneric.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="CalculatedHorsePoints_template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -378,12 +381,15 @@
     <Content Include="html\img\hamre.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\norway-flag-xs.png" />
     <Content Include="html\img\preliminary_results.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="html\img\Standard_rgb.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\sweden-flag-xs.png" />
+    <Content Include="html\img\sweden-xs.gif" />
     <Content Include="html\img\uppsala2.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -393,6 +399,7 @@
     <Content Include="html\img\uppsala.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\Uppsala_SM_NM_Voltage_RGB.png" />
     <Content Include="html\mallMain.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

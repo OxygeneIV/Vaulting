@@ -83,7 +83,10 @@ table.result-table {
     }
 
 
-
+  table.result-table th.spacefixer {
+    padding-left: 1.3rem;
+    padding-right: 1.1rem;
+  }
 
     table.result-table td {
         border-color: black;
@@ -103,6 +106,7 @@ tr.toprow > td {
 th.bottomrow, tr.bottomrow {
     border-bottom: 4px solid black;
 }
+
 
 col.dummy {
     width: 5%;
@@ -189,6 +193,12 @@ img.ridsport {
 img.folksam {
     width: 100%;
     object-fit: contain;
+}
+
+img.uv {
+  width: 50%;
+  height: auto;
+  object-fit: contain;
 }
 
 .shadowed
@@ -278,6 +288,8 @@ img.preliminaryResults {
     max-height: 80%;
 }
 
+
+
 @media only screen and (max-width: 680px) {
     th.klassnamn {
         font-size: 14pt;
@@ -293,6 +305,11 @@ img.preliminaryResults {
 
     table.result-table th {
         font-size: 8pt;
+    }
+
+    table.result-table td img {
+      width: auto;
+      height: 8px;
     }
 }
 

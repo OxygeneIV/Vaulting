@@ -22,6 +22,14 @@ using System.Threading;
 using SelectPdf;
 using FluentFTP;
 using System.Net;
+using static WindowsFormsApplication1.Form1.Horse;
+using System.Collections.Specialized;
+using System.Collections;
+using System.Web.UI;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
+using System.Web.Caching;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace WindowsFormsApplication1
 {
@@ -62,6 +70,7 @@ namespace WindowsFormsApplication1
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       InitializeComponent();
       setPathes();
+     // setWatcher();
 
       dataGridView1.AutoGenerateColumns = true;
       dataGridView2.AutoGenerateColumns = true;
@@ -70,6 +79,43 @@ namespace WindowsFormsApplication1
       tabPage1.Text = "Klasser";
       tabPage2.Text = "Deltagare";
       tabPage3.Text = "Resultat";
+    }
+
+
+    private void setWatcher()
+    {
+      var watcher = new FileSystemWatcher(inboxFolder);
+      watcher.NotifyFilter = NotifyFilters.LastAccess;
+      watcher.EnableRaisingEvents = true;
+      watcher.Changed += WatchOnChanged;
+      watcher.Renamed += WatchOnChanged;
+    
+      watcher.Error += OnError;
+    }
+    private void WatchOnChanged(object sender, FileSystemEventArgs e)
+    {
+
+      UpdateMessageTextBox($"Change type : {e.ChangeType} {DateTime.Now.ToLongTimeString()}");
+      if (e.ChangeType != WatcherChangeTypes.Changed)
+      {
+        return;
+      }
+      UpdateMessageTextBox($"Changed : {e.FullPath} {DateTime.Now.ToLongTimeString()}");      
+    }
+
+    private static void OnError(object sender, ErrorEventArgs e) =>
+            PrintException(e.GetException());
+
+    private static void PrintException(Exception ex)
+    {
+      if (ex != null)
+      {
+        Console.WriteLine($"Message: {ex.Message}");
+        Console.WriteLine("Stacktrace:");
+        Console.WriteLine(ex.StackTrace);
+        Console.WriteLine();
+        PrintException(ex.InnerException);
+      }
     }
 
     private void setPathes()
@@ -254,8 +300,8 @@ namespace WindowsFormsApplication1
         }
         classes = cellvals.Select(r => Klass.RowToClass(r)).ToList();
 
-        // Remove .2-classes SM & NM
-        classes.RemoveAll(c => c.Name.EndsWith(".2"));
+        // Remove SM & NM
+        classes.RemoveAll(c => c.Name.Contains("."));
       }
       UpdateMessageTextBox($"Found {classes.Count} classes");
       return classes;
@@ -301,18 +347,23 @@ namespace WindowsFormsApplication1
 
       foreach (var d in deltagare)
       {
-
-
-        if (d.Klass.EndsWith(".2"))
+        
+        if (d.Klass.Contains("."))
         {
+          List<String> theIds = d.Id.Split(',').ToList();
+          List<String> theClasses = d.Klass.Split('.').ToList();
+
+          if (theIds.Count != theClasses.Count)
+            throw new Exception("Wrong sizes for klass and id " + d.Id);
+
           var d1 = d.Duplicate();
-          d1.Klass = d.Klass.Replace(".2", "");
-          d1.Id = d.Id.Replace(".2", "");
+          d1.Klass = theClasses[0];
+          d1.Id = theIds[0];
           deltagare2.Add(d1);
 
           var d2 = d.Duplicate();
-          d2.Klass = d2.Klass.Replace(".2", ".1");
-          d2.Id = d2.Id.Replace(".2", ".1");
+          d2.Klass = theClasses[1];
+          d2.Id = theIds[1];
           deltagare2.Add(d2);
         }
         else
@@ -320,11 +371,17 @@ namespace WindowsFormsApplication1
           deltagare2.Add(d.Duplicate());
         }
       }
-
+      var allIds = deltagare2.Select(d => d.Id);
       var distinctIds = deltagare2.Select(d => d.Id).Distinct().Count();
       var duplicates = deltagare2.Count - distinctIds;
 
+
+
       UpdateMessageTextBox($"Found {deltagare2.Count} vaulters, {duplicates} duplicate IDs");
+      //foreach (var d in deltagare2)
+      //{
+      //  UpdateMessageTextBox($"{allIds}");
+      //}
       return deltagare2;
     }
 
@@ -625,6 +682,7 @@ namespace WindowsFormsApplication1
     private delegate void UpdateProgressBarMaxCallback(int barValue);
     private delegate void UpdateMessageTextBoxCallback(string text);
 
+
     private void UpdateProgressBarHandler(int barValue)
     {
       if (this.progressBar1.InvokeRequired)
@@ -673,6 +731,19 @@ namespace WindowsFormsApplication1
       }
     }
 
+    public void UpdateMessageTextBoxWarn(string text)
+    {
+      if (this.textBox1.InvokeRequired)
+        this.BeginInvoke(new UpdateMessageTextBoxCallback(this.UpdateMessageTextBoxWarn), new object[] { text });
+      else
+      {
+        // change your text
+        this.textBox1.ForeColor = System.Drawing.Color.Red;
+        this.textBox1.AppendText(text + System.Environment.NewLine);// (char)13);
+        this.textBox1.ForeColor = System.Drawing.Color.Black;
+
+      }
+    }
 
     // Here are the background workers...
     private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -997,9 +1068,40 @@ namespace WindowsFormsApplication1
       return filename.Replace(",", "-").Replace(" ", "-").Replace("å", "a").Replace("ü", "y");
     }
 
-    public static void publish()
+
+
+    private void backgroundWorkerPublish_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
     {
-      
+      UpdateMessageTextBox($"Publish Results BackgroundWorker Start...");
+      createIndex();
+      //createIndexNoPublish();
+      UpdateMessageTextBox("Publishing results");
+      publish();
+      UpdateMessageTextBox("Publishing results completed");
+      UpdateMessageTextBox($"Publish Results BackgroundWorker End...");
+    }
+
+    private void backgroundWorkerPublish_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("Publish Results completed");
+      }
+    }
+
+
+
+    public void publish()
+    {
+      UpdateMessageTextBox($"Publishing...");
       var folder = Form1.htmlResultsFolder;
       var files = Directory.GetFiles(folder).ToList();
       var folders = Directory.GetDirectories(folder).ToList();
@@ -1011,14 +1113,24 @@ namespace WindowsFormsApplication1
       var remoteworkingfolder = ConfigurationManager.AppSettings["remoteworkingfolder"];
       var remotepdfurl = ConfigurationManager.AppSettings["remotepdfurl"];
 
-      
-      FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
-      client.Connect();
-      client.SetWorkingDirectory(remoteworkingfolder);
-      //UploadFiles(localPaths, remoteDir, existsMode, createRemoteDir, verifyOptions, errorHandling)
-      //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
-      client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
-      client.Disconnect();
+      try
+      {
+        FtpClient client = new FtpClient(FTPserver) { Credentials = new NetworkCredential(FTPuser, FTPpwd) };
+        client.Connect();
+        client.SetWorkingDirectory(remoteworkingfolder);
+        //UploadFiles(localPaths, remoteDir, existsMode, createRemoteDir, verifyOptions, errorHandling)
+        //client.UploadFiles(files, remoteworkingfolder, FtpRemoteExists.Overwrite);
+        client.UploadDirectory(htmlResultsFolder, remoteworkingfolder, FtpFolderSyncMode.Update, FtpRemoteExists.Overwrite);
+        client.Disconnect();
+        UpdateMessageTextBox($"Publishing completed...");
+
+      }
+      catch (Exception e)
+      {
+       
+        UpdateMessageTextBox($"FTP failed...{e.Message}");
+
+      }
     }
 
 
@@ -1151,9 +1263,19 @@ namespace WindowsFormsApplication1
         f2 = f2.Replace("_star_", "*");
         String klassnum = f2.Split(' ')[0].Trim();
 
-        String lnkformat = @"<td class=""indexunderline""><a href=""" + f +
-                           @""">" + f2 + @"</a></td>" + Environment.NewLine;
+        // FLAG
+        bool isNumber = Int32.TryParse(klassnum, out int result);
 
+        String lnkformat;
+        if (isNumber && result < 0)
+        {
+           lnkformat = @"<td class=""indexunderline""><a href=""" + f +
+                             @""">" + f2 + @"</a> <img src=""./sweden-framed-flag.jpg"" width=""20px"" height=""auto"" alt=""Flag""></td>" + Environment.NewLine;
+        }else
+        {
+           lnkformat = @"<td class=""indexunderline""><a href=""" + f +
+                         @""">" + f2 + @"</a></td>" + Environment.NewLine;
+        }
 
         ulLista = ulLista + lnkformat + Environment.NewLine; ;
         /*
@@ -1268,6 +1390,80 @@ namespace WindowsFormsApplication1
 
     }
 
+    void addHorseid()
+    {
+
+      File.Copy(sortedresultsfile, "C:\\katarina\\sortedWithId.xlsx");
+      var resultat = new FileInfo("C:\\katarina\\sortedWithId.xlsx");
+
+      Dictionary<Int32, string> dict = new Dictionary<Int32, string>();
+
+
+      dict[266295] = "Apache";
+      dict[264133] = "Belvedere";
+      dict[280330] = "Calouha";
+      dict[275109] = "Caramba";
+      dict[321438] = "Carmani";
+      dict[297396] = "Charlie";
+      dict[286694] = "Corsaro V";
+      dict[293254] = "Cortesch";
+      dict[312598] = "Diamond";
+      dict[264141] = "Diesel";
+      dict[291299] = "Donald";
+      dict[306380] = "Donovan";
+      dict[293760] = "Freilene";
+      dict[308300] = "Gladiator VDH";
+      dict[279357] = "Halving";
+      dict[306606] = "Kanon";
+      dict[313507] = "Klintholms Ramstein";
+      dict[296063] = "Langaller on your marks";
+      dict[301468] = "Lucky Lover";
+      dict[265065] = "Luco Rae";
+      dict[265064] = "Lyra Rae";
+      dict[294359] = "Monte Cassino af Wasbek";
+      dict[301477] = "Normandie";
+      dict[310234] = "Sems";
+      dict[342703] = "Serenade";
+      dict[334748] = "Silver";
+      dict[285918] = "Toronto BG";
+      dict[328098] = "Turbic Boy";
+      dict[312178] = "Zeus";
+      dict[316719] = "Chuck";
+      dict[308238] = "Egelunds Safie";
+      dict[345893] = "Dunhalls Julius";
+      dict[244537] = "Dario M";
+      dict[342894] = "Charlz";
+
+      var classes = readClasses();
+
+      using (var results = new ExcelPackage(resultat))
+      {
+        foreach (Klass klass in classes)
+        {
+          var sheet = results.Workbook.Worksheets[klass.Name];
+
+
+          
+          foreach (KeyValuePair<Int32,string> horse in dict)
+          {
+            String h=horse.Value;
+            Int32 i = horse.Key;
+
+            var query = from cell in sheet.Cells["A:XFD"]
+                        where cell.Value?.ToString().Contains(h) == true
+                        select cell;
+
+            foreach (var cell in query) { 
+              String newdata = cell.Value.ToString() + " " + i.ToString();
+              cell.Value = newdata;
+            }
+          }
+        }
+
+        results.Save();
+
+      }
+    }
 
     private String createHtml(String className)
     {
@@ -1463,6 +1659,15 @@ namespace WindowsFormsApplication1
 
 
         bool preliminiaryResults = checkBox1.Checked;
+
+        // If completed competition ignore Checked
+        String completedCompetitions = ConfigurationManager.AppSettings["completed"];
+        List<String> completedCompetitionsList = completedCompetitions.Split(',').ToList();
+        if(completedCompetitionsList.Contains(klassnamn))
+        {
+          preliminiaryResults = false;
+        }
+
         resultatheadertext = preliminiaryResults ? resultatheadertext.Replace("{HIDDEN}", "") : resultatheadertext.Replace("{HIDDEN}", "hidden");
 
         var sheet = results.Workbook.Worksheets[klass.Name];
@@ -1539,13 +1744,52 @@ namespace WindowsFormsApplication1
                 placering = "4";
             }
           }
+          var arr = club.Split('(');
 
+          String clubName = arr.FirstOrDefault();
+          String country =   arr.Last().Replace(")", string.Empty).ToLower();
+          
+          String flagname = "";
+          switch (country)
+          {
+            case "se":
+            case "est":
+            case "no":
+            case "usa":
+            case "dk":
+            case "fi":
+             // flagname = $"<img src=\"./{country}-result.jpg\" style=\"margin-right:4px;width:20px;height:auto\">";
+              flagname = $"<img src=\"./{country}-result.jpg\" style=\"margin-right:4px;width:auto;height:12px\">";
+              break;
+
+            default: 
+              break;
+          }
+
+          if(klass.Name=="5")
+          {
+            if (currentRowInTable > 15)
+                placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          }
+
+          if (klass.Name == "25")
+          {
+            if (currentRowInTable > 17)
+              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          }
+
+          if (klass.Name == "26")
+          {
+            if (currentRowInTable > 15)
+              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          }
 
           text3 = text3.Replace("{PLACERING}", placering);
           text3 = text3.Replace("{NAMN}", name);
-          text3 = text3.Replace("{KLUBB}", club);
+          text3 = text3.Replace("{KLUBB}", string.IsNullOrEmpty(clubName) ? "-" : clubName );
+          text3 = text3.Replace("{FLAG}", flagname);
           text3 = text3.Replace("{LINFORARE}", linforare);
-          text3 = text3.Replace("{HAST}", horse);
+          text3 = text3.Replace("{HAST}", horse.Replace("_"," "));
           text3 = text3.Replace("{TOT}", tot);
 
           counter = 0;
@@ -1864,14 +2108,58 @@ namespace WindowsFormsApplication1
 
     }
 
-    // Export Results for all classes
-    private void button5_Click(object sender, EventArgs e)
+    private void backgroundWorkerPrintResults_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      UpdateMessageTextBox($"Print Results BackgroundWorker Start...");
+      this.doPrintResults();
+      UpdateMessageTextBox($"Print Results BackgroundWorker End...");
+    }
+
+    private void backgroundWorkerPrintResults_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("Print Results completed");
+      }
+    }
+
+    private void doPrintResults()
     {
       var allClasses = readClasses();
       foreach (var cl in allClasses)
       {
         printResults(cl.Name, cl.Name + " " + cl.Description);
       }
+    }
+
+    // Export Results for all classes
+    private void button5_Click(object sender, EventArgs e)
+    {
+
+      backgroundWorkerPrintResults.RunWorkerAsync();
+      bool hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPrintResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+
+      //var allClasses = readClasses();
+      //foreach (var cl in allClasses)
+      //{
+      //  printResults(cl.Name, cl.Name + " " + cl.Description);
+      //}
 
 
 
@@ -1997,9 +2285,9 @@ namespace WindowsFormsApplication1
       public string Klass;
       public float point;
 
-      public bool IsSM => !Klass.Contains(".");
-      public bool IsNM => Klass.Contains(".1");
-      public bool IsSMNM => Id.Contains(".2");
+      public bool IsSM => Int32.Parse(Klass)<20;
+      public bool IsNM => Int32.Parse(Klass) >= 20;
+      public bool IsSMNM => Id.Contains("A");
 
       public static HPclass Create(string hpline)
       {
@@ -2007,7 +2295,7 @@ namespace WindowsFormsApplication1
         var hp = new HPclass
         {
           Id = data[0].Trim(),
-          Name = data[1].Trim(),
+          Name = data[1].Replace("_","").Trim(),
           Klass = data[2].Trim(),
           point = float.Parse(data[3].Trim().Replace(",", "."), CultureInfo.InvariantCulture)
         };
@@ -2015,7 +2303,99 @@ namespace WindowsFormsApplication1
       }
     }
 
+
+    private dynamic getGroup(List<HPclass> horsePoints)
+    {
+      var horsepointGroup = from so in horsePoints
+                            group so by so.Name
+          into AllHorsePoints
+                            select new
+                            {
+                              HorseName = AllHorsePoints.Key,
+                              Max = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point),
+                              Average = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point),
+                              Count = horsePoints.Where(hp => hp.Name == AllHorsePoints.Key).Count()
+                            };
+      return horsepointGroup;
+    }
+
     public void CalculateHorsePoints2()
+    {
+      UpdateMessageTextBox($"Analyzing Horse points...");
+      /*
+    <add key="horse_ind" value="3,4,5,6,8,9,13,15,16,17,18,23,24,25,26" />
+    <add key="horse_team" value="1,2,21,22" />
+    <add key="horse_pdd" value="7,27,28" />
+
+    <add key="horse_sm_classes" value="1,2,3,4,5,6,7" />
+    <add key="horse_nm_classes" value="21,22,23,24,25,26,27,28" />
+    <add key="horse_rm_classes" value="8,9" />
+    <add key="horse_nationell_classes" value="13,15,16,17,18" />
+       */
+
+      var horse_team = ConfigurationManager.AppSettings["horse_team"].Split(',').Select(s => s.Trim());
+      var horse_ind = ConfigurationManager.AppSettings["horse_ind"].Split(',').Select(s => s.Trim());
+      var horse_pdd = ConfigurationManager.AppSettings["horse_pdd"].Split(',').Select(s => s.Trim());
+      var horse_sm_classes = ConfigurationManager.AppSettings["horse_sm_classes"].Split(',').Select(s => s.Trim());
+      var horse_nm_classes = ConfigurationManager.AppSettings["horse_nm_classes"].Split(',').Select(s => s.Trim());
+      var horse_rm_classes = ConfigurationManager.AppSettings["horse_rm_classes"].Split(',').Select(s => s.Trim());
+      var horse_nationell_classes = ConfigurationManager.AppSettings["horse_nationell_classes"].Split(',').Select(s => s.Trim());
+
+      var horsepoints = Form1.horseresultfile;
+      var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder, "CalculatedHorsePoints.xlsx");
+      var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_templateGeneric.xlsx");
+
+      var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
+
+      File.Delete(horsepointsCalculated);
+      File.Copy(horsepointsCalculatedTemplate, horsepointsCalculated, true);
+
+      var allSMPoints = allHPs.Where(hp => horse_sm_classes.Contains(hp.Klass)).ToList();
+      var allNMPoints = allHPs.Where(hp => horse_nm_classes.Contains(hp.Klass)).ToList();
+      var allRMPoints = allHPs.Where(hp => horse_rm_classes.Contains(hp.Klass)).ToList();
+      var allNationellPoints = allHPs.Where(hp => horse_nationell_classes.Contains(hp.Klass)).ToList();
+      var allPddPoints = allHPs.Where(hp => horse_pdd.Contains(hp.Klass)).ToList();
+
+      OrderedDictionary od = new OrderedDictionary();
+
+
+      od.Add("SM",allSMPoints);
+      od.Add("NM",allNMPoints);
+      od.Add("RM",allRMPoints);
+      od.Add("Pdd", allRMPoints);
+      od.Add("Nationell",allNationellPoints);
+      od.Add("SM - Ind", allSMPoints.Where(hp => horse_ind.Contains(hp.Klass)).ToList());
+      od.Add("SM - Lag", allSMPoints.Where(hp => horse_team.Contains(hp.Klass)).ToList());
+      od.Add("SM - Pdd", allSMPoints.Where(hp => horse_pdd.Contains(hp.Klass)).ToList());
+      od.Add("NM - Ind", allNMPoints.Where(hp => horse_ind.Contains(hp.Klass)).ToList());
+      od.Add("NM - Lag", allNMPoints.Where(hp => horse_team.Contains(hp.Klass)).ToList());
+      od.Add("NM - Pdd", allNMPoints.Where(hp => horse_pdd.Contains(hp.Klass)).ToList());
+
+      foreach (DictionaryEntry de in od)
+      {
+        var fileinfo = new FileInfo(horsepointsCalculated);
+        using (var results = new ExcelPackage(fileinfo))
+        {
+
+          object value = de.Value;
+          dynamic dynamicz = getGroup((List<HPclass>)value);
+          var ws = results.Workbook.Worksheets.Copy("HorsePoints",de.Key.ToString());
+          var row = 2;
+          foreach (var horse in dynamicz)
+          {
+            ws.Cells[row, 1].Value = horse.HorseName + $"  ({horse.Count})";
+            ws.Cells[row, 2].Value = horse.Max;
+            ws.Cells[row, 3].Value = horse.Average;
+            row++;
+          }
+          results.Save();
+        }
+      }
+      UpdateMessageTextBox($"Horse points analyzed");
+     
+    }
+
+    public void CalculateHorsePoints23()
     {
 
       UpdateMessageTextBox($"Analyzing Horse points...");
@@ -2136,220 +2516,220 @@ namespace WindowsFormsApplication1
 
 
 
-    public void CalculateHorsePoints()
-    {
-      var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
+    //public void CalculateHorsePoints()
+    //{
+    //  var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
 
-      UpdateMessageTextBox($"Starting horse point calculation");
-      var resultfile = Form1.sortedresultsfile;
-      var horsefile = horseresultfile;
+    //  UpdateMessageTextBox($"Starting horse point calculation");
+    //  var resultfile = Form1.sortedresultsfile;
+    //  var horsefile = horseresultfile;
 
-      if (!File.Exists(resultfile))
-      {
-        UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
-        return;
-      }
+    //  if (!File.Exists(resultfile))
+    //  {
+    //    UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
+    //    return;
+    //  }
 
-      FileInfo resultat = new FileInfo(resultfile);
-      FileInfo horsefileInfo = new FileInfo(horsefile);
+    //  FileInfo resultat = new FileInfo(resultfile);
+    //  FileInfo horsefileInfo = new FileInfo(horsefile);
 
-      List<string> horses = new List<string>();
+    //  List<string> horses = new List<string>();
 
-      List<Horse> definedHorses = new List<Horse>();
-      List<Horse> definedHorsesTeam = new List<Horse>();
-      List<Horse> definedHorsesInd = new List<Horse>();
+    //  List<Horse> definedHorses = new List<Horse>();
+    //  List<Horse> definedHorsesTeam = new List<Horse>();
+    //  List<Horse> definedHorsesInd = new List<Horse>();
 
-      var classes = readClasses();
+    //  var classes = readClasses();
 
-      using (ExcelPackage results = new ExcelPackage(resultat))
-      {
-        try
-        {
-          foreach (var cl in classes)
-          {
-            UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
-            int startRow = 7;
-            ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
-            var maxrow = ws.Dimension.End.Row;
+    //  using (ExcelPackage results = new ExcelPackage(resultat))
+    //  {
+    //    try
+    //    {
+    //      foreach (var cl in classes)
+    //      {
+    //        UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
+    //        int startRow = 7;
+    //        ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
+    //        var maxrow = ws.Dimension.End.Row;
 
-            int ekipages = (maxrow - startRow + 1) / 4;
+    //        int ekipages = (maxrow - startRow + 1) / 4;
 
-            for (int ekipage = 0; ekipage < ekipages; ekipage++)
-            {
-              var currentStartRow = startRow + (ekipage * 4);
-              var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
-              horses.Add(horsename);
+    //        for (int ekipage = 0; ekipage < ekipages; ekipage++)
+    //        {
+    //          var currentStartRow = startRow + (ekipage * 4);
+    //          var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
+    //          horses.Add(horsename);
 
-              if (!definedHorses.Any(h => h.Name == horsename))
-              {
-                Horse h1 = new Horse();
-                h1.Name = horsename;
-                definedHorses.Add(h1);
-              }
+    //          if (!definedHorses.Any(h => h.Name == horsename))
+    //          {
+    //            Horse h1 = new Horse();
+    //            h1.Name = horsename;
+    //            definedHorses.Add(h1);
+    //          }
 
 
-              // TEAM
-              if (teamclasses.Contains(ws.Name))
-              {
-                if (!definedHorsesTeam.Any(h => h.Name == horsename))
-                {
-                  Horse h1 = new Horse();
-                  h1.Name = horsename;
-                  definedHorsesTeam.Add(h1);
-                }
-              }
-              // IND
-              else
-              {
-                if (!definedHorsesInd.Any(h => h.Name == horsename))
-                {
-                  Horse h1 = new Horse();
-                  h1.Name = horsename;
-                  definedHorsesInd.Add(h1);
-                }
-              }
+    //          // TEAM
+    //          if (teamclasses.Contains(ws.Name))
+    //          {
+    //            if (!definedHorsesTeam.Any(h => h.Name == horsename))
+    //            {
+    //              Horse h1 = new Horse();
+    //              h1.Name = horsename;
+    //              definedHorsesTeam.Add(h1);
+    //            }
+    //          }
+    //          // IND
+    //          else
+    //          {
+    //            if (!definedHorsesInd.Any(h => h.Name == horsename))
+    //            {
+    //              Horse h1 = new Horse();
+    //              h1.Name = horsename;
+    //              definedHorsesInd.Add(h1);
+    //            }
+    //          }
 
-              var curhorse = definedHorses.Single(h => h.Name == horsename);
+    //          var curhorse = definedHorses.Single(h => h.Name == horsename);
 
-              for (int arow = 0; arow < 4; arow++)
-              {
-                var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
-                if (momenttext.Length > 1) // we may have points
-                {
-                  var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
-                  if (point > 0)
-                  {
-                    curhorse.Points.Add(point);
+    //          for (int arow = 0; arow < 4; arow++)
+    //          {
+    //            var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
+    //            if (momenttext.Length > 1) // we may have points
+    //            {
+    //              var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
+    //              if (point > 0)
+    //              {
+    //                curhorse.Points.Add(point);
 
-                    // TEAM
-                    if (teamclasses.Contains(ws.Name))
-                    {
-                      var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
-                      curhorse1.Points.Add(point);
+    //                // TEAM
+    //                if (teamclasses.Contains(ws.Name))
+    //                {
+    //                  var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
+    //                  curhorse1.Points.Add(point);
 
-                    }
-                    // IND
-                    else
-                    {
-                      var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
-                      curhorse2.Points.Add(point);
-                    }
-                  }
-                }
-              }
-            }
-          }
+    //                }
+    //                // IND
+    //                else
+    //                {
+    //                  var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
+    //                  curhorse2.Points.Add(point);
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
 
-        }
-        catch (Exception ex)
-        {
-          var str = ex.Message;
-          UpdateMessageTextBox(str);
-        }
-        finally
-        {
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      var str = ex.Message;
+    //      UpdateMessageTextBox(str);
+    //    }
+    //    finally
+    //    {
 
-        }
-      }
+    //    }
+    //  }
 
-      UpdateMessageTextBox($"Getting horse points from all classes done");
-      var all = horses.Distinct().ToList();
-      all.RemoveAll(s => s == "A4");
-      definedHorses.RemoveAll(h => h.Name == "A4");
-      definedHorsesTeam.RemoveAll(h => h.Name == "A4");
-      definedHorsesInd.RemoveAll(h => h.Name == "A4");
+    //  UpdateMessageTextBox($"Getting horse points from all classes done");
+    //  var all = horses.Distinct().ToList();
+    //  all.RemoveAll(s => s == "A4");
+    //  definedHorses.RemoveAll(h => h.Name == "A4");
+    //  definedHorsesTeam.RemoveAll(h => h.Name == "A4");
+    //  definedHorsesInd.RemoveAll(h => h.Name == "A4");
 
-      definedHorses.Sort();
-      definedHorsesTeam.Sort();
-      definedHorsesInd.Sort();
+    //  definedHorses.Sort();
+    //  definedHorsesTeam.Sort();
+    //  definedHorsesInd.Sort();
 
-      File.Delete(horsefileInfo.FullName);
+    //  File.Delete(horsefileInfo.FullName);
 
-      using (ExcelPackage results = new ExcelPackage(horsefileInfo))
-      {
-        try
-        {
-          var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
-          var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
-          var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
-          sheet.Cells.Style.Numberformat.Format = @"0.000";
-          sheet.Cells[1, 1].Value = "Häst";
-          sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet.Cells[1, 2].Value = "Medelpoäng";
-          sheet.Cells[1, 4].Value = "Samtliga poäng";
+    //  using (ExcelPackage results = new ExcelPackage(horsefileInfo))
+    //  {
+    //    try
+    //    {
+    //      var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
+    //      var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
+    //      var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
+    //      sheet.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet.Cells[1, 1].Value = "Häst";
+    //      sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet.Cells[1, 4].Value = "Samtliga poäng";
 
-          sheet2.Cells.Style.Numberformat.Format = @"0.000";
-          sheet2.Cells[1, 1].Value = "Häst";
-          sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet2.Cells[1, 2].Value = "Medelpoäng";
-          sheet2.Cells[1, 4].Value = "Samtliga poäng";
+    //      sheet2.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet2.Cells[1, 1].Value = "Häst";
+    //      sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet2.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet2.Cells[1, 4].Value = "Samtliga poäng";
 
-          sheet3.Cells.Style.Numberformat.Format = @"0.000";
-          sheet3.Cells[1, 1].Value = "Häst";
-          sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
-          sheet3.Cells[1, 2].Value = "Medelpoäng";
-          sheet3.Cells[1, 4].Value = "Samtliga poäng";
+    //      sheet3.Cells.Style.Numberformat.Format = @"0.000";
+    //      sheet3.Cells[1, 1].Value = "Häst";
+    //      sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
+    //      sheet3.Cells[1, 2].Value = "Medelpoäng";
+    //      sheet3.Cells[1, 4].Value = "Samtliga poäng";
 
-          int row = 1;
+    //      int row = 1;
 
-          foreach (Horse h in definedHorses)
-          {
-            row = row + 1;
-            sheet.Cells[row, 1].Value = h.Name;
-            sheet.Cells[row, 3].Value = h.Max;
-            sheet.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      foreach (Horse h in definedHorses)
+    //      {
+    //        row = row + 1;
+    //        sheet.Cells[row, 1].Value = h.Name;
+    //        sheet.Cells[row, 3].Value = h.Max;
+    //        sheet.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet.Cells.AutoFitColumns();
+    //      }
+    //      sheet.Cells.AutoFitColumns();
 
-          row = 1;
-          foreach (Horse h in definedHorsesTeam)
-          {
-            row = row + 1;
-            sheet2.Cells[row, 1].Value = h.Name;
-            sheet2.Cells[row, 3].Value = h.Max;
-            sheet2.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet2.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      row = 1;
+    //      foreach (Horse h in definedHorsesTeam)
+    //      {
+    //        row = row + 1;
+    //        sheet2.Cells[row, 1].Value = h.Name;
+    //        sheet2.Cells[row, 3].Value = h.Max;
+    //        sheet2.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet2.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet2.Cells.AutoFitColumns();
+    //      }
+    //      sheet2.Cells.AutoFitColumns();
 
-          row = 1;
-          foreach (Horse h in definedHorsesInd)
-          {
-            row = row + 1;
-            sheet3.Cells[row, 1].Value = h.Name;
-            sheet3.Cells[row, 3].Value = h.Max;
-            sheet3.Cells[row, 2].Value = h.Average;
-            for (int i = 0; i < h.Points.Count; i++)
-            {
-              sheet3.Cells[row, 4 + i].Value = h.Points[i];
-            }
+    //      row = 1;
+    //      foreach (Horse h in definedHorsesInd)
+    //      {
+    //        row = row + 1;
+    //        sheet3.Cells[row, 1].Value = h.Name;
+    //        sheet3.Cells[row, 3].Value = h.Max;
+    //        sheet3.Cells[row, 2].Value = h.Average;
+    //        for (int i = 0; i < h.Points.Count; i++)
+    //        {
+    //          sheet3.Cells[row, 4 + i].Value = h.Points[i];
+    //        }
 
-          }
-          sheet3.Cells.AutoFitColumns();
-          UpdateMessageTextBox($"{horsefile} created ! ");
-        }
-        catch (Exception ex)
-        {
-          UpdateMessageTextBox($"Horse point Error! ");
-          UpdateMessageTextBox(ex.Message);
-        }
-        finally
-        {
-          results.Save();
-          UpdateMessageTextBox($"{horsefile} saves ! ");
-        }
-      }
+    //      }
+    //      sheet3.Cells.AutoFitColumns();
+    //      UpdateMessageTextBox($"{horsefile} created ! ");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      UpdateMessageTextBox($"Horse point Error! ");
+    //      UpdateMessageTextBox(ex.Message);
+    //    }
+    //    finally
+    //    {
+    //      results.Save();
+    //      UpdateMessageTextBox($"{horsefile} saves ! ");
+    //    }
+    //  }
 
-    }
+    //}
 
     private void button3_Click(object sender, EventArgs e)
     {
@@ -2373,6 +2753,280 @@ namespace WindowsFormsApplication1
     private void checkBox2_CheckedChanged(object sender, EventArgs e)
     {
 
+    }
+
+    private void checkBoxProcessTimer_CheckedChanged(object sender, EventArgs e)
+    {
+      this.processResultsTimer.Enabled = false;
+      if (int.TryParse(textBoxProcessInterval.Text, out int interval))
+      {
+        this.processResultsTimer.Interval = interval*1000;
+      }
+      this.processResultsTimer.Enabled = checkBoxProcessTimer.Checked;
+      this.textBoxProcessInterval.Enabled = !checkBoxProcessTimer.Checked;
+      UpdateMessageTextBox($"Auto process Timer status = {this.processResultsTimer.Enabled}, period = {this.processResultsTimer.Interval} ms");
+    }
+
+    private void textBoxProcessInterval_TextChanged(object sender, EventArgs e)
+    {
+      this.checkBoxProcessTimer.Enabled = (int.TryParse(textBoxProcessInterval.Text, out int interval) && interval > 0);
+    }
+
+    private void processResultsTimer_Tick(object sender, EventArgs e)
+    {
+      if(backgroundWorkerFullAutoProcess.IsBusy)
+      {
+        UpdateMessageTextBox($"backgroundWorker - FullAutoProcess is Busy...");
+        return;
+      }
+      UpdateMessageTextBox($"Launching processResults at {DateTime.Now}");
+      backgroundWorkerFullAutoProcess.RunWorkerAsync();
+    }
+
+    private DateTime lastJudgeHandlingTime=DateTime.MinValue;
+
+    private void checkBoxJudge_CheckedChanged(object sender, EventArgs e)
+    {
+      if (lastJudgeHandlingTime.Equals(DateTime.MinValue))
+      {
+        lastJudgeHandlingTime = DateTime.Now;
+      }
+      this.judgeTimer.Enabled = false;
+      this.judgeTimer.Interval = 5 * 1000;
+      //if (int.TryParse(textBoxProcessInterval.Text, out int interval))
+      //{
+      //  this.judgeTimer.Interval = interval * 1000;
+      //}
+      this.judgeTimer.Enabled = checkBoxJudge.Checked;
+      //this.textBoxProcessInterval.Enabled = !checkBoxProcessTimer.Checked;
+      UpdateMessageTextBox($"Judge Timer status = {this.judgeTimer.Enabled}, period = {this.judgeTimer.Interval} ms");
+    }
+    private void judgeTimer_Tick(object sender, EventArgs e)
+    {
+      if (backgroundWorkerJudgeTables.IsBusy)
+      {
+        UpdateMessageTextBox($"backgroundWorker - judgeTimer is Busy...");
+        return;
+      }
+      UpdateMessageTextBox($"Launching judgeTimer at {DateTime.Now}");
+      backgroundWorkerJudgeTables.RunWorkerAsync();
+    }
+
+
+
+    private int ReadResultsFromJudges()
+    {
+    //      < add key = "copiedFromJudgesFolder" value = "copiedFromJudges" />
+    //< add key = "judgesWorkingFolder" value = "judgesWorking" />
+
+      UpdateMessageTextBox(" Doing ReadResultsFromJudges");
+      var judgeWorkingFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["judgesWorkingFolder"]);
+      var judgeHandledFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["copiedFromJudgesFolder"]);
+      
+
+      String d = "\\\\L-8MF4PE316S60M\\Domare D\\Hanterade";
+      String c = "\\\\L-KDH4ND2LFJRGQ\\Domare C\\Hanterade";
+      String a = "\\\\L-7HEUS8D1JC3OE\\Domare A\\Hanterade";
+      String b = "\\\\L-SLBRBQA86CPS0\\Domare B\\Hanterade";
+      //a = "C:\\voltige\\sm2023\\data\\judge";
+
+
+      List<String> folders = new List<String>();
+      folders.Add(a);folders.Add(b);folders.Add(c);folders.Add(d);
+
+      foreach(String folder in folders)
+      {
+        List<String> files;
+        try
+        {
+          files = Directory.GetFiles(folder).ToList();
+          //files = Directory.EnumerateFiles(folder).ToList();            
+        }catch(Exception e)
+        {
+          UpdateMessageTextBox($"Enumerate Error for folder {folder}: {e.Message}");
+          continue;
+        }
+
+        foreach(String file in files)
+        {
+          String theFile = Path.GetFileName(file);
+          String handledFolderFilename = Path.Combine(judgeHandledFolder, theFile);
+          if(File.Exists(handledFolderFilename))
+          {
+            // Skip
+            //UpdateMessageTextBox($"Already copied {handledFolderFilename}");
+          }
+          else
+          {
+            try
+            {
+              String workingFile = Path.Combine(judgeWorkingFolder, theFile);
+              File.Copy(file, workingFile);
+              File.Copy(workingFile, handledFolderFilename);
+              //UpdateMessageTextBox($"Copied {file} to {judgeWorkingFolder}");
+            }
+            catch (Exception e)
+            {
+              UpdateMessageTextBox($"Could not copy {file} - {e.Message}");
+            }
+          }
+        }
+      }
+
+      int timeForAction = DateTime.Compare(DateTime.Now, lastJudgeHandlingTime.AddSeconds(120));
+
+      if( timeForAction>0)
+      {
+        lastJudgeHandlingTime = DateTime.Now;
+        UpdateMessageTextBox($"Time to Handle judge data");
+        var newfiles = Directory.GetFiles(judgeWorkingFolder).ToList();
+        UpdateMessageTextBox($"Got {newfiles.Count} files to move to Inbox");
+        foreach (String file in newfiles)
+        {
+          try
+          {
+            var indexfile = Path.Combine(inboxFolder, Path.GetFileName(file));
+            File.Move(file, indexfile);
+            //UpdateMessageTextBox($"Moved {file} to {indexfile}");
+          }
+          catch(Exception e)
+          {
+            UpdateMessageTextBox($"Could not move {file} to Inbox - {e.Message}");
+          }
+        }
+       }
+      else
+      {
+        //UpdateMessageTextBox($"No time for action");
+      }
+
+      return 0;
+    }
+
+
+    private void backgroundWorkerJudgeTables_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      try
+      {
+        // Read domarbord
+        int ret = this.ReadResultsFromJudges();
+        if (ret == -1)
+        {
+          UpdateMessageTextBoxWarn("ReadResultsFromJudges - Returning at ReadResultsFromJudges...");
+          return;
+        }
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"ReadResultsFromJudges - Failed to read FromJudges : {ex}");
+        return;
+      }
+    }
+
+    private void backgroundWorkerJudgeTables_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("JudgeTables completed");
+      }
+    }
+
+
+
+    private void backgroundWorkerFullAutoProcess_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+    {
+      try
+      {
+        // Read inbox
+        int ret = this.ReadResultsFromInbox();
+        if(ret == -1) 
+        {
+          UpdateMessageTextBoxWarn("AutoProcess - Returning at ReadResultsFromInbox...");
+          return;
+        }
+      }catch(Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to read inbox : {ex.Message}");
+        return;
+      }
+
+      try
+      {
+        // Sort
+        this.SortResults();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to sort: {ex.Message}");
+        return;
+      }
+
+      try
+      {
+        // Print
+        this.doPrintResults();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to print results: {ex.Message}");
+        return;
+      }
+
+      try
+      {
+        // Create Index
+        this.createIndex(); ;
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to create Index {ex.Message}");
+        return;
+      }
+        
+
+      try
+      {
+        // Publish
+        this.publish();
+      }
+      catch (Exception ex)
+      {
+        UpdateMessageTextBoxWarn($"AutoProcess - Failed to publish results {ex.Message}");
+        return;
+      }
+    }
+
+    private void backgroundWorkerFullAutoProcess_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+    {
+      // Enable timer
+      UpdateMessageTextBox("AutoProcess - Completed");
+
+      if (e.Cancelled == true)
+      {
+        //   "Canceled!";
+      }
+      else if (e.Error != null)
+      {
+        showMessageBox(e.Error.Message);
+      }
+      else
+      {
+        showMessageBox("FullAutoProcess completed");
+      }
+    }
+
+    private void button7_Click(object sender, EventArgs e)
+    {
+      addHorseid();
     }
   }
   public static class Extension

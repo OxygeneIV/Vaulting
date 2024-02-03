@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -44,6 +45,10 @@ namespace WindowsFormsApplication1
         // Populate results
         private void btnReadResultsFromInbox_Click(object sender, EventArgs e)
         {
+
+  
+
+      
             backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
             bool hasAllThreadsFinished = false;
             while (!hasAllThreadsFinished)
@@ -66,10 +71,93 @@ namespace WindowsFormsApplication1
                                                         //re-checking.
             }
 
-
+      
         }
 
-        private void doSort()
+         // Do all
+     private void processResults()
+    {
+
+      bool hasAllThreadsFinished = false;
+      try
+      {
+        backgroundWorkerReadResultsFromInbox.RunWorkerAsync();
+        hasAllThreadsFinished = false;
+        while (!hasAllThreadsFinished)
+        {
+          hasAllThreadsFinished = backgroundWorkerReadResultsFromInbox.IsBusy == false;
+          Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                  //from the Progress event of the background worker.
+          System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                  //re-checking.
+        }
+      }catch(Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - ReadResultsFromInbox Failed: {e.Message}");
+        return;
+      }
+
+      try
+      {
+        backgroundWorkerSortResults.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerSortResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - SortResults Failed: { e.Message}");
+        return;
+      }
+
+      try
+      {
+        backgroundWorkerPrintResults.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPrintResults.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - PrintResults Failed: { e.Message}");
+        return;
+      }
+
+      try
+      {
+        backgroundWorkerPublish.RunWorkerAsync();
+      hasAllThreadsFinished = false;
+      while (!hasAllThreadsFinished)
+      {
+        hasAllThreadsFinished = backgroundWorkerPublish.IsBusy == false;
+        Application.DoEvents(); //This call is very important if you want to have a progress bar and want to update it
+                                //from the Progress event of the background worker.
+        System.Threading.Thread.Sleep(100);     //This call waits if the loop continues making sure that the CPU time gets freed before
+                                                //re-checking.
+      }
+      }
+      catch (Exception e)
+      {
+        UpdateMessageTextBoxWarn($"backgroundWorker - Publish Failed: { e.Message}");
+        return;
+      }
+
+    }
+
+
+    private void doSort()
         {
             bool hasAllThreadsFinished = false;
             backgroundWorkerSortResults.RunWorkerAsync();
@@ -85,20 +173,28 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void ReadResultsFromInbox()
+
+        private int ReadResultsFromInbox()
         {
+            // Set timestamp that files should have been created to not get misbehaved files
+            DateTime maxDateTime = DateTime.Now.AddSeconds(-95);
             DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
-            var files = dirinfo.EnumerateFiles("*.xls*");
+            var files = dirinfo.EnumerateFiles("*.xls*").ToList();
+            
+
+          // var files = dirinfo.EnumerateFiles("*.xls*").Where(p=> DateTime.Compare(p.LastAccessTime,maxDateTime)<0);
             var max = files.Count();
+            if (max == 0)
+            {
+              UpdateMessageTextBox("No result files available");
+              return -1;
+            }
+
             UpdateProgressBarHandler(0);
             UpdateProgressBarMax(max);
             UpdateProgressBarLabel("");
 
-            if (files.Count() == 0)
-            {
-                UpdateMessageTextBox("No result files available");
-                return;
-            }
+
 
             UpdateMessageTextBox("Beginning import of results");
             UpdateProgressBarHandler(0);
@@ -117,21 +213,12 @@ namespace WindowsFormsApplication1
                         var toFile1 = Path.Combine(outboxFolder, f.Name);
                         if(File.Exists(toFile1))
                         {
-                            // Overwrite
-                            var msg = MessageBox.Show($@"File {Path.GetFileName(toFile1)} already exists in outbox!  Overwrite ?","",MessageBoxButtons.YesNo);
-                            if (msg == DialogResult.Yes)
-                            {
-                                // continue using a backup
-                                string date = DateTime.Now.ToString("yyyyMMddHHmmss");
-                                string newfile = $"{toFile1}_{date}";
-                                File.Move(toFile1,newfile);
-                            }
-                            else
-                            {
-                                UpdateMessageTextBox($"Ignoring file {f.Name}");
-                                continue;
-                            }
-                           
+
+                              // Overwrite
+                              UpdateMessageTextBoxWarn($"{f.Name} already exists in outbox!  Createing backup first...");
+                              string date = DateTime.Now.ToString("yyyyMMddHHmmss");
+                              string newfile = $"{toFile1}_{date}.{f.Extension}";
+                              File.Move(toFile1, newfile);           
                         }
 
                         // First copy the file before trying anything stupid.
@@ -150,83 +237,52 @@ namespace WindowsFormsApplication1
 
                                 }
                                 else
-                                {
+                                {         
+
                                     var res = ws.Cells["result"].GetValue<float>();
-                                    var id = ws.Cells["id"].Value.ToString();
-                                    string refid = id;
-                                    var refsplit = refid.Split('_');
+                                    var idrefs = ws.Cells["id"].Value.ToString();
+                                    //bool horseSet = false;
+                                    System.Collections.Generic.List<String> ids = idrefs.Split(',').ToList();
 
-                                    //var horsenumber = refsplit[3].Trim();
+                                              foreach (var id in ids)
+                                              {
+                                                string refid = id;
+                                                var refsplit = refid.Split('_');
 
+                                                // Horse analysis
+                                                // SM & NM HorsePointStoring
+                                                string horsename = null;
+                                                try
+                                                {
+                                                  var table = refsplit.Last().Trim();
+                                                  if (table.ToLower() == "a")
+                                                  {
+                                                    var datumcell = ws.Cells["datum"];
+                                                    var horsecell = datumcell.Offset(5, 0);
+                                                    horsename = horsecell.GetValue<string>().Trim();
+                                                  }
+                                                }
+                                                catch (Exception g)
+                                                {
+                                                  UpdateMessageTextBoxWarn($"Failed to add horse point for {f.Name} , {g.Message}");
+                                                }
 
-                                  // Horse analysis
-                                  // SM & NM HorsePointStoring
-                                  string horsename = null;
-                                  try
-                                  {
-                                    var table = refsplit.Last().Trim();
-                                    if (table.ToLower() == "a")
-                                    {
-                                      var datumcell = ws.Cells["datum"];
-                                      var horsecell = datumcell.Offset(5, 0);
-                                      horsename = horsecell.GetValue<string>().Trim();                                                    }
-                                  }
-                                  catch (Exception g)
-                                  {
-                                    UpdateMessageTextBox($"Failed to add horse point for {f.Name} , {g.Message}");
-                                  }
+                                                var klassMain = refsplit[2].Trim();
 
-
-
-                  // SM & NM
-                  if (refid.Contains(".2")) // add results to 0 and 1
-                  {
-                    var klassMain = refsplit[3].Trim().Split('.').First();
-
-                    var zero = refid.Replace(".2", "");
-                    results.Workbook.Worksheets[klassMain].Cells[zero].Value = res;
-
-                    var one = refid.Replace(".2", ".1");
-                    results.Workbook.Worksheets[klassMain + ".1"].Cells[one].Value = res;
-
-                    if (horsename != null)
-                    {
-                      File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
-                      File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain + ".1"};{res}{Environment.NewLine}");
-                    }
-
-                  }
-                  else
-                  {
-
-                    var klassMain = refsplit[2].Trim();
-                     
-                    // Escamilo
-                    /*
-                    if (klassMain == "5" || klassMain == "6")
-                    {
-                        if (horsenumber == "")  // New Common Escamilo
-                        {
-
-                            // Update refid for class 5 and 6
-                            var newRefsplit = refsplit;
-                            newRefsplit[3]  = oldHorseNumber; // Old escamilo for class 5 and 6
-                            refid = String.Join("_", newRefsplit).Trim();
-                        }
-                    }
-                    */
-                                       try { 
-                                        results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
-                                        }
-                                        catch(Exception herr)
-                                        {
-                                             UpdateMessageTextBox("Failed to add result to ref "+klassMain + " " + refid+ " "+ f.Name);
-                                        }
-                                        if (horsename != null)
-                                        {
-                                          File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
-                                        }
-                                     }
+                                                try
+                                                {
+                                                  results.Workbook.Worksheets[klassMain].Cells[refid].Value = res;
+                                                }
+                                                catch (Exception herr)
+                                                {
+                                                  UpdateMessageTextBoxWarn("Failed to add result to ref " + klassMain + " " + refid + " " + f.Name);
+                                                }
+                                                if (horsename != null)
+                                                {
+                                                  File.AppendAllText(horseFileName, $"{refid};{horsename};{klassMain};{res}{Environment.NewLine}");
+                                                }
+                                               
+                                              }
                                 }
                             }
                             var toFile = Path.Combine(outboxFolder, f.Name);
@@ -257,13 +313,13 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            UpdateMessageTextBox("Import of results, calculating points...");
+             UpdateMessageTextBox("Import of results, calculating points...");
        
               bool docalc = Convert.ToBoolean(ConfigurationManager.AppSettings["resultcalchelper"]);
               if (!docalc)
               {
                 UpdateMessageTextBox("Import of results, calculation done...sorting...");
-                return;
+                return 0;
               }
     
                 var MyApp = new Microsoft.Office.Interop.Excel.Application();
@@ -282,7 +338,7 @@ namespace WindowsFormsApplication1
                 workbooks = null;
                 MyApp = null;
 
-
+      return 0;
 
         }
     }
