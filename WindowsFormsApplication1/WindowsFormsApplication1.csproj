@@ -381,6 +381,9 @@
     <Content Include="html\img\hamre.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\nopoints.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\img\norway-flag-xs.png" />
     <Content Include="html\img\preliminary_results.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -436,7 +439,9 @@
     <Content Include="logos\logo_ridsport_top_mini.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="logos\nopoints.png" />
+    <Content Include="logos\nopoints.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="logos\PreliminaryResults.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -128,12 +128,14 @@
       // 
       // button6
       // 
+      this.button6.Enabled = false;
       this.button6.Location = new System.Drawing.Point(75, 178);
       this.button6.Name = "button6";
       this.button6.Size = new System.Drawing.Size(216, 42);
       this.button6.TabIndex = 14;
       this.button6.Text = "Extract results";
       this.button6.UseVisualStyleBackColor = true;
+      this.button6.Visible = false;
       this.button6.Click += new System.EventHandler(this.button6_Click);
       // 
       // label4
@@ -529,6 +531,8 @@
       // 
       this.checkBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
       this.checkBox1.AutoSize = true;
+      this.checkBox1.Checked = true;
+      this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkBox1.Location = new System.Drawing.Point(373, 15);
       this.checkBox1.Name = "checkBox1";
       this.checkBox1.Size = new System.Drawing.Size(166, 17);
