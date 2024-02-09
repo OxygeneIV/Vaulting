@@ -266,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="documentation\configs.txt" />
     <Content Include="documentation\todoHintarFrånTidigare.txt" />
     <Content Include="html\HTML_head.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

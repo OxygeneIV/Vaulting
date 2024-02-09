@@ -1,0 +1,175 @@
+app.config ny root
+
+skapa "data"-folder under root.
+kopiera package dit.
+
+kopiera magnusL2024....xlsx -> root
+
+Starta solution, kör (debug).
+Massa foldrar skapas i root.
+
+
+
+i "utskrift"-foldern , hitta alla Excel-filer och kopiera till fakebox-foldern i root.
+Ta bort show-klassen 9 , saknar ID, 6 st.
+
+
+
+
+
+Döp om magnusL2024....xlsx => magnusl.xlsx
+Editera den i Tab'en Klasser.
+
+Först "Antal Domare"-kolumnen
+
+1	Svår klass individuellt 1*	TRAGK2
+2	Svår klass individuellt 2*	TRAGK2
+3	Young Vaulters	TRAGK2
+4	Svår klass individuellt 3*	TRAGK2
+5	Svår klass lag junior	TRAGK2
+6	Svår klass lag senior	TRAGK2
+7	Lätt klass lag typ 1	GK2
+8	Pas-de-deux	TRAK1
+11	Clear round Lätt klass individuell	GK2
+21	Clear round Svår klass individuellt 1*	TRAGK2
+9	Showklass lag	GK2
+
+sedan "Moment(ABCD)"-kolumnerna
+
+Grund,Grund => Grund,Grund,Grund
+Tekniskt,Artistiskt => Tekniskt,Artistiskt,Tekniskt
+för alla utom lätt klass
+
+
+
+Run Steps and see the text field populate with messages.
+
+Kör Step 1- knappen
+  Found 10 classes
+  Found 58 vaulters, 0 duplicate IDs
+
+Kör Step 2- knappen
+   Found 10 classes
+   Found 58 vaulters, 0 duplicate IDs
+   Found 10 classes
+
+Kör Step 3- knappen
+   Found 10 classes
+   Found 58 vaulters, 0 duplicate IDs
+   Found 10 classes
+   Found 58 vaulters, 0 duplicate IDs
+   Found 10 classes
+
+
+
+Kör Step 4 -knappen , Fake results
+=> "Allt fake klart" - meddelande i textrutan. Efter en öl ca.
+Ta bort eller spara "fakedresults.xlsx" som sparast i /fakebox
+
+Kopiera alla exceler i Fakevox till Inbox
+
+Tryck clear -knappen till höger för att rensa message-fältet.
+
+Kör Step 5- knappen, ta en öl
+   Beginning import of results
+
+   after some time:
+
+    Completed import of results
+Completed import of results, saving...
+Save completed, wait for calculation
+Import of results, calculating points...
+Import of results, calculation done...sorting...
+Found 10 classes
+Starting Sort of results...
+sortedresultsfile copied...
+Sorting 1
+Sorting 2
+Sorting 3
+Sorting 4
+Sorting 5
+Sorting 6
+Sorting 7
+Sorting 8
+Sorting 9
+Sorting 11
+Sorting completed
+
+inbox skall nu vara tom
+Man kan kolla sortedResults.xlsx, alla fält ska vara ifyllda utom klass 9.
+
+Export Results for all classes - knappen. => filer i htmlResults-foldern och htmlNoResults
+Finns en checkbox "Create PDFs during export" om man vill ha PDF'er oxå.
+
+=>
+Print Results BackgroundWorker Start...
+Found 10 classes
+Saving class '1' to HTML
+Found 10 classes
+Saving class '1' to HTML done...
+PDF creation not requested...
+Saving class '2' to HTML
+Found 10 classes
+Saving class '2' to HTML done...
+PDF creation not requested...
+Saving class '3' to HTML
+Found 10 classes
+Saving class '3' to HTML done...
+PDF creation not requested...
+Saving class '4' to HTML
+Found 10 classes
+Saving class '4' to HTML done...
+PDF creation not requested...
+Saving class '5' to HTML
+Found 10 classes
+Saving class '5' to HTML done...
+PDF creation not requested...
+Saving class '6' to HTML
+Found 10 classes
+Saving class '6' to HTML done...
+PDF creation not requested...
+Saving class '7' to HTML
+Found 10 classes
+Saving class '7' to HTML done...
+PDF creation not requested...
+Saving class '8' to HTML
+Found 10 classes
+Saving class '8' to HTML done...
+PDF creation not requested...
+Saving class '9' to HTML
+Found 10 classes
+Saving class '9' to HTML done...
+PDF creation not requested...
+Saving class '11' to HTML
+Found 10 classes
+Saving class '11' to HTML done...
+PDF creation not requested...
+Print Results BackgroundWorker End...
+
+
+
+
+
+Publish-knapp => webben.
+Just nu till http://oxygeneiv.se/voltige_dev/
+
+
+Creating Indexfile...
+Skipping PDFs...
+Creating Indexfile and PDFs completed...
+Creating Indexfile and PDFs for No Publish...
+Skipping PDFs...
+Creating Indexfile and PDFs completed for No Publish...
+Publishing results
+Publishing...
+Publishing completed...
+Publishing results completed
+
+
+
+http://www.oxygeneiv.se/voltige
+
+
+
+
+
