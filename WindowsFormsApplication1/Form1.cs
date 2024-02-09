@@ -1682,6 +1682,8 @@ namespace WindowsFormsApplication1
 
 
         text = text.Replace("{KLASS}", "Klass " + klass.Name + " - " + klass.Description);
+
+
         int counter = 0;
         foreach (Moment moment in klass.Moments)
         {
@@ -1736,7 +1738,7 @@ namespace WindowsFormsApplication1
           String tot = toRange[row + 1, 15].Text; // GetValue<String>();// 
 
 
-          if (noresultsInClass) tot = "-";
+          if (noresultsInClass) tot = "Inga poäng redovisas i denna klass";
 
           if(noresultsInClass && (placering.Trim() != "1"))
           {
