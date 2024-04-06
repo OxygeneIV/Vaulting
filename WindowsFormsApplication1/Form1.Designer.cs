@@ -116,22 +116,26 @@
       // 
       // button7
       // 
+      this.button7.Enabled = false;
       this.button7.Location = new System.Drawing.Point(202, 143);
       this.button7.Name = "button7";
       this.button7.Size = new System.Drawing.Size(75, 23);
       this.button7.TabIndex = 15;
       this.button7.Text = "button7";
       this.button7.UseVisualStyleBackColor = true;
+      this.button7.Visible = false;
       this.button7.Click += new System.EventHandler(this.button7_Click);
       // 
       // button6
       // 
+      this.button6.Enabled = false;
       this.button6.Location = new System.Drawing.Point(75, 178);
       this.button6.Name = "button6";
       this.button6.Size = new System.Drawing.Size(216, 42);
       this.button6.TabIndex = 14;
       this.button6.Text = "Extract results";
       this.button6.UseVisualStyleBackColor = true;
+      this.button6.Visible = false;
       this.button6.Click += new System.EventHandler(this.button6_Click);
       // 
       // label4
@@ -400,27 +404,32 @@
       this.checkBoxJudge.TabIndex = 16;
       this.checkBoxJudge.Text = "Judge Table Points";
       this.checkBoxJudge.UseVisualStyleBackColor = true;
+      this.checkBoxJudge.Visible = false;
       this.checkBoxJudge.CheckedChanged += new System.EventHandler(this.checkBoxJudge_CheckedChanged);
       // 
       // textBoxProcessInterval
       // 
+      this.textBoxProcessInterval.Enabled = false;
       this.textBoxProcessInterval.Location = new System.Drawing.Point(310, 76);
       this.textBoxProcessInterval.Name = "textBoxProcessInterval";
       this.textBoxProcessInterval.Size = new System.Drawing.Size(100, 20);
       this.textBoxProcessInterval.TabIndex = 15;
       this.textBoxProcessInterval.Text = "600";
       this.textBoxProcessInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+      this.textBoxProcessInterval.Visible = false;
       this.textBoxProcessInterval.TextChanged += new System.EventHandler(this.textBoxProcessInterval_TextChanged);
       // 
       // checkBoxProcessTimer
       // 
       this.checkBoxProcessTimer.AutoSize = true;
+      this.checkBoxProcessTimer.Enabled = false;
       this.checkBoxProcessTimer.Location = new System.Drawing.Point(310, 53);
       this.checkBoxProcessTimer.Name = "checkBoxProcessTimer";
       this.checkBoxProcessTimer.Size = new System.Drawing.Size(102, 17);
       this.checkBoxProcessTimer.TabIndex = 9;
       this.checkBoxProcessTimer.Text = "Auto processing";
       this.checkBoxProcessTimer.UseVisualStyleBackColor = true;
+      this.checkBoxProcessTimer.Visible = false;
       this.checkBoxProcessTimer.CheckedChanged += new System.EventHandler(this.checkBoxProcessTimer_CheckedChanged);
       // 
       // button5
@@ -522,6 +531,8 @@
       // 
       this.checkBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
       this.checkBox1.AutoSize = true;
+      this.checkBox1.Checked = true;
+      this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkBox1.Location = new System.Drawing.Point(373, 15);
       this.checkBox1.Name = "checkBox1";
       this.checkBox1.Size = new System.Drawing.Size(166, 17);

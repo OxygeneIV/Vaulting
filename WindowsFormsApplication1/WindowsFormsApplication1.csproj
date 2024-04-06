@@ -266,6 +266,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="documentation\configs.txt" />
     <Content Include="documentation\todoHintarFrånTidigare.txt" />
     <Content Include="html\HTML_head.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -381,6 +382,9 @@
     <Content Include="html\img\hamre.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="html\img\nopoints.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="html\img\norway-flag-xs.png" />
     <Content Include="html\img\preliminary_results.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -398,6 +402,9 @@
     </Content>
     <Content Include="html\img\uppsala.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="html\img\uppsalavoltige.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="html\img\Uppsala_SM_NM_Voltage_RGB.png" />
     <Content Include="html\mallMain.html">
@@ -433,7 +440,9 @@
     <Content Include="logos\logo_ridsport_top_mini.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="logos\nopoints.png" />
+    <Content Include="logos\nopoints.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="logos\PreliminaryResults.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

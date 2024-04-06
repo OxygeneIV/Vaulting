@@ -58,6 +58,8 @@ namespace WindowsFormsApplication1
     public static string htmlNoResultsFolder;
 
     public static string cssFolder;
+    public static string cssFolderNoResults;
+
     public static string logosFolder;
     private static string workingDirectory;
     private static bool fake;
@@ -180,6 +182,8 @@ namespace WindowsFormsApplication1
         cssFolder = Path.Combine(htmlResultsFolder, ConfigurationManager.AppSettings["cssfolder"]);
         foldersToCreate.Add(cssFolder);
 
+        cssFolderNoResults = Path.Combine(htmlNoResultsFolder, ConfigurationManager.AppSettings["cssfolder"]);
+        foldersToCreate.Add(cssFolderNoResults);
 
 
         mergedresultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["mergedresults"]);
@@ -207,12 +211,15 @@ namespace WindowsFormsApplication1
 
         String cssfile = Path.Combine(Environment.CurrentDirectory, "html/stylesheet.css");
         File.Copy(cssfile, Path.Combine(cssFolder, "stylesm.css"), true);
+        File.Copy(cssfile, Path.Combine(cssFolderNoResults, "stylesm.css"), true);
 
         var files = Directory.EnumerateFiles(Path.Combine(Environment.CurrentDirectory, "html/img"));
         foreach (String f in files)
         {
 
           File.Copy(f, htmlResultsFolder + "/" + Path.GetFileName(f), true);
+          File.Copy(f, htmlNoResultsFolder + "/" + Path.GetFileName(f), true);
+
         }
 
 
@@ -1675,6 +1682,8 @@ namespace WindowsFormsApplication1
 
 
         text = text.Replace("{KLASS}", "Klass " + klass.Name + " - " + klass.Description);
+
+
         int counter = 0;
         foreach (Moment moment in klass.Moments)
         {
@@ -1729,7 +1738,7 @@ namespace WindowsFormsApplication1
           String tot = toRange[row + 1, 15].Text; // GetValue<String>();// 
 
 
-          if (noresultsInClass) tot = "-";
+          if (noresultsInClass) tot = "Inga poäng redovisas i denna klass";
 
           if(noresultsInClass && (placering.Trim() != "1"))
           {
@@ -1766,23 +1775,23 @@ namespace WindowsFormsApplication1
               break;
           }
 
-          if(klass.Name=="5")
-          {
-            if (currentRowInTable > 15)
-                placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
-          }
+          //if(klass.Name=="5")
+          //{
+          //  if (currentRowInTable > 15)
+          //      placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          //}
 
-          if (klass.Name == "25")
-          {
-            if (currentRowInTable > 17)
-              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
-          }
+          //if (klass.Name == "25")
+          //{
+          //  if (currentRowInTable > 17)
+          //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          //}
 
-          if (klass.Name == "26")
-          {
-            if (currentRowInTable > 15)
-              placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
-          }
+          //if (klass.Name == "26")
+          //{
+          //  if (currentRowInTable > 15)
+          //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+          //}
 
           text3 = text3.Replace("{PLACERING}", placering);
           text3 = text3.Replace("{NAMN}", name);
