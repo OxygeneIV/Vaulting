@@ -2379,6 +2379,8 @@ namespace WindowsFormsApplication1
       od.Add("NM - Ind", allNMPoints.Where(hp => horse_ind.Contains(hp.Klass)).ToList());
       od.Add("NM - Lag", allNMPoints.Where(hp => horse_team.Contains(hp.Klass)).ToList());
       od.Add("NM - Pdd", allNMPoints.Where(hp => horse_pdd.Contains(hp.Klass)).ToList());
+      od.Add("All classes", allHPs.ToList());
+
 
       foreach (DictionaryEntry de in od)
       {
