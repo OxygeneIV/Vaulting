@@ -1418,8 +1418,13 @@ namespace WindowsFormsApplication1
       dict[264141] = "Diesel";
       dict[291299] = "Donald";
       dict[306380] = "Donovan";
+      dict[345893] = "Dunhalls Julius";
+      dict[347476] = "Emzids";
+      dict[308238] = "Egelunds Safie";
+      dict[316201] = "Farrakech";
       dict[293760] = "Freilene";
       dict[308300] = "Gladiator VDH";
+      dict[262992] = "Hembys Bellman";
       dict[279357] = "Halving";
       dict[306606] = "Kanon";
       dict[313507] = "Klintholms Ramstein";
@@ -1429,6 +1434,7 @@ namespace WindowsFormsApplication1
       dict[265064] = "Lyra Rae";
       dict[294359] = "Monte Cassino af Wasbek";
       dict[301477] = "Normandie";
+      dict[326135] = "Orlando Van´t Merodehof";
       dict[310234] = "Sems";
       dict[342703] = "Serenade";
       dict[334748] = "Silver";
@@ -1436,8 +1442,6 @@ namespace WindowsFormsApplication1
       dict[328098] = "Turbic Boy";
       dict[312178] = "Zeus";
       dict[316719] = "Chuck";
-      dict[308238] = "Egelunds Safie";
-      dict[345893] = "Dunhalls Julius";
       dict[244537] = "Dario M";
       dict[342894] = "Charlz";
 
