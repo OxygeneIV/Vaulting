@@ -415,7 +415,8 @@ namespace Framework.PageObjects
                 else
                 {
                     ScrollIntoView();
-                    Log.Info("Clicking...");
+                    Thread.Sleep(400);
+                     Log.Info("Clicking...");
                     DoAction(i => i.Click(), 120);
                     Log.Info("Clicking done");
                 }
