@@ -160,8 +160,8 @@ namespace Tests.Voltige
 
             //l.email.SetText("annaomagnus@hotmail.com");
             //l.password.SetText("berlin96");
-            l.email.SetText("oxygeneiv@hotmail.com");
-            l.password.SetText("xfiles67");
+            l.email.SetText("lizagustafsson_@hotmail.com");
+            l.password.SetText("VoltigeSM2024");
             l.SubmitButton.Click();
 
             // Inistatiate the Competition page
@@ -355,14 +355,22 @@ namespace Tests.Voltige
             _horsereserve[horseIdNumReserve] = "-";
             if (reservehorseCellText.Length > 0)
             {
-              var reservlink = reservhorse.LinkUrl;
-              driver.Navigate().GoToUrl(reservlink);
-              xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
-              by = By.XPath(xpath);
-              horseref = driver.WrappedDriver.FindElement(by);
-              horseIdNumReserve = Int32.Parse(horseref.Text);
-              _horsereserve[horseIdNumReserve] = reservehorseCellText;
-              driver.Navigate().Back();
+                 var hlinks = reservhorse.Links.ToList();
+                 int sz =  hlinks.Count;
+                            for (int k = 0; k < sz; k++)
+                            {
+                                var reservlinka = hlinks[k];
+                                //var reservlink = reservhorse.LinkUrl;
+                                var reservlink = reservlinka.GetAttribute("href");
+
+                                driver.Navigate().GoToUrl(reservlink);
+                                xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
+                                by = By.XPath(xpath);
+                                horseref = driver.WrappedDriver.FindElement(by);
+                                horseIdNumReserve = Int32.Parse(horseref.Text);
+                                _horsereserve[horseIdNumReserve] = reservehorseCellText;
+                                driver.Navigate().Back();
+                            }
             }
             
 

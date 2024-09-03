@@ -30,6 +30,11 @@ namespace Viedoc.viedoc.pages.components.elements
         {
             get { return link_.GetAttribute("href"); }
         }
+        public string LinkUrls
+        {
+            get { return link_.GetAttribute("href"); }
+        }
+
 
         public void JavaSetText(string text, bool append = false)
         {
