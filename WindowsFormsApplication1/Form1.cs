@@ -30,6 +30,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Vml.Office;
 using System.Web.Caching;
 using DocumentFormat.OpenXml.Bibliography;
+using System.Security.Policy;
 
 namespace WindowsFormsApplication1
 {
@@ -72,7 +73,8 @@ namespace WindowsFormsApplication1
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       InitializeComponent();
       setPathes();
-     // setWatcher();
+            //LoadParametersFromFile();
+     //       setWatcher();
 
       dataGridView1.AutoGenerateColumns = true;
       dataGridView2.AutoGenerateColumns = true;
@@ -86,23 +88,36 @@ namespace WindowsFormsApplication1
 
     private void setWatcher()
     {
-      var watcher = new FileSystemWatcher(inboxFolder);
-      watcher.NotifyFilter = NotifyFilters.LastAccess;
+            var root = ConfigurationManager.AppSettings["root"];
+            var cfgfile = root + ConfigurationManager.AppSettings["cfgfile"];
+
+
+            FileSystemWatcher watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(cfgfile),
+                Filter = Path.GetFileName(cfgfile),
+                NotifyFilter = NotifyFilters.LastWrite
+            };
+
+
+//      watcher.NotifyFilter = NotifyFilters.LastAccess;
       watcher.EnableRaisingEvents = true;
       watcher.Changed += WatchOnChanged;
-      watcher.Renamed += WatchOnChanged;
+//      watcher.Renamed += WatchOnChanged;
     
       watcher.Error += OnError;
     }
     private void WatchOnChanged(object sender, FileSystemEventArgs e)
     {
-
-      UpdateMessageTextBox($"Change type : {e.ChangeType} {DateTime.Now.ToLongTimeString()}");
-      if (e.ChangeType != WatcherChangeTypes.Changed)
+ 
+            if (e.ChangeType == WatcherChangeTypes.Changed)
       {
-        return;
+                UpdateMessageTextBox($"Loading new parameters from file");
+
+                LoadParametersFromFile();
+                UpdateMessageTextBox($"Loading new parameters from file completed");
+                return;
       }
-      UpdateMessageTextBox($"Changed : {e.FullPath} {DateTime.Now.ToLongTimeString()}");      
     }
 
     private static void OnError(object sender, ErrorEventArgs e) =>
@@ -119,8 +134,90 @@ namespace WindowsFormsApplication1
         PrintException(ex.InnerException);
       }
     }
+        static DateTime lastReadTime = DateTime.MinValue;
+        static readonly object lockObj = new object();
 
-    private void setPathes()
+        // Load parameters from external file (e.g., teamclasses.txt) into in-memory settings
+        void LoadParametersFromFile()
+        {
+            var root = ConfigurationManager.AppSettings["root"];
+            var cfgfile = root + ConfigurationManager.AppSettings["cfgfile"];
+            lock (lockObj)  // Prevent multiple threads from accessing the file simultaneously
+            {
+                if (File.Exists(cfgfile))
+                {
+                    DateTime lastRead = File.GetLastWriteTime(cfgfile);
+
+                    // Throttle excessive reads if the file is changing too quickly
+                    if (lastReadTime == lastRead)
+                        return;
+
+                    lastReadTime = lastRead;
+
+                    // Read the external file (assuming each line contains "key=value" pairs)
+                    string[] lines = File.ReadAllLines(cfgfile);
+
+                    Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+                    foreach (string line in lines)
+                    {
+                        // Split each line into key and value
+                        string[] parts = line.Split('=');
+                        if (parts.Length == 2)
+                        {
+                            string key = parts[0].Trim();
+                            string value = parts[1].Trim();
+                            UpdateMessageTextBox($"Setting : {key} = {value}");
+                            // Check if the key already exists
+                            if (config.AppSettings.Settings[key] != null)
+                            {
+                                // Update the existing key's value
+                                config.AppSettings.Settings[key].Value = value;
+                            }
+                            else
+                            {
+
+                                // Add the new key if it doesn't exist
+                                config.AppSettings.Settings.Add(key, value);
+                            }
+                        }
+                    }
+
+                    // Print the updated settings to verify
+                    foreach (string key in ConfigurationManager.AppSettings.AllKeys)
+                    {
+                        Console.WriteLine($"Updated {key}: {ConfigurationManager.AppSettings[key]}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Parameters file not found!");
+                }
+            }
+        }
+
+        //// Function to update AppSettings in-memory
+        //static void UpdateAppSettingsInMemory(string key, string value)
+        //{
+        //    var configField = typeof(ConfigurationManager).GetField("s_configSystem", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+        //    var configSystem = configField.GetValue(null);
+        //    var config = configSystem.GetType().GetProperty("System", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(configSystem, null);
+        //    var appSettings = config.GetType().GetProperty("AppSettings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(config, null);
+        //    var settings = appSettings.GetType().GetField("_settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(appSettings) as System.Collections.Specialized.NameValueCollection;
+        //    settings.Set(key, value);  // Update the key in-memory
+        //}
+
+        //static void AddAppSettingsInMemory(string key, string value)
+        //{
+        //    var configField = typeof(ConfigurationManager).GetField("s_configSystem", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+        //    var configSystem = configField.GetValue(null);
+        //    var config = configSystem.GetType().GetProperty("System", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(configSystem, null);
+        //    var appSettings = config.GetType().GetProperty("AppSettings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(config, null);
+        //    var settings = appSettings.GetType().GetField("_settings", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(appSettings) as System.Collections.Specialized.NameValueCollection;
+        //    settings.Add(key, value);  // Add the new key in-memory
+        //}
+
+        private void setPathes()
     {
 
       try

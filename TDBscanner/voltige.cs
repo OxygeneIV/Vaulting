@@ -353,7 +353,10 @@ namespace Tests.Voltige
             var reservehorseCellText = reservhorse.Text.Trim();
             Int32 horseIdNumReserve = 0;
             _horsereserve[horseIdNumReserve] = "-";
-            if (reservehorseCellText.Length > 0)
+                        var horseReserveTotalText = "";
+                        var horseReserveTotalIDText = "";
+
+                        if (reservehorseCellText.Length > 0)
             {
                  var hlinks = reservhorse.Links.ToList();
                  int sz =  hlinks.Count;
@@ -362,15 +365,26 @@ namespace Tests.Voltige
                                 var reservlinka = hlinks[k];
                                 //var reservlink = reservhorse.LinkUrl;
                                 var reservlink = reservlinka.GetAttribute("href");
-
+                                var curhorse = reservlinka.TrimmedText;
                                 driver.Navigate().GoToUrl(reservlink);
                                 xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
                                 by = By.XPath(xpath);
                                 horseref = driver.WrappedDriver.FindElement(by);
                                 horseIdNumReserve = Int32.Parse(horseref.Text);
-                                _horsereserve[horseIdNumReserve] = reservehorseCellText;
+                                _horsereserve[horseIdNumReserve] = curhorse;
+                                if (k == 0)
+                                {
+                                    horseReserveTotalText = curhorse;
+                                    horseReserveTotalIDText = horseIdNumReserve.ToString();
+                                }
+                                else
+                                {
+                                    horseReserveTotalText = horseReserveTotalText + " + "+ curhorse;
+                                    horseReserveTotalIDText = horseReserveTotalIDText + " + " + horseIdNumReserve.ToString();
+                                }
                                 driver.Navigate().Back();
                             }
+
             }
             
 
@@ -423,8 +437,8 @@ namespace Tests.Voltige
                                         _linf[linfIdNum] +
                                         "|" + horseIdNum + "|" 
                                         + _horse[horseIdNum] +
-                                          "|" + horseIdNumReserve + "|"
-                                        + _horsereserve[horseIdNumReserve]
+                                          "|" + horseReserveTotalIDText + "|"
+                                        + horseReserveTotalText
                                         + "|" + clubIdNum + "|" +
                                         _clubs[clubIdNum] + "|" + notetext + nnn);
 
