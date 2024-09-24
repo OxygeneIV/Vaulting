@@ -1875,24 +1875,24 @@ namespace WindowsFormsApplication1
             default: 
               break;
           }
-
+          flagname = "";
           //if(klass.Name=="5")
           //{
           //  if (currentRowInTable > 15)
           //      placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
           //}
 
-          //if (klass.Name == "25")
-          //{
-          //  if (currentRowInTable > 17)
-          //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
-          //}
+                    //if (klass.Name == "25")
+                    //{
+                    //  if (currentRowInTable > 17)
+                    //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+                    //}
 
-          //if (klass.Name == "26")
-          //{
-          //  if (currentRowInTable > 15)
-          //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
-          //}
+                    //if (klass.Name == "26")
+                    //{
+                    //  if (currentRowInTable > 15)
+                    //    placering = $"<b style='color:red;'>Did Not Qualify ({currentRowInTable})</b>";
+                    //}
 
           text3 = text3.Replace("{PLACERING}", placering);
           text3 = text3.Replace("{NAMN}", name);
