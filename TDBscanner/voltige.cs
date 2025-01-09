@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Base;
 using Viedoc.viedoc.pages.components.elements;
 using OpenQA.Selenium;
+using static System.Net.WebRequestMethods;
 
 namespace Tests.Voltige
 {
@@ -122,30 +123,31 @@ namespace Tests.Voltige
             // Login
             string tdbUrl = "https://tdb.ridsport.se/login";
 
-      //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
-      // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
-      // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
-      //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+            //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
+            // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
+            // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
+            //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
 
-      // SM https://tdb.ridsport.se/meetings/63485
+            // SM https://tdb.ridsport.se/meetings/63485
 
-      // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
-      //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
-      string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
+            // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
+            string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
 
-      // Open Browser
-      var driver = CreateBrowserInstance(Driver.Browser.Chrome);
+            // Open Browser
+            var driver = CreateBrowserInstance(Driver.Browser.Chrome);
 
             // Goto TDB
             driver.Navigate().GoToUrl(tdbUrl);
@@ -158,8 +160,8 @@ namespace Tests.Voltige
 
             //l.email.SetText("annaomagnus@hotmail.com");
             //l.password.SetText("berlin96");
-            l.email.SetText("oxygeneiv@hotmail.com");
-            l.password.SetText("xfiles67");
+            l.email.SetText("lizagustafsson_@hotmail.com");
+            l.password.SetText("VoltigeSM2024");
             l.SubmitButton.Click();
 
             // Inistatiate the Competition page
@@ -351,16 +353,38 @@ namespace Tests.Voltige
             var reservehorseCellText = reservhorse.Text.Trim();
             Int32 horseIdNumReserve = 0;
             _horsereserve[horseIdNumReserve] = "-";
-            if (reservehorseCellText.Length > 0)
+                        var horseReserveTotalText = "";
+                        var horseReserveTotalIDText = "";
+
+                        if (reservehorseCellText.Length > 0)
             {
-              var reservlink = reservhorse.LinkUrl;
-              driver.Navigate().GoToUrl(reservlink);
-              xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
-              by = By.XPath(xpath);
-              horseref = driver.WrappedDriver.FindElement(by);
-              horseIdNumReserve = Int32.Parse(horseref.Text);
-              _horsereserve[horseIdNumReserve] = reservehorseCellText;
-              driver.Navigate().Back();
+                 var hlinks = reservhorse.Links.ToList();
+                 int sz =  hlinks.Count;
+                            for (int k = 0; k < sz; k++)
+                            {
+                                var reservlinka = hlinks[k];
+                                //var reservlink = reservhorse.LinkUrl;
+                                var reservlink = reservlinka.GetAttribute("href");
+                                var curhorse = reservlinka.TrimmedText;
+                                driver.Navigate().GoToUrl(reservlink);
+                                xpath = "//tr/td[.='SVRF']/following-sibling::td[1]";
+                                by = By.XPath(xpath);
+                                horseref = driver.WrappedDriver.FindElement(by);
+                                horseIdNumReserve = Int32.Parse(horseref.Text);
+                                _horsereserve[horseIdNumReserve] = curhorse;
+                                if (k == 0)
+                                {
+                                    horseReserveTotalText = curhorse;
+                                    horseReserveTotalIDText = horseIdNumReserve.ToString();
+                                }
+                                else
+                                {
+                                    horseReserveTotalText = horseReserveTotalText + " + "+ curhorse;
+                                    horseReserveTotalIDText = horseReserveTotalIDText + " + " + horseIdNumReserve.ToString();
+                                }
+                                driver.Navigate().Back();
+                            }
+
             }
             
 
@@ -413,8 +437,8 @@ namespace Tests.Voltige
                                         _linf[linfIdNum] +
                                         "|" + horseIdNum + "|" 
                                         + _horse[horseIdNum] +
-                                          "|" + horseIdNumReserve + "|"
-                                        + _horsereserve[horseIdNumReserve]
+                                          "|" + horseReserveTotalIDText + "|"
+                                        + horseReserveTotalText
                                         + "|" + clubIdNum + "|" +
                                         _clubs[clubIdNum] + "|" + notetext + nnn);
 

@@ -646,7 +646,7 @@ namespace WindowsFormsApplication1
 				Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
 				newRng.Sort(
 							newRng.Columns[1, Type.Missing], Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
-								newRng.Columns[2, Type.Missing], Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
+							newRng.Columns[2, Type.Missing], Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
 							Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
 								XlYesNoGuess.xlNo, Type.Missing, Type.Missing,
 								XlSortOrientation.xlSortColumns,
