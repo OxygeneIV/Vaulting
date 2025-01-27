@@ -251,7 +251,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="results.xlsx" />
+    <None Include="results.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="results-sm2024.xlsx" />
     <None Include="results_base.xlsx" />
     <None Include="results_beforesm2024.xlsx">
