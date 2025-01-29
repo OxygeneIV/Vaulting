@@ -1,48 +1,40 @@
 app.config ny root
+<add key="root" value="C:\privat\voltige\trahast-vattholma" />
 
 skapa "data"-folder under root.
-kopiera package dit.
+kopiera paket med protokoll dit.
 
-kopiera magnusL2024....xlsx -> root
+kopiera magnusL2024....xlsx -> root och döp om till MagnusL.xlsx
 
 Starta solution, kör (debug).
 Massa foldrar skapas i root.
 
-
-
 i "utskrift"-foldern , hitta alla Excel-filer och kopiera till fakebox-foldern i root.
-Ta bort show-klassen 9 , saknar ID, 6 st.
 
 
-
-
-
-Döp om magnusL2024....xlsx => magnusl.xlsx
-Editera den i Tab'en Klasser.
-
+MagnusL.xlsx-filen:
+Editera data i Tab'en Klasser.
 Först "Antal Domare"-kolumnen
 
-1	Svår klass individuellt 1*	TRAGK2
-2	Svår klass individuellt 2*	TRAGK2
-3	Young Vaulters	TRAGK2
-4	Svår klass individuellt 3*	TRAGK2
-5	Svår klass lag junior	TRAGK2
-6	Svår klass lag senior	TRAGK2
-7	Lätt klass lag typ 1	GK2
-8	Pas-de-deux	TRAK1
-11	Clear round Lätt klass individuell	GK2
-21	Clear round Svår klass individuellt 1*	TRAGK2
-9	Showklass lag	GK2
+1	Svår klass individuellt 1*	=> TRAGK2
+2	Svår klass individuellt 2*	=> 	TRAGK2
+3	Young Vaulters		=> TRAGK2
+4	Svår klass individuellt 3*		=> TRAGK2
+5	Svår klass lag junior		=> TRAGK2
+6	Svår klass lag senior		=> TRAGK2
+7	Lätt klass lag typ 1	=> 	GK2
+8	Pas-de-deux		=> TRAK1
+11	Clear round Lätt klass individuell		=> GK2
+21	Clear round Svår klass individuellt 1*		=> TRAGK2
+9	Showklass lag	=> 	GK2
 
-sedan "Moment(ABCD)"-kolumnerna
+sedan "Moment(ABCD)"-kolumnerna:
 
 Grund,Grund => Grund,Grund,Grund
 Tekniskt,Artistiskt => Tekniskt,Artistiskt,Tekniskt
 för alla utom lätt klass
 
-
-
-Run Steps and see the text field populate with messages.
+Run Steps and see the text field populate with messages. Exempel på output nedan
 
 Kör Step 1- knappen
   Found 10 classes
@@ -62,13 +54,15 @@ Kör Step 3- knappen
 
 
 
+Kopiera alla protokoll till /fakebox
 Kör Step 4 -knappen , Fake results
 => "Allt fake klart" - meddelande i textrutan. Efter en öl ca.
-Ta bort eller spara "fakedresults.xlsx" som sparast i /fakebox
 
-Kopiera alla exceler i Fakevox till Inbox
+Ta bort (eller spara undan)  "fakedresults.xlsx" som sparas i samband med fakedata-skapande i samma folder
 
-Tryck clear -knappen till höger för att rensa message-fältet.
+Kopiera alla exceler i Fakebox till Inbox
+
+Tryck clear -knappen till höger för att rensa message-fältet i GUIt'.
 
 Kör Step 5- knappen, ta en öl
    Beginning import of results
@@ -96,9 +90,9 @@ Sorting 11
 Sorting completed
 
 inbox skall nu vara tom
-Man kan kolla sortedResults.xlsx, alla fält ska vara ifyllda utom klass 9.
+Man kan kolla sortedResults.xlsx, alla fält ska vara ifyllda
 
-Export Results for all classes - knappen. => filer i htmlResults-foldern och htmlNoResults
+Export Results for all classes - knappen. => filer i htmlResults-foldern
 Finns en checkbox "Create PDFs during export" om man vill ha PDF'er oxå.
 
 =>
@@ -147,11 +141,12 @@ PDF creation not requested...
 Print Results BackgroundWorker End...
 
 
-
-
-
 Publish-knapp => webben.
-Just nu till http://oxygeneiv.se/voltige_dev/
+Just nu till http://oxygeneiv.se/voltige/
+    
+    Möjlig konfigändring i app.config vart resultat skall  publiceras:
+    <!--<add key="remoteworkingfolder" value="/public_html/voltige_dev/" />-->
+    <add key="remoteworkingfolder" value="/public_html/voltige/" />
 
 
 Creating Indexfile...
@@ -166,7 +161,7 @@ Publishing completed...
 Publishing results completed
 
 
-
+Resultat:
 http://www.oxygeneiv.se/voltige
 
 
