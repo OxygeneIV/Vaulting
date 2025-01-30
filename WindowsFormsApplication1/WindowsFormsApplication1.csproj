@@ -721,7 +721,9 @@
     <None Include="fakebox\9Tuva Westerlund_B_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MagnusL.xlsx" />
+    <None Include="MagnusL.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
