@@ -319,8 +319,6 @@ namespace WindowsFormsApplication1
 
         }
 
-
-
         fakefile = Path.Combine(fakeboxFolder, "fakedresults.xlsx");
 
         if (!File.Exists(resultfile))
@@ -328,6 +326,13 @@ namespace WindowsFormsApplication1
           showMessageBox("First time using folder " + workingDirectory + ". Copying base result file");
           var ff = Path.Combine(Application.StartupPath, ConfigurationManager.AppSettings["results"]);
           File.Copy(ff, resultfile);
+        }
+        //startlist
+        if (!File.Exists(startlistfile))
+        {
+          showMessageBox("First time using folder " + workingDirectory + ". Copying startlist file");
+          var ff = Path.Combine(Application.StartupPath, ConfigurationManager.AppSettings["startlist"]);
+          File.Copy(ff, startlistfile);
         }
 
         //if (!File.Exists(ridsportlogo))

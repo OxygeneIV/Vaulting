@@ -241,6 +241,489 @@
     <None Include="CalculatedHorsePoints_template_SMNM.xlsx" />
     <None Include="documentation\InstruktionerResultat.docx" />
     <None Include="documentation\ProtokollIfyllnad.docx" />
+    <None Include="fakebox\10Sigrid Stidelius_A_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\10Sigrid Stidelius_B_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\10Sofia Börling_A_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\10Sofia Börling_B_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\11Henny Lind_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\11Henny Lind_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\12Olivia Nyberg_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\12Olivia Nyberg_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\13Linnea Viklund_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\13Linnea Viklund_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\14Cecilia Viklund_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\14Cecilia Viklund_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\15Tyra Karlsson_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\15Tyra Karlsson_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\16Henny Lind_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\16Henny Lind_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\17Olivia Nyberg_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\17Olivia Nyberg_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\18Linnea Viklund_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\18Linnea Viklund_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\19Cecilia Viklund_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\19Cecilia Viklund_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Hilda Ovebäck_A_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Hilda Ovebäck_B_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Lag Enyo_A_klass6_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Lag Enyo_B_klass6_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Novalie och Ebba_A_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Novalie och Ebba_B_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Team Athena_A_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Team Athena_B_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Team Atlas_A_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Team Atlas_B_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Tuva Westerlund_A_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\1Tuva Westerlund_B_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\20Tyra Karlsson_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\20Tyra Karlsson_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\21Thea Lundell_A_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\21Thea Lundell_B_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\22Ebba Wallqvist_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\22Ebba Wallqvist_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\23Idun Lennerman_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\23Idun Lennerman_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\24Ariah Fischer_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\24Ariah Fischer_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\25Thea Lundell_A_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\25Thea Lundell_B_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\26Ebba Wallqvist_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\26Ebba Wallqvist_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\27Idun Lennerman_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\27Idun Lennerman_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\28Ariah Fischer_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\28Ariah Fischer_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\29Thea Lundell_A_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\29Thea Lundell_B_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Hilda Ovebäck_A_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Hilda Ovebäck_B_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Lag Enyo_A_klass6_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Lag Enyo_B_klass6_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Mirabel och Thea_A_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Mirabel och Thea_B_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Sofia Börling_A_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Sofia Börling_B_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Team Athena_A_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Team Athena_B_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Team Atlas_A_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\2Team Atlas_B_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\30Novalie Wall_A_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\30Novalie Wall_B_klass3_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\31Tuva Wipemo_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\31Tuva Wipemo_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\32Novalie Wall_A_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\32Novalie Wall_B_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\33Tuva Wipemo_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\33Tuva Wipemo_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\34Novalie Wall_A_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\34Novalie Wall_B_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\35Alva Ewerlöf_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\35Alva Ewerlöf_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\36Mirabel Lennerman_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\36Mirabel Lennerman_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\37Vera Bjarnemo_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\37Vera Bjarnemo_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\38Alva Ewerlöf_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\38Alva Ewerlöf_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\39Mirabel Lennerman_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\39Mirabel Lennerman_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Alva och Ebba_A_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Alva och Ebba_B_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Hilma Bernström_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Hilma Bernström_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Lovis Berg_A_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Lovis Berg_B_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Team Andromeda_A_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Team Andromeda_B_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Team Cassiopeia_A_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\3Team Cassiopeia_B_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\40Vera Bjarnemo_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\40Vera Bjarnemo_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\41Henny Lind %28trä%29_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\41Henny Lind %28trä%29_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\42Olivia Nyberg  %28trä%29_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\42Olivia Nyberg  %28trä%29_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\43Linnea Viklund  %28trä%29_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\43Linnea Viklund  %28trä%29_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\44Cecilia Viklund  %28trä%29_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\44Cecilia Viklund  %28trä%29_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\45Tyra Karlsson  %28trä%29_A_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\45Tyra Karlsson  %28trä%29_B_klass1_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\46Henny Lind %28trä%29_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\46Henny Lind %28trä%29_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\47Olivia Nyberg  %28trä%29_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\47Olivia Nyberg  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\48Linnea Viklund  %28trä%29_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\48Linnea Viklund  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\49Cecilia Viklund  %28trä%29_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\49Cecilia Viklund  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Lovisa Baeckström_A_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Lovisa Baeckström_B_klass2_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Nelia Palmius_A_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Nelia Palmius_B_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Olivia och Agnes_A_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Olivia och Agnes_B_klass10_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Team Andromeda_A_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Team Andromeda_B_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Team Cassiopeia_A_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\4Team Cassiopeia_B_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\50Tyra Karlsson  %28trä%29_A_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\50Tyra Karlsson  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Linnea Lif_A_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Linnea Lif_B_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Team Aquila_A_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Team Aquila_B_klass7_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Team Eros_A_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Team Eros_B_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Tuva Westerlund_A_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\5Tuva Westerlund_B_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Sigrid Stidelius_A_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Sigrid Stidelius_B_klass5_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Sofia Börling_A_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Sofia Börling_B_klass3_Tekn kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Team Aquila_A_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Team Aquila_B_klass7_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Team Eros_A_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\6Team Eros_B_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Hilma Bernström_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Hilma Bernström_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Lag Safir_A_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Lag Safir_B_klass9_Grund_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Lovis Berg_A_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\7Lovis Berg_B_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Lag Safir_A_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Lag Safir_B_klass9_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Lovisa Baeckström_A_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Lovisa Baeckström_B_klass2_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Nelia Palmius_A_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\8Nelia Palmius_B_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\9Linnea Lif_A_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\9Linnea Lif_B_klass5_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\9Tuva Westerlund_A_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="fakebox\9Tuva Westerlund_B_klass3_Kür_-_Sa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MagnusL.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -252,6 +735,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="results.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="results-sm2024.xlsx" />
+    <None Include="results_base.xlsx" />
+    <None Include="results_beforesm2024.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="results_org.xlsx">
