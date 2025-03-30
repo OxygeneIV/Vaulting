@@ -144,10 +144,10 @@ namespace Tests.Voltige
             //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
-            string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
-
-            // Open Browser
-            var driver = CreateBrowserInstance(Driver.Browser.Chrome);
+            //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
+             string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+      // Open Browser
+      var driver = CreateBrowserInstance(Driver.Browser.Chrome);
 
             // Goto TDB
             driver.Navigate().GoToUrl(tdbUrl);
@@ -155,14 +155,10 @@ namespace Tests.Voltige
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
 
-           // l.email.SetText("helena.heuman@billdalsridklubb.com");
-           //  l.password.SetText("1492");
 
-            //l.email.SetText("annaomagnus@hotmail.com");
-            //l.password.SetText("berlin96");
-            l.email.SetText("lizagustafsson_@hotmail.com");
-            l.password.SetText("VoltigeSM2024");
-            l.SubmitButton.Click();
+      l.email.SetText("oxygeneiv@hotmail.com");
+      l.password.SetText("xfiles67");
+      l.SubmitButton.Click();
 
             // Inistatiate the Competition page
             CompetitionPage c = PageObjectFactory.Init<CompetitionPage>(driver);
