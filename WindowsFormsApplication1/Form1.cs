@@ -31,6 +31,7 @@ using DocumentFormat.OpenXml.Vml.Office;
 using System.Web.Caching;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Security.Policy;
+using System.Windows.Input;
 
 namespace WindowsFormsApplication1
 {
@@ -1554,6 +1555,8 @@ namespace WindowsFormsApplication1
       dict[342894] = "Charlz";
       dict[333778] = "Bathory";
       dict[349212] = "Zara";
+      dict[281424] = "Currior";
+
 
       var classes = readClasses();
 

@@ -109,27 +109,29 @@
       this.panel1.Controls.Add(this.label1);
       this.panel1.Controls.Add(this.buttonFakeResults);
       this.panel1.Controls.Add(this.panel3);
-      this.panel1.Location = new System.Drawing.Point(30, 527);
+      this.panel1.Location = new System.Drawing.Point(40, 649);
+      this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(1458, 248);
+      this.panel1.Size = new System.Drawing.Size(1943, 305);
       this.panel1.TabIndex = 0;
       // 
       // button7
       // 
-      this.button7.Location = new System.Drawing.Point(202, 143);
+      this.button7.Location = new System.Drawing.Point(269, 176);
+      this.button7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button7.Name = "button7";
-      this.button7.Size = new System.Drawing.Size(75, 23);
+      this.button7.Size = new System.Drawing.Size(100, 28);
       this.button7.TabIndex = 15;
       this.button7.Text = "häst ID";
       this.button7.UseVisualStyleBackColor = true;
-      this.button7.Visible = false;
       this.button7.Click += new System.EventHandler(this.button7_Click);
       // 
       // button6
       // 
-      this.button6.Location = new System.Drawing.Point(75, 178);
+      this.button6.Location = new System.Drawing.Point(100, 219);
+      this.button6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button6.Name = "button6";
-      this.button6.Size = new System.Drawing.Size(216, 42);
+      this.button6.Size = new System.Drawing.Size(288, 52);
       this.button6.TabIndex = 14;
       this.button6.Text = "Omvänd startordning";
       this.button6.UseVisualStyleBackColor = true;
@@ -139,26 +141,29 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(31, 118);
+      this.label4.Location = new System.Drawing.Point(41, 145);
+      this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(38, 13);
+      this.label4.Size = new System.Drawing.Size(45, 16);
       this.label4.TabIndex = 13;
       this.label4.Text = "Step 5";
       // 
       // label3
       // 
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(31, 56);
+      this.label3.Location = new System.Drawing.Point(41, 69);
+      this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(38, 13);
+      this.label3.Size = new System.Drawing.Size(45, 16);
       this.label3.TabIndex = 12;
       this.label3.Text = "Step 3";
       // 
       // buttonPopulateSheetsWithVaulters
       // 
-      this.buttonPopulateSheetsWithVaulters.Location = new System.Drawing.Point(75, 51);
+      this.buttonPopulateSheetsWithVaulters.Location = new System.Drawing.Point(100, 63);
+      this.buttonPopulateSheetsWithVaulters.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.buttonPopulateSheetsWithVaulters.Name = "buttonPopulateSheetsWithVaulters";
-      this.buttonPopulateSheetsWithVaulters.Size = new System.Drawing.Size(217, 23);
+      this.buttonPopulateSheetsWithVaulters.Size = new System.Drawing.Size(289, 28);
       this.buttonPopulateSheetsWithVaulters.TabIndex = 11;
       this.buttonPopulateSheetsWithVaulters.Text = "Populate Results sheets with vaulters";
       this.buttonPopulateSheetsWithVaulters.UseVisualStyleBackColor = true;
@@ -167,17 +172,19 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(31, 25);
+      this.label2.Location = new System.Drawing.Point(41, 31);
+      this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(38, 13);
+      this.label2.Size = new System.Drawing.Size(45, 16);
       this.label2.TabIndex = 8;
       this.label2.Text = "Step 2";
       // 
       // buttonCreateResultSheets
       // 
-      this.buttonCreateResultSheets.Location = new System.Drawing.Point(75, 20);
+      this.buttonCreateResultSheets.Location = new System.Drawing.Point(100, 25);
+      this.buttonCreateResultSheets.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.buttonCreateResultSheets.Name = "buttonCreateResultSheets";
-      this.buttonCreateResultSheets.Size = new System.Drawing.Size(217, 23);
+      this.buttonCreateResultSheets.Size = new System.Drawing.Size(289, 28);
       this.buttonCreateResultSheets.TabIndex = 7;
       this.buttonCreateResultSheets.Text = "Create Base Result Sheets for all classes";
       this.buttonCreateResultSheets.UseVisualStyleBackColor = true;
@@ -185,9 +192,10 @@
       // 
       // btnReadResultsFromInbox
       // 
-      this.btnReadResultsFromInbox.Location = new System.Drawing.Point(75, 113);
+      this.btnReadResultsFromInbox.Location = new System.Drawing.Point(100, 139);
+      this.btnReadResultsFromInbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.btnReadResultsFromInbox.Name = "btnReadResultsFromInbox";
-      this.btnReadResultsFromInbox.Size = new System.Drawing.Size(217, 23);
+      this.btnReadResultsFromInbox.Size = new System.Drawing.Size(289, 28);
       this.btnReadResultsFromInbox.TabIndex = 6;
       this.btnReadResultsFromInbox.Text = "Read results from Inbox and sort";
       this.btnReadResultsFromInbox.UseVisualStyleBackColor = true;
@@ -196,17 +204,19 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(31, 87);
+      this.label1.Location = new System.Drawing.Point(41, 107);
+      this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(38, 13);
+      this.label1.Size = new System.Drawing.Size(45, 16);
       this.label1.TabIndex = 5;
       this.label1.Text = "Step 4";
       // 
       // buttonFakeResults
       // 
-      this.buttonFakeResults.Location = new System.Drawing.Point(75, 82);
+      this.buttonFakeResults.Location = new System.Drawing.Point(100, 101);
+      this.buttonFakeResults.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.buttonFakeResults.Name = "buttonFakeResults";
-      this.buttonFakeResults.Size = new System.Drawing.Size(217, 23);
+      this.buttonFakeResults.Size = new System.Drawing.Size(289, 28);
       this.buttonFakeResults.TabIndex = 4;
       this.buttonFakeResults.Text = "Fake Results";
       this.buttonFakeResults.UseVisualStyleBackColor = true;
@@ -221,17 +231,19 @@
       this.panel3.Controls.Add(this.textBox1);
       this.panel3.Controls.Add(this.progressLabel);
       this.panel3.Controls.Add(this.progressBar1);
-      this.panel3.Location = new System.Drawing.Point(327, 20);
+      this.panel3.Location = new System.Drawing.Point(436, 25);
+      this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.panel3.Name = "panel3";
-      this.panel3.Size = new System.Drawing.Size(1106, 215);
+      this.panel3.Size = new System.Drawing.Size(1475, 265);
       this.panel3.TabIndex = 10;
       // 
       // buttonClear
       // 
       this.buttonClear.Anchor = System.Windows.Forms.AnchorStyles.Right;
-      this.buttonClear.Location = new System.Drawing.Point(1024, 59);
+      this.buttonClear.Location = new System.Drawing.Point(1365, 73);
+      this.buttonClear.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.buttonClear.Name = "buttonClear";
-      this.buttonClear.Size = new System.Drawing.Size(51, 23);
+      this.buttonClear.Size = new System.Drawing.Size(68, 28);
       this.buttonClear.TabIndex = 11;
       this.buttonClear.Text = "Clear";
       this.buttonClear.UseVisualStyleBackColor = true;
@@ -242,19 +254,21 @@
       this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.textBox1.Location = new System.Drawing.Point(14, 59);
+      this.textBox1.Location = new System.Drawing.Point(19, 73);
+      this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.textBox1.Multiline = true;
       this.textBox1.Name = "textBox1";
       this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.textBox1.Size = new System.Drawing.Size(993, 153);
+      this.textBox1.Size = new System.Drawing.Size(1323, 187);
       this.textBox1.TabIndex = 10;
       // 
       // progressLabel
       // 
       this.progressLabel.AutoSize = true;
-      this.progressLabel.Location = new System.Drawing.Point(11, 10);
+      this.progressLabel.Location = new System.Drawing.Point(15, 12);
+      this.progressLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.progressLabel.Name = "progressLabel";
-      this.progressLabel.Size = new System.Drawing.Size(48, 13);
+      this.progressLabel.Size = new System.Drawing.Size(62, 16);
       this.progressLabel.TabIndex = 9;
       this.progressLabel.Text = "Progress";
       this.progressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -263,9 +277,10 @@
       // 
       this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.progressBar1.Location = new System.Drawing.Point(14, 26);
+      this.progressBar1.Location = new System.Drawing.Point(19, 32);
+      this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.progressBar1.Name = "progressBar1";
-      this.progressBar1.Size = new System.Drawing.Size(993, 23);
+      this.progressBar1.Size = new System.Drawing.Size(1324, 28);
       this.progressBar1.TabIndex = 3;
       // 
       // backgroundWorkerFakeResults
@@ -279,19 +294,21 @@
       this.tabControl1.Controls.Add(this.tabPage1);
       this.tabControl1.Controls.Add(this.tabPage2);
       this.tabControl1.Controls.Add(this.tabPage3);
-      this.tabControl1.Location = new System.Drawing.Point(17, 104);
+      this.tabControl1.Location = new System.Drawing.Point(23, 128);
+      this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(1425, 378);
+      this.tabControl1.Size = new System.Drawing.Size(1900, 465);
       this.tabControl1.TabIndex = 1;
       // 
       // tabPage1
       // 
       this.tabPage1.Controls.Add(this.dataGridView1);
-      this.tabPage1.Location = new System.Drawing.Point(4, 22);
+      this.tabPage1.Location = new System.Drawing.Point(4, 25);
+      this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(1417, 352);
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabPage1.Size = new System.Drawing.Size(1892, 436);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "tabPage1";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -304,20 +321,22 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
       this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView1.Location = new System.Drawing.Point(6, 6);
+      this.dataGridView1.Location = new System.Drawing.Point(8, 7);
+      this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.dataGridView1.Name = "dataGridView1";
       this.dataGridView1.ReadOnly = true;
       this.dataGridView1.RowHeadersWidth = 51;
-      this.dataGridView1.Size = new System.Drawing.Size(1399, 372);
+      this.dataGridView1.Size = new System.Drawing.Size(1865, 458);
       this.dataGridView1.TabIndex = 0;
       // 
       // tabPage2
       // 
       this.tabPage2.Controls.Add(this.dataGridView2);
-      this.tabPage2.Location = new System.Drawing.Point(4, 22);
+      this.tabPage2.Location = new System.Drawing.Point(4, 25);
+      this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.tabPage2.Name = "tabPage2";
-      this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(1417, 352);
+      this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabPage2.Size = new System.Drawing.Size(1892, 436);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "tabPage2";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -328,20 +347,22 @@
       this.dataGridView2.AllowUserToDeleteRows = false;
       this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
       this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView2.Location = new System.Drawing.Point(7, 6);
+      this.dataGridView2.Location = new System.Drawing.Point(9, 7);
+      this.dataGridView2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.dataGridView2.Name = "dataGridView2";
       this.dataGridView2.ReadOnly = true;
       this.dataGridView2.RowHeadersWidth = 51;
-      this.dataGridView2.Size = new System.Drawing.Size(1404, 372);
+      this.dataGridView2.Size = new System.Drawing.Size(1872, 458);
       this.dataGridView2.TabIndex = 0;
       // 
       // tabPage3
       // 
       this.tabPage3.Controls.Add(this.dataGridView3);
-      this.tabPage3.Location = new System.Drawing.Point(4, 22);
+      this.tabPage3.Location = new System.Drawing.Point(4, 25);
+      this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.tabPage3.Name = "tabPage3";
-      this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage3.Size = new System.Drawing.Size(1417, 352);
+      this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.tabPage3.Size = new System.Drawing.Size(1892, 436);
       this.tabPage3.TabIndex = 2;
       this.tabPage3.Text = "tabPage3";
       this.tabPage3.UseVisualStyleBackColor = true;
@@ -353,12 +374,13 @@
       this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
       this.dataGridView3.BackgroundColor = System.Drawing.Color.Azure;
       this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.dataGridView3.Location = new System.Drawing.Point(7, 6);
+      this.dataGridView3.Location = new System.Drawing.Point(9, 7);
+      this.dataGridView3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.dataGridView3.Name = "dataGridView3";
       this.dataGridView3.ReadOnly = true;
       this.dataGridView3.RowHeadersWidth = 51;
       this.dataGridView3.RowTemplate.Height = 16;
-      this.dataGridView3.Size = new System.Drawing.Size(1404, 372);
+      this.dataGridView3.Size = new System.Drawing.Size(1872, 458);
       this.dataGridView3.TabIndex = 1;
       this.dataGridView3.DataSourceChanged += new System.EventHandler(this.dataGridView3_DataSourceChanged);
       this.dataGridView3.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView3_CellFormatting);
@@ -366,9 +388,10 @@
       // 
       // button4
       // 
-      this.button4.Location = new System.Drawing.Point(17, 16);
+      this.button4.Location = new System.Drawing.Point(23, 20);
+      this.button4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button4.Name = "button4";
-      this.button4.Size = new System.Drawing.Size(395, 31);
+      this.button4.Size = new System.Drawing.Size(527, 38);
       this.button4.TabIndex = 7;
       this.button4.Text = "Step 1 - Read Classes and Vaulters from Startlist";
       this.button4.UseVisualStyleBackColor = true;
@@ -387,18 +410,20 @@
       this.panel2.Controls.Add(this.button4);
       this.panel2.Controls.Add(this.panel4);
       this.panel2.Controls.Add(this.tabControl1);
-      this.panel2.Location = new System.Drawing.Point(30, 26);
+      this.panel2.Location = new System.Drawing.Point(40, 32);
+      this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(1458, 495);
+      this.panel2.Size = new System.Drawing.Size(1943, 609);
       this.panel2.TabIndex = 8;
       // 
       // checkBoxJudge
       // 
       this.checkBoxJudge.AutoSize = true;
       this.checkBoxJudge.Enabled = false;
-      this.checkBoxJudge.Location = new System.Drawing.Point(121, 54);
+      this.checkBoxJudge.Location = new System.Drawing.Point(161, 66);
+      this.checkBoxJudge.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.checkBoxJudge.Name = "checkBoxJudge";
-      this.checkBoxJudge.Size = new System.Drawing.Size(117, 17);
+      this.checkBoxJudge.Size = new System.Drawing.Size(146, 20);
       this.checkBoxJudge.TabIndex = 16;
       this.checkBoxJudge.Text = "Judge Table Points";
       this.checkBoxJudge.UseVisualStyleBackColor = true;
@@ -408,9 +433,10 @@
       // textBoxProcessInterval
       // 
       this.textBoxProcessInterval.Enabled = false;
-      this.textBoxProcessInterval.Location = new System.Drawing.Point(310, 76);
+      this.textBoxProcessInterval.Location = new System.Drawing.Point(413, 94);
+      this.textBoxProcessInterval.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.textBoxProcessInterval.Name = "textBoxProcessInterval";
-      this.textBoxProcessInterval.Size = new System.Drawing.Size(100, 20);
+      this.textBoxProcessInterval.Size = new System.Drawing.Size(132, 22);
       this.textBoxProcessInterval.TabIndex = 15;
       this.textBoxProcessInterval.Text = "600";
       this.textBoxProcessInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -421,9 +447,10 @@
       // 
       this.checkBoxProcessTimer.AutoSize = true;
       this.checkBoxProcessTimer.Enabled = false;
-      this.checkBoxProcessTimer.Location = new System.Drawing.Point(310, 53);
+      this.checkBoxProcessTimer.Location = new System.Drawing.Point(413, 65);
+      this.checkBoxProcessTimer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.checkBoxProcessTimer.Name = "checkBoxProcessTimer";
-      this.checkBoxProcessTimer.Size = new System.Drawing.Size(102, 17);
+      this.checkBoxProcessTimer.Size = new System.Drawing.Size(126, 20);
       this.checkBoxProcessTimer.TabIndex = 9;
       this.checkBoxProcessTimer.Text = "Auto processing";
       this.checkBoxProcessTimer.UseVisualStyleBackColor = true;
@@ -433,9 +460,10 @@
       // button5
       // 
       this.button5.Anchor = System.Windows.Forms.AnchorStyles.Right;
-      this.button5.Location = new System.Drawing.Point(1008, 43);
+      this.button5.Location = new System.Drawing.Point(1344, 53);
+      this.button5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button5.Name = "button5";
-      this.button5.Size = new System.Drawing.Size(202, 23);
+      this.button5.Size = new System.Drawing.Size(269, 28);
       this.button5.TabIndex = 11;
       this.button5.Text = "Export results for all classes";
       this.button5.UseVisualStyleBackColor = true;
@@ -444,9 +472,10 @@
       // button2
       // 
       this.button2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-      this.button2.Location = new System.Drawing.Point(1008, 18);
+      this.button2.Location = new System.Drawing.Point(1344, 22);
+      this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(202, 23);
+      this.button2.Size = new System.Drawing.Size(269, 28);
       this.button2.TabIndex = 10;
       this.button2.Text = "Export result for selected  class";
       this.button2.UseVisualStyleBackColor = true;
@@ -464,17 +493,19 @@
       this.panel4.Controls.Add(this.label5);
       this.panel4.Controls.Add(this.comboBox1);
       this.panel4.Controls.Add(this.checkBox1);
-      this.panel4.Location = new System.Drawing.Point(440, 6);
+      this.panel4.Location = new System.Drawing.Point(587, 7);
+      this.panel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.panel4.Name = "panel4";
-      this.panel4.Size = new System.Drawing.Size(992, 92);
+      this.panel4.Size = new System.Drawing.Size(1322, 113);
       this.panel4.TabIndex = 14;
       // 
       // createPdfsCheckBox
       // 
       this.createPdfsCheckBox.AutoSize = true;
-      this.createPdfsCheckBox.Location = new System.Drawing.Point(373, 43);
+      this.createPdfsCheckBox.Location = new System.Drawing.Point(497, 53);
+      this.createPdfsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.createPdfsCheckBox.Name = "createPdfsCheckBox";
-      this.createPdfsCheckBox.Size = new System.Drawing.Size(150, 17);
+      this.createPdfsCheckBox.Size = new System.Drawing.Size(186, 20);
       this.createPdfsCheckBox.TabIndex = 16;
       this.createPdfsCheckBox.Text = "Create PDFs during export";
       this.createPdfsCheckBox.UseVisualStyleBackColor = true;
@@ -483,9 +514,10 @@
       // button3
       // 
       this.button3.Anchor = System.Windows.Forms.AnchorStyles.Right;
-      this.button3.Location = new System.Drawing.Point(775, 39);
+      this.button3.Location = new System.Drawing.Point(1033, 48);
+      this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(186, 22);
+      this.button3.Size = new System.Drawing.Size(248, 27);
       this.button3.TabIndex = 15;
       this.button3.Text = "Calculate horse points";
       this.button3.UseVisualStyleBackColor = true;
@@ -494,9 +526,10 @@
       // button1
       // 
       this.button1.Anchor = System.Windows.Forms.AnchorStyles.Right;
-      this.button1.Location = new System.Drawing.Point(775, 11);
+      this.button1.Location = new System.Drawing.Point(1033, 14);
+      this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(186, 26);
+      this.button1.Size = new System.Drawing.Size(248, 32);
       this.button1.TabIndex = 13;
       this.button1.Text = "Publish";
       this.button1.UseVisualStyleBackColor = true;
@@ -507,9 +540,10 @@
       this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
       this.label5.AutoSize = true;
       this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label5.Location = new System.Drawing.Point(23, 10);
+      this.label5.Location = new System.Drawing.Point(31, 12);
+      this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(120, 13);
+      this.label5.Size = new System.Drawing.Size(154, 17);
       this.label5.TabIndex = 13;
       this.label5.Text = "Results and printing";
       // 
@@ -517,9 +551,10 @@
       // 
       this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
       this.comboBox1.FormattingEnabled = true;
-      this.comboBox1.Location = new System.Drawing.Point(26, 39);
+      this.comboBox1.Location = new System.Drawing.Point(35, 48);
+      this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.comboBox1.Name = "comboBox1";
-      this.comboBox1.Size = new System.Drawing.Size(325, 21);
+      this.comboBox1.Size = new System.Drawing.Size(432, 24);
       this.comboBox1.TabIndex = 9;
       this.comboBox1.Text = "Select Class";
       this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -531,9 +566,10 @@
       this.checkBox1.AutoSize = true;
       this.checkBox1.Checked = true;
       this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.checkBox1.Location = new System.Drawing.Point(373, 15);
+      this.checkBox1.Location = new System.Drawing.Point(510, 18);
+      this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.checkBox1.Name = "checkBox1";
-      this.checkBox1.Size = new System.Drawing.Size(166, 17);
+      this.checkBox1.Size = new System.Drawing.Size(208, 20);
       this.checkBox1.TabIndex = 12;
       this.checkBox1.Text = "Add \"Preliminiary result\" label ";
       this.checkBox1.UseVisualStyleBackColor = true;
@@ -599,11 +635,12 @@
       // 
       // Form1
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1500, 818);
+      this.ClientSize = new System.Drawing.Size(2000, 1007);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel1);
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.Name = "Form1";
       this.Text = "Form1";
       this.panel1.ResumeLayout(false);
