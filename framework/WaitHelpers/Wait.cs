@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Framework.Exceptions;
-using Framework.PageObjects;
 using Framework.TimeoutManagement;
 using NLog;
 using Polly;
@@ -10,10 +9,10 @@ using Polly.Retry;
 
 namespace Framework.WaitHelpers
 {
-    /// <summary>
-    /// Wait class
-    /// </summary>
-    public static class Wait
+  /// <summary>
+  /// Wait class
+  /// </summary>
+  public static class Wait
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

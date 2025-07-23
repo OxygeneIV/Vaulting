@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Framework.Video
+﻿namespace Framework.Video
 {
-    public static class VideoUtils
+  public static class VideoUtils
     {
         //public static List<string> Split(string filePath, int videoLengthInMinutes)
         //{

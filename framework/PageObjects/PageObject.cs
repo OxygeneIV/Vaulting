@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.Core.Internal;
@@ -24,10 +23,10 @@ using Polly.Retry;
 namespace Framework.PageObjects
 {
 
-    /// <summary>
-    /// Base class of all PageObject
-    /// </summary>
-    public class PageObject : IParent
+  /// <summary>
+  /// Base class of all PageObject
+  /// </summary>
+  public class PageObject : IParent
     {
 
         protected Logger Log { get; private set; }

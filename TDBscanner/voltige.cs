@@ -10,11 +10,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Base;
 using Viedoc.viedoc.pages.components.elements;
 using OpenQA.Selenium;
-using static System.Net.WebRequestMethods;
 
 namespace Tests.Voltige
 {
-    [Locator(How.Sizzle, "body:has(#email)")]
+  [Locator(How.Sizzle, "body:has(#email)")]
     public class LoginPage : PageObject
     {
         [Locator("#email")] public TextField email;

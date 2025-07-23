@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using NLog;
 using Polly;
 using Polly.Timeout;
 
 namespace Framework.TimeoutManagement
 {
-    public class FaultHandling
+  public class FaultHandling
     {
 
         protected static Logger Log= LogManager.GetCurrentClassLogger();

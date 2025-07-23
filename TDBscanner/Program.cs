@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TDBscanner
+﻿namespace TDBscanner
 {
-    class Program
+  class Program
     {
         static void Main(string[] args)
         {

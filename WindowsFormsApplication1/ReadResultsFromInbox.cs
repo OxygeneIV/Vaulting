@@ -1,6 +1,5 @@
 ﻿using OfficeOpenXml;
 using System;
-using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    partial class Form1
+  partial class Form1
     {
 
         private void showMessageBox(string text)

@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Windows.Forms;
 //using Bytescout.PDF2HTML;
 //using EvoPdf.PdfToHtml;
-using FluentFTP;
 //using RasterEdge.Imaging.Basic;
 //using RasterEdge.XDoc.Converter;
 //using RasterEdge.XDoc.PDF;

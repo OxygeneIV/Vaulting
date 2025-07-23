@@ -4,12 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 
 using System.IO;
-using Framework.PageObjects;
-using Framework.WaitHelpers;
-using Framework.WebDriver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Base;
-using Viedoc.viedoc.pages.components.elements;
 
 namespace Tests.Voltige
 {
@@ -18,7 +14,7 @@ namespace Tests.Voltige
 
 
 
-    [TestClass]
+  [TestClass]
     public class VoltigeTestsManuell : ViedocTestbase
     {
 

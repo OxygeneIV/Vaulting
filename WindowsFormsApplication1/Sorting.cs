@@ -3,15 +3,12 @@ using System.IO;
 using System.Linq;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
 using System.Collections.Generic;
-using DocumentFormat.OpenXml.Office2013.Word;
-using ListBox = System.Windows.Forms.ListBox;
 using System.Configuration;
 
 namespace WindowsFormsApplication1
 {
-	partial class Form1
+  partial class Form1
 	{
 
 		private void backgroundWorkerSortResults_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)

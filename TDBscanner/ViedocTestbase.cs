@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Framework.PageObjects;
-using Framework.WaitHelpers;
 using Framework.WebDriver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
 namespace Tests.Base
 {
-    [Browser(true)]
+  [Browser(true)]
     public class ViedocTestbase : TestBase
     {
         protected string Password => TestProperty("password");

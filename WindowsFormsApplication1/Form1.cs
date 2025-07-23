@@ -11,27 +11,15 @@ using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Globalization;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
 using PdfSharp.Drawing;
-using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using Color = System.Drawing.Color;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using System.Threading;
 using SelectPdf;
 using FluentFTP;
 using System.Net;
-using static WindowsFormsApplication1.Form1.Horse;
 using System.Collections.Specialized;
 using System.Collections;
-using System.Web.UI;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml.Office;
-using System.Web.Caching;
-using DocumentFormat.OpenXml.Bibliography;
-using System.Security.Policy;
-using System.Windows.Input;
 
 namespace WindowsFormsApplication1
 {

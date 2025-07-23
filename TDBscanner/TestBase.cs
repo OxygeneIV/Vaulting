@@ -5,17 +5,13 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 using Castle.Core.Internal;
-using Framework.Utils;
 using Framework.WaitHelpers;
 using Framework.WebDriver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
 using OpenQA.Selenium.Remote;
@@ -26,7 +22,7 @@ using Parallel = System.Threading.Tasks.Parallel;
 
 namespace Tests.Base
 {
-    [TestClass]
+  [TestClass]
     public abstract class TestBase
     {
         public TValue GetMethodAttributeValue<TAttribute, TValue>(Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute, new()
