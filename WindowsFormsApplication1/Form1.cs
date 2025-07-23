@@ -36,6 +36,7 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Collections;
 using PdfSharp.UniversalAccessibility.Drawing;
+using System.ComponentModel;
 
 namespace WindowsFormsApplication1
 {
@@ -75,7 +76,9 @@ namespace WindowsFormsApplication1
 
     public Form1()
     {
-      ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+      //ExcelPackage.License = new LicenseProvider(LicenseType.NonCommercial);
+      //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+      ExcelPackage.License.SetNonCommercialOrganization("Uppsala Voltige");
       InitializeComponent();
       setPathes();
             //LoadParametersFromFile();
