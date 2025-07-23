@@ -176,7 +176,7 @@ namespace WindowsFormsApplication1
         private int ReadResultsFromInbox()
         {
             // Set timestamp that files should have been created to not get misbehaved files
-            DateTime maxDateTime = DateTime.Now.AddSeconds(-95);
+            //DateTime maxDateTime = DateTime.Now.AddSeconds(-95);
             DirectoryInfo dirinfo = new DirectoryInfo(inboxFolder);
             var files = dirinfo.EnumerateFiles("*.xls*").ToList();
             
@@ -321,21 +321,21 @@ namespace WindowsFormsApplication1
                 return 0;
               }
     
-                var MyApp = new Microsoft.Office.Interop.Excel.Application();
-                MyApp.Visible = true;
-                var workbooks = MyApp.Workbooks;
-                var MyBook = workbooks.Open(resultfile);
-                MyApp.CalculateFull();
-                MyBook.Close(true);
-                workbooks.Close();
-                MyApp.Quit();
-                UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
-                Marshal.ReleaseComObject(MyBook);
-                Marshal.ReleaseComObject(workbooks);
-                Marshal.ReleaseComObject(MyApp);
-                MyBook = null;
-                workbooks = null;
-                MyApp = null;
+                //var MyApp = new Microsoft.Office.Interop.Excel.Application();
+                //MyApp.Visible = true;
+                //var workbooks = MyApp.Workbooks;
+                //var MyBook = workbooks.Open(resultfile);
+                //MyApp.CalculateFull();
+                //MyBook.Close(true);
+                //workbooks.Close();
+                //MyApp.Quit();
+                //UpdateMessageTextBox("Import of results, calculation done...wait for sorting...");
+                //Marshal.ReleaseComObject(MyBook);
+                //Marshal.ReleaseComObject(workbooks);
+                //Marshal.ReleaseComObject(MyApp);
+                //MyBook = null;
+                //workbooks = null;
+                //MyApp = null;
 
       return 0;
 

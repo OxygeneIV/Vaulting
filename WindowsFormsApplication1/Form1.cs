@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 using System.Globalization;
 using ClosedXML.Excel;
 using PdfSharp.Drawing;
@@ -990,195 +989,195 @@ namespace WindowsFormsApplication1
     }
 
 
-    public Excel._Application printResultsExcelHandler(string className, string filename)
-    {
-      Excel.Application MyApp = null;
-      Excel.Workbook MyBook = null;
-      Excel.Workbooks workbooks = null;
-      Excel.Worksheet MySheet = null;
-      bool preliminiaryResults = checkBox1.Checked;
-      string fullpath = Path.Combine(printedresultsFolder, filename);
-      fullpath = fullpath.Replace("*", "_star_");
+    //public Excel._Application printResultsExcelHandler(string className, string filename)
+    //{
+    //  Excel.Application MyApp = null;
+    //  Excel.Workbook MyBook = null;
+    //  Excel.Workbooks workbooks = null;
+    //  Excel.Worksheet MySheet = null;
+    //  bool preliminiaryResults = checkBox1.Checked;
+    //  string fullpath = Path.Combine(printedresultsFolder, filename);
+    //  fullpath = fullpath.Replace("*", "_star_");
       
-      string pdfFullPath = fullpath + ".pdf";
+    //  string pdfFullPath = fullpath + ".pdf";
      
-      String noresults = ConfigurationManager.AppSettings["noresults"];
+    //  String noresults = ConfigurationManager.AppSettings["noresults"];
 
-      List<String> noresultsList = noresults.Split(',').ToList();
+    //  List<String> noresultsList = noresults.Split(',').ToList();
 
-      // Domare
-      int counter = 0;
-      Klass klass = readClasses().Find(c => c.Name.Equals(className));
-      List<String> judgelist = new List<string>();
-      //String totalJudge = "";
-      foreach (Moment mom in klass.Moments)
-      {
-        counter++;
-        string judgetext = string.Format("{0,15}", mom.Name);
-        // Can be calculated, but not yet...
-        int subcounter = 8;
+    //  // Domare
+    //  int counter = 0;
+    //  Klass klass = readClasses().Find(c => c.Name.Equals(className));
+    //  List<String> judgelist = new List<string>();
+    //  //String totalJudge = "";
+    //  foreach (Moment mom in klass.Moments)
+    //  {
+    //    counter++;
+    //    string judgetext = string.Format("{0,15}", mom.Name);
+    //    // Can be calculated, but not yet...
+    //    int subcounter = 8;
 
-        foreach (SubMoment submom in mom.SubMoments)
-        {
+    //    foreach (SubMoment submom in mom.SubMoments)
+    //    {
 
-          if (submom.Table.judge.Fullname.Trim().Length > 0)
-          {
-            string judgeName = string.Format("{0,-30}", submom.Table.judge.Fullname);
+    //      if (submom.Table.judge.Fullname.Trim().Length > 0)
+    //      {
+    //        string judgeName = string.Format("{0,-30}", submom.Table.judge.Fullname);
 
-            judgetext = judgetext + "   " + submom.Table.Name + " : " + judgeName;
-          }
+    //        judgetext = judgetext + "   " + submom.Table.Name + " : " + judgeName;
+    //      }
 
-        }
-        judgelist.Add(judgetext);
-        // totalJudge = totalJudge + judgetext + "\n";
-
-
-
-        //foreach (SubMoment submom in mom.SubMoments)
-        //{
-        //    int row = classWorksheet.Cells[$"round{counter}"].Start.Row;
-        //    classWorksheet.Cells[row, subcounter].Value = submom.Name;
-        //    subcounter++;
-        //}
-      }
-
-      try
-      {
-        MyApp = new Excel.Application
-        {
-          Visible = false,
-          ScreenUpdating = false
-
-          //DisplayAlerts = true
-        };
-        workbooks = MyApp.Workbooks;
-
-        MyBook = workbooks.Open(sortedresultsfile, ReadOnly: true);
-        MySheet = (Excel.Worksheet)MyBook.Sheets[className];
-
-        var usedRange = MySheet.UsedRange;
+    //    }
+    //    judgelist.Add(judgetext);
+    //    // totalJudge = totalJudge + judgetext + "\n";
 
 
-        if (noresultsList.Contains(className))
-        {
-          var range = MySheet.get_Range("H7", "O50");
-          range.NumberFormat = ";;;";
-        }
 
-        MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
+    //    //foreach (SubMoment submom in mom.SubMoments)
+    //    //{
+    //    //    int row = classWorksheet.Cells[$"round{counter}"].Start.Row;
+    //    //    classWorksheet.Cells[row, subcounter].Value = submom.Name;
+    //    //    subcounter++;
+    //    //}
+    //  }
 
-        MyApp.DisplayAlerts = false;
-        MyBook.Close();
-        MyApp.DisplayAlerts = true;
-        MyApp.Quit();
+    //  try
+    //  {
+    //    MyApp = new Excel.Application
+    //    {
+    //      Visible = false,
+    //      ScreenUpdating = false
 
-        //createHtml(className);
+    //      //DisplayAlerts = true
+    //    };
+    //    workbooks = MyApp.Workbooks;
 
-      }
-      catch (Exception e)
-      {
-        this.UpdateMessageTextBox($"Save to PDF failed for {className} : {e.Message}");
-        showMessageBox(e.Message);
-      }
-      finally
-      {
-        Marshal.FinalReleaseComObject(MySheet);
-        Marshal.FinalReleaseComObject(MyBook);
-        Marshal.FinalReleaseComObject(workbooks);
-        Marshal.FinalReleaseComObject(MyApp);
-        MySheet = null;
-        MyBook = null;
-        workbooks = null;
-        MyApp = null;
-      }
+    //    MyBook = workbooks.Open(sortedresultsfile, ReadOnly: true);
+    //    MySheet = (Excel.Worksheet)MyBook.Sheets[className];
 
-      // Fix logos 
-
-      try
-      {
-
-        //var sponsorlogo = Path.Combine(Form1.logosFolder, "sponsor.png");
-        //var complogo = Path.Combine(Form1.logosFolder, "competition.png");
-        var preliminary = Path.Combine(Form1.logosFolder, "preliminaryresults.png");
-        var ridsport = Path.Combine(Form1.logosFolder, "logo_ridsport_top.png");
-        var datelogo = Path.Combine(Form1.logosFolder, "date.png");
-        var noresultlogo = Path.Combine(Form1.logosFolder, "nopoints.png");
-
-        PdfSharp.Pdf.PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
-
-        for (int i = 0; i < document.Pages.Count; ++i)
-        {
-          PdfSharp.Pdf.PdfPage page = document.Pages[i];
-
-          // Make a layout rectangle.  
-          //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
-          //using (XGraphics gfx = XGraphics.FromPdfPage(page))
-          //{
-          //  gfx.DrawString($" {now:F} -  Page " + (i + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
-          //}
-          using (XGraphics gfx = XGraphics.FromPdfPage(page))
-          {
-            var xim = XImage.FromFile(ridsport);
-            gfx.ScaleTransform(0.4);
-            gfx.DrawImage(xim, new XPoint(120, 10));
-
-          }
-
-          //using (XGraphics gfx = XGraphics.FromPdfPage(page))
-          //{
-          //    var xim = XImage.FromFile(complogo);
-          //    gfx.ScaleTransform(0.15);
-          //    gfx.DrawImage(xim, new Point(600, 10));
-          //}
-
-          using (XGraphics gfx = XGraphics.FromPdfPage(page))
-          {
-            var xim = XImage.FromFile(datelogo);
-            gfx.ScaleTransform(0.35);
-            gfx.DrawImage(xim, new XPoint(260, 30));
-          }
-
-          //using (XGraphics gfx = XGraphics.FromPdfPage(page))
-          //{
-          //  var xim = XImage.FromFile(sponsorlogo);
-          //  gfx.ScaleTransform(0.3);
-          //  gfx.DrawImage(xim, new Point(2000, 30));
-          //}
-
-          if (preliminiaryResults)
-          {
-            using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            {
-              var xim = XImage.FromFile(preliminary);
-              gfx.ScaleTransform(0.5);
-              gfx.DrawImage(xim, new XPoint(1300, 140));
-            }
-          }
+    //    var usedRange = MySheet.UsedRange;
 
 
-          if (noresultsList.Contains(className))
-          {
-            using (XGraphics gfx = XGraphics.FromPdfPage(page))
-            {
-              var xim = XImage.FromFile(noresultlogo);
-              gfx.ScaleTransform(0.8);
-              gfx.DrawImage(xim, new XPoint(500, 10));
-            }
-          }
+    //    if (noresultsList.Contains(className))
+    //    {
+    //      var range = MySheet.get_Range("H7", "O50");
+    //      range.NumberFormat = ";;;";
+    //    }
 
-        }
+    //    MySheet.ExportAsFixedFormat(Excel.XlFixedFormatType.xlTypePDF, pdfFullPath);
 
-        document.Options.CompressContentStreams = true;
-        document.Options.NoCompression = false;
-        document.Save(pdfFullPath);
-      }
-      catch (Exception logoException)
-      {
-        this.UpdateMessageTextBox($"Save to PDF failed for {className} : {logoException.Message}");
-      }
+    //    MyApp.DisplayAlerts = false;
+    //    MyBook.Close();
+    //    MyApp.DisplayAlerts = true;
+    //    MyApp.Quit();
 
-      return null;
-    }
+    //    //createHtml(className);
+
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    this.UpdateMessageTextBox($"Save to PDF failed for {className} : {e.Message}");
+    //    showMessageBox(e.Message);
+    //  }
+    //  finally
+    //  {
+    //    Marshal.FinalReleaseComObject(MySheet);
+    //    Marshal.FinalReleaseComObject(MyBook);
+    //    Marshal.FinalReleaseComObject(workbooks);
+    //    Marshal.FinalReleaseComObject(MyApp);
+    //    MySheet = null;
+    //    MyBook = null;
+    //    workbooks = null;
+    //    MyApp = null;
+    //  }
+
+    //  // Fix logos 
+
+    //  try
+    //  {
+
+    //    //var sponsorlogo = Path.Combine(Form1.logosFolder, "sponsor.png");
+    //    //var complogo = Path.Combine(Form1.logosFolder, "competition.png");
+    //    var preliminary = Path.Combine(Form1.logosFolder, "preliminaryresults.png");
+    //    var ridsport = Path.Combine(Form1.logosFolder, "logo_ridsport_top.png");
+    //    var datelogo = Path.Combine(Form1.logosFolder, "date.png");
+    //    var noresultlogo = Path.Combine(Form1.logosFolder, "nopoints.png");
+
+    //    PdfSharp.Pdf.PdfDocument document = PdfReader.Open(pdfFullPath, PdfDocumentOpenMode.Modify);
+
+    //    for (int i = 0; i < document.Pages.Count; ++i)
+    //    {
+    //      PdfSharp.Pdf.PdfPage page = document.Pages[i];
+
+    //      // Make a layout rectangle.  
+    //      //XRect layoutRectangle = new XRect(240 /*X*/ , page.Height - font.Height - 10 /*Y*/ , page.Width /*Width*/ , font.Height /*Height*/ );
+    //      //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //      //{
+    //      //  gfx.DrawString($" {now:F} -  Page " + (i + 1).ToString() + " of " + noPages, font, brush, layoutRectangle, XStringFormats.Center);
+    //      //}
+    //      using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //      {
+    //        var xim = XImage.FromFile(ridsport);
+    //        gfx.ScaleTransform(0.4);
+    //        gfx.DrawImage(xim, new XPoint(120, 10));
+
+    //      }
+
+    //      //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //      //{
+    //      //    var xim = XImage.FromFile(complogo);
+    //      //    gfx.ScaleTransform(0.15);
+    //      //    gfx.DrawImage(xim, new Point(600, 10));
+    //      //}
+
+    //      using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //      {
+    //        var xim = XImage.FromFile(datelogo);
+    //        gfx.ScaleTransform(0.35);
+    //        gfx.DrawImage(xim, new XPoint(260, 30));
+    //      }
+
+    //      //using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //      //{
+    //      //  var xim = XImage.FromFile(sponsorlogo);
+    //      //  gfx.ScaleTransform(0.3);
+    //      //  gfx.DrawImage(xim, new Point(2000, 30));
+    //      //}
+
+    //      if (preliminiaryResults)
+    //      {
+    //        using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //        {
+    //          var xim = XImage.FromFile(preliminary);
+    //          gfx.ScaleTransform(0.5);
+    //          gfx.DrawImage(xim, new XPoint(1300, 140));
+    //        }
+    //      }
+
+
+    //      if (noresultsList.Contains(className))
+    //      {
+    //        using (XGraphics gfx = XGraphics.FromPdfPage(page))
+    //        {
+    //          var xim = XImage.FromFile(noresultlogo);
+    //          gfx.ScaleTransform(0.8);
+    //          gfx.DrawImage(xim, new XPoint(500, 10));
+    //        }
+    //      }
+
+    //    }
+
+    //    document.Options.CompressContentStreams = true;
+    //    document.Options.NoCompression = false;
+    //    document.Save(pdfFullPath);
+    //  }
+    //  catch (Exception logoException)
+    //  {
+    //    this.UpdateMessageTextBox($"Save to PDF failed for {className} : {logoException.Message}");
+    //  }
+
+    //  return null;
+    //}
 
 
     private static string MakeFileNameWebSafe(string filename)
