@@ -1,19 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{56BBA093-B1F7-4629-8E15-0BB48CC0F0F8}</ProjectGuid>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WindowsFormsApplication1</RootNamespace>
-    <AssemblyName>WindowsFormsApplication1</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile />
     <PublishUrl>C:\smapp\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,511 +19,353 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <ManifestCertificateThumbprint>7CC13A6153F43DDABD2E72040388849F2D2C2E6B</ManifestCertificateThumbprint>
+    <ManifestKeyFile>WindowsFormsApplication1_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <PostBuildEvent>IF not exist inbox (mkdir inbox)
+IF not exist outbox (mkdir outbox)
+IF not exist backup (mkdir backup)
+IF not exist fakebox (mkdir fakebox)
+IF not exist printedResults (mkdir printedResults)
+IF not exist htmlResults (mkdir htmlResults)
+IF not exist mergedResults (mkdir mergedResults)
+IF not exist logos (mkdir logos)
+
+</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>7CC13A6153F43DDABD2E72040388849F2D2C2E6B</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>WindowsFormsApplication1_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClosedXML, Version=0.93.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClosedXML.0.93.1\lib\net46\ClosedXML.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.8.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.8.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus, Version=6.0.5.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.6.0.5\lib\net35\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus.Interfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.Interfaces.6.0.0\lib\net452\EPPlus.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus.System.Drawing, Version=6.0.0.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.System.Drawing.6.0.0\lib\net452\EPPlus.System.Drawing.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
-      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
-    </Reference>
     <Reference Include="ExcelToHtml, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\jalla20220423\ExcelToHtml-master\ExcelToHtml\obj\Debug\ExcelToHtml.dll</HintPath>
     </Reference>
-    <Reference Include="FastMember.Signed, Version=1.3.0.0, Culture=neutral, PublicKeyToken=9e8f22703bef9a29, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember.Signed.1.3.0\lib\net45\FastMember.Signed.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentFTP, Version=37.0.5.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentFTP.37.0.5\lib\net45\FluentFTP.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlRenderer, Version=1.5.0.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlRenderer.Core.1.5.0.5\lib\net45\HtmlRenderer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp, Version=1.32.3057.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp.1.32.3057.0\lib\net20\PdfSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="PdfSharp.Charting, Version=1.32.3057.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\PDFsharp.1.32.3057.0\lib\net20\PdfSharp.Charting.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Select.HtmlToPdf, Version=22.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
-      <HintPath>..\packages\Select.HtmlToPdf.22.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Packaging, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Packaging.4.4.0\lib\net46\System.IO.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-    </Reference>
-	<!--
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-	-->
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="25.2.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.7" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="ClosedXML" Version="0.93.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.8.1" />
+    <PackageReference Include="EPPlus" Version="6.0.5" />
+    <PackageReference Include="EPPlus.Interfaces" Version="6.0.0" />
+    <PackageReference Include="EPPlus.System.Drawing" Version="6.0.0" />
+    <PackageReference Include="ExcelNumberFormat" Version="1.0.3" />
+    <PackageReference Include="FastMember.Signed" Version="1.3.0" />
+    <PackageReference Include="FluentFTP" Version="37.0.5" />
+    <PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="PDFsharp" Version="6.2.0" />
+    <PackageReference Include="Select.HtmlToPdf" Version="25.2.0" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.7" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.7" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.7" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateResultSheetsForAllClasses.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Deltagare.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Klass.cs" />
-    <Compile Include="pdf\pdf.cs" />
-    <Compile Include="PopulateResultsSheets.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadResultsFromInbox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Sorting.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="pdf\PDFtoHTML.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="CalculatedHorsePoints_templateGeneric.xlsx">
+    <None Update="CalculatedHorsePoints_templateGeneric.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="CalculatedHorsePoints_template.xlsx">
+    <None Update="CalculatedHorsePoints_template.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="CalculatedHorsePoints_template_SMNM.xlsx" />
-    <None Include="documentation\InstruktionerResultat.docx" />
-    <None Include="documentation\ProtokollIfyllnad.docx" />
-    <None Include="fakebox\10Sigrid Stidelius_A_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\10Sigrid Stidelius_A_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\10Sigrid Stidelius_B_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\10Sigrid Stidelius_B_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\10Sofia Börling_A_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\10Sofia Börling_A_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\10Sofia Börling_B_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\10Sofia Börling_B_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\11Henny Lind_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\11Henny Lind_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\11Henny Lind_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\11Henny Lind_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\12Olivia Nyberg_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\12Olivia Nyberg_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\12Olivia Nyberg_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\12Olivia Nyberg_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\13Linnea Viklund_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\13Linnea Viklund_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\13Linnea Viklund_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\13Linnea Viklund_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\14Cecilia Viklund_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\14Cecilia Viklund_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\14Cecilia Viklund_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\14Cecilia Viklund_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\15Tyra Karlsson_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\15Tyra Karlsson_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\15Tyra Karlsson_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\15Tyra Karlsson_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\16Henny Lind_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\16Henny Lind_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\16Henny Lind_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\16Henny Lind_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\17Olivia Nyberg_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\17Olivia Nyberg_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\17Olivia Nyberg_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\17Olivia Nyberg_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\18Linnea Viklund_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\18Linnea Viklund_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\18Linnea Viklund_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\18Linnea Viklund_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\19Cecilia Viklund_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\19Cecilia Viklund_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\19Cecilia Viklund_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\19Cecilia Viklund_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Hilda Ovebäck_A_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Hilda Ovebäck_A_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Hilda Ovebäck_B_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Hilda Ovebäck_B_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Lag Enyo_A_klass6_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Lag Enyo_A_klass6_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Lag Enyo_B_klass6_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Lag Enyo_B_klass6_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Novalie och Ebba_A_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\1Novalie och Ebba_A_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Novalie och Ebba_B_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\1Novalie och Ebba_B_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Team Athena_A_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Team Athena_A_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Team Athena_B_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Team Athena_B_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Team Atlas_A_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Team Atlas_A_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Team Atlas_B_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Team Atlas_B_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Tuva Westerlund_A_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Tuva Westerlund_A_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\1Tuva Westerlund_B_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\1Tuva Westerlund_B_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\20Tyra Karlsson_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\20Tyra Karlsson_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\20Tyra Karlsson_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\20Tyra Karlsson_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\21Thea Lundell_A_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\21Thea Lundell_A_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\21Thea Lundell_B_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\21Thea Lundell_B_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\22Ebba Wallqvist_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\22Ebba Wallqvist_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\22Ebba Wallqvist_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\22Ebba Wallqvist_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\23Idun Lennerman_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\23Idun Lennerman_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\23Idun Lennerman_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\23Idun Lennerman_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\24Ariah Fischer_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\24Ariah Fischer_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\24Ariah Fischer_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\24Ariah Fischer_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\25Thea Lundell_A_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\25Thea Lundell_A_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\25Thea Lundell_B_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\25Thea Lundell_B_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\26Ebba Wallqvist_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\26Ebba Wallqvist_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\26Ebba Wallqvist_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\26Ebba Wallqvist_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\27Idun Lennerman_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\27Idun Lennerman_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\27Idun Lennerman_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\27Idun Lennerman_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\28Ariah Fischer_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\28Ariah Fischer_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\28Ariah Fischer_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\28Ariah Fischer_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\29Thea Lundell_A_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\29Thea Lundell_A_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\29Thea Lundell_B_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\29Thea Lundell_B_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Hilda Ovebäck_A_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Hilda Ovebäck_A_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Hilda Ovebäck_B_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Hilda Ovebäck_B_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Lag Enyo_A_klass6_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Lag Enyo_A_klass6_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Lag Enyo_B_klass6_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Lag Enyo_B_klass6_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Mirabel och Thea_A_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Mirabel och Thea_A_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Mirabel och Thea_B_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Mirabel och Thea_B_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Sofia Börling_A_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\2Sofia Börling_A_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Sofia Börling_B_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\2Sofia Börling_B_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Team Athena_A_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Team Athena_A_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Team Athena_B_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Team Athena_B_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Team Atlas_A_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Team Atlas_A_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\2Team Atlas_B_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\2Team Atlas_B_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\30Novalie Wall_A_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\30Novalie Wall_A_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\30Novalie Wall_B_klass3_Grund_-_Sa.xlsx">
+    <None Update="fakebox\30Novalie Wall_B_klass3_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\31Tuva Wipemo_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\31Tuva Wipemo_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\31Tuva Wipemo_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\31Tuva Wipemo_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\32Novalie Wall_A_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\32Novalie Wall_A_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\32Novalie Wall_B_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\32Novalie Wall_B_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\33Tuva Wipemo_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\33Tuva Wipemo_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\33Tuva Wipemo_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\33Tuva Wipemo_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\34Novalie Wall_A_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\34Novalie Wall_A_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\34Novalie Wall_B_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\34Novalie Wall_B_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\35Alva Ewerlöf_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\35Alva Ewerlöf_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\35Alva Ewerlöf_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\35Alva Ewerlöf_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\36Mirabel Lennerman_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\36Mirabel Lennerman_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\36Mirabel Lennerman_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\36Mirabel Lennerman_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\37Vera Bjarnemo_A_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\37Vera Bjarnemo_A_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\37Vera Bjarnemo_B_klass1_Grund_-_Sa.xlsx">
+    <None Update="fakebox\37Vera Bjarnemo_B_klass1_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\38Alva Ewerlöf_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\38Alva Ewerlöf_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\38Alva Ewerlöf_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\38Alva Ewerlöf_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\39Mirabel Lennerman_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\39Mirabel Lennerman_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\39Mirabel Lennerman_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\39Mirabel Lennerman_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Alva och Ebba_A_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\3Alva och Ebba_A_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Alva och Ebba_B_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\3Alva och Ebba_B_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Hilma Bernström_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Hilma Bernström_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Hilma Bernström_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Hilma Bernström_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Lovis Berg_A_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Lovis Berg_A_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Lovis Berg_B_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Lovis Berg_B_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Team Andromeda_A_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Team Andromeda_A_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Team Andromeda_B_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Team Andromeda_B_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Team Cassiopeia_A_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Team Cassiopeia_A_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\3Team Cassiopeia_B_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\3Team Cassiopeia_B_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\40Vera Bjarnemo_A_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\40Vera Bjarnemo_A_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\40Vera Bjarnemo_B_klass1_Kür_-_Sa.xlsx">
+    <None Update="fakebox\40Vera Bjarnemo_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="fakebox\41Henny Lind %28trä%29_A_klass2_Grund_-_Sa.xlsx">
@@ -591,34 +422,34 @@
     <None Include="fakebox\49Cecilia Viklund  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Lovisa Baeckström_A_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\4Lovisa Baeckström_A_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Lovisa Baeckström_B_klass2_Grund_-_Sa.xlsx">
+    <None Update="fakebox\4Lovisa Baeckström_B_klass2_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Nelia Palmius_A_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\4Nelia Palmius_A_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Nelia Palmius_B_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\4Nelia Palmius_B_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Olivia och Agnes_A_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Olivia och Agnes_A_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Olivia och Agnes_B_klass10_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Olivia och Agnes_B_klass10_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Team Andromeda_A_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Team Andromeda_A_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Team Andromeda_B_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Team Andromeda_B_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Team Cassiopeia_A_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Team Cassiopeia_A_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\4Team Cassiopeia_B_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\4Team Cassiopeia_B_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="fakebox\50Tyra Karlsson  %28trä%29_A_klass1_Kür_-_Sa.xlsx">
@@ -627,133 +458,115 @@
     <None Include="fakebox\50Tyra Karlsson  %28trä%29_B_klass1_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Linnea Lif_A_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Linnea Lif_A_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Linnea Lif_B_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Linnea Lif_B_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Team Aquila_A_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Team Aquila_A_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Team Aquila_B_klass7_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Team Aquila_B_klass7_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Team Eros_A_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Team Eros_A_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Team Eros_B_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\5Team Eros_B_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Tuva Westerlund_A_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\5Tuva Westerlund_A_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\5Tuva Westerlund_B_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\5Tuva Westerlund_B_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Sigrid Stidelius_A_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\6Sigrid Stidelius_A_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Sigrid Stidelius_B_klass5_Grund_-_Sa.xlsx">
+    <None Update="fakebox\6Sigrid Stidelius_B_klass5_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Sofia Börling_A_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\6Sofia Börling_A_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Sofia Börling_B_klass3_Tekn kür_-_Sa.xlsx">
+    <None Update="fakebox\6Sofia Börling_B_klass3_Tekn kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Team Aquila_A_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\6Team Aquila_A_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Team Aquila_B_klass7_Kür_-_Sa.xlsx">
+    <None Update="fakebox\6Team Aquila_B_klass7_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Team Eros_A_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\6Team Eros_A_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\6Team Eros_B_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\6Team Eros_B_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Hilma Bernström_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\7Hilma Bernström_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Hilma Bernström_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\7Hilma Bernström_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Lag Safir_A_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\7Lag Safir_A_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Lag Safir_B_klass9_Grund_-_Sa.xlsx">
+    <None Update="fakebox\7Lag Safir_B_klass9_Grund_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Lovis Berg_A_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\7Lovis Berg_A_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\7Lovis Berg_B_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\7Lovis Berg_B_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Lag Safir_A_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Lag Safir_A_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Lag Safir_B_klass9_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Lag Safir_B_klass9_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Lovisa Baeckström_A_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Lovisa Baeckström_A_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Lovisa Baeckström_B_klass2_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Lovisa Baeckström_B_klass2_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Nelia Palmius_A_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Nelia Palmius_A_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\8Nelia Palmius_B_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\8Nelia Palmius_B_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\9Linnea Lif_A_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\9Linnea Lif_A_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\9Linnea Lif_B_klass5_Kür_-_Sa.xlsx">
+    <None Update="fakebox\9Linnea Lif_B_klass5_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\9Tuva Westerlund_A_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\9Tuva Westerlund_A_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="fakebox\9Tuva Westerlund_B_klass3_Kür_-_Sa.xlsx">
+    <None Update="fakebox\9Tuva Westerlund_B_klass3_Kür_-_Sa.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MagnusL.xlsx">
+    <None Update="MagnusL.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="results.xlsx">
+    <None Update="results.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="results-sm2024.xlsx" />
-    <None Include="results_base.xlsx" />
-    <None Include="results_beforesm2024.xlsx">
+    <None Update="results_beforesm2024.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="results_org.xlsx">
+    <None Update="results_org.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="WindowsFormsApplication1_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="documentation\configs.txt" />
@@ -964,25 +777,4 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>IF not exist inbox (mkdir inbox)
-IF not exist outbox (mkdir outbox)
-IF not exist backup (mkdir backup)
-IF not exist fakebox (mkdir fakebox)
-IF not exist printedResults (mkdir printedResults)
-IF not exist htmlResults (mkdir htmlResults)
-IF not exist mergedResults (mkdir mergedResults)
-IF not exist logos (mkdir logos)
-
-</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml;
+using OfficeOpenXml.Drawing;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -228,11 +229,18 @@ namespace WindowsFormsApplication1
 
                         ExcelHeaderFooterText t5 = classWorksheet.HeaderFooter.OddFooter;
                         
-                        t5.InsertPicture(img, PictureAlignment.Centered);
-                        // Test
-                        //    t5.CenteredText = totalJudge;
+                        //t5.InsertPicture(img, PictureAlignment.Centered);
 
-                        classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
+            using (var imgStream = ConvertImageToStream(img, System.Drawing.Imaging.ImageFormat.Png))
+            {
+              t5.InsertPicture(imgStream, ePictureType.Png, PictureAlignment.Centered);
+            }
+
+
+            // Test
+            //    t5.CenteredText = totalJudge;
+
+            classWorksheet.PrinterSettings.RepeatRows = new ExcelAddress(className+"!1:6");
                         UpdateProgressBarLabel("Added result sheet for class " + className);
          
                     }
@@ -253,6 +261,13 @@ namespace WindowsFormsApplication1
             UpdateProgressBarLabel("All result sheets created");
         }
 
-
+    private Stream ConvertImageToStream(Image image, System.Drawing.Imaging.ImageFormat format)
+    {
+      MemoryStream stream = new MemoryStream();
+      image.Save(stream, format);
+      stream.Position = 0;
+      return stream;
     }
+
+  }
 }

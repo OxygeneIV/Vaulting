@@ -15,11 +15,27 @@ using PdfSharp.Drawing;
 using PdfSharp.Pdf.IO;
 using Color = System.Drawing.Color;
 using System.Collections.Concurrent;
+// To resolve the CS0246 error, ensure that the SelectPdf library is installed in your project.  
+// Follow these steps:  
+
+// 1. Open the NuGet Package Manager in Visual Studio.  
+// 2. Search for "Select.Pdf" in the NuGet Package Manager.  
+// 3. Install the Select.Pdf package into your project.  
+
+// After installation, the namespace 'SelectPdf' will be available, and the error should be resolved.  
+
+// If the library is already installed but the error persists, ensure that the project file includes a reference to the Select.Pdf assembly.  
+// You can also try cleaning and rebuilding the project to ensure all dependencies are correctly resolved.
+
 using SelectPdf;
+
+
+
 using FluentFTP;
 using System.Net;
 using System.Collections.Specialized;
 using System.Collections;
+using PdfSharp.UniversalAccessibility.Drawing;
 
 namespace WindowsFormsApplication1
 {
@@ -1035,7 +1051,7 @@ namespace WindowsFormsApplication1
         workbooks = MyApp.Workbooks;
 
         MyBook = workbooks.Open(sortedresultsfile, ReadOnly: true);
-        MySheet = MyBook.Sheets[className];
+        MySheet = (Excel.Worksheet)MyBook.Sheets[className];
 
         var usedRange = MySheet.UsedRange;
 
@@ -1101,7 +1117,8 @@ namespace WindowsFormsApplication1
           {
             var xim = XImage.FromFile(ridsport);
             gfx.ScaleTransform(0.4);
-            gfx.DrawImage(xim, new Point(120, 10));
+            gfx.DrawImage(xim, new XPoint(120, 10));
+
           }
 
           //using (XGraphics gfx = XGraphics.FromPdfPage(page))
@@ -1115,7 +1132,7 @@ namespace WindowsFormsApplication1
           {
             var xim = XImage.FromFile(datelogo);
             gfx.ScaleTransform(0.35);
-            gfx.DrawImage(xim, new Point(260, 30));
+            gfx.DrawImage(xim, new XPoint(260, 30));
           }
 
           //using (XGraphics gfx = XGraphics.FromPdfPage(page))
@@ -1131,7 +1148,7 @@ namespace WindowsFormsApplication1
             {
               var xim = XImage.FromFile(preliminary);
               gfx.ScaleTransform(0.5);
-              gfx.DrawImage(xim, new Point(1300, 140));
+              gfx.DrawImage(xim, new XPoint(1300, 140));
             }
           }
 
@@ -1142,7 +1159,7 @@ namespace WindowsFormsApplication1
             {
               var xim = XImage.FromFile(noresultlogo);
               gfx.ScaleTransform(0.8);
-              gfx.DrawImage(xim, new Point(500, 10));
+              gfx.DrawImage(xim, new XPoint(500, 10));
             }
           }
 

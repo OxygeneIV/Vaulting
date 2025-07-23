@@ -5,6 +5,8 @@ using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Configuration;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Workbook = Microsoft.Office.Interop.Excel.Workbook;
 
 namespace WindowsFormsApplication1
 {
@@ -389,7 +391,7 @@ namespace WindowsFormsApplication1
 
                 string className = klass.klass.Name;
                 int klassRank = klass.omvandRank;
-                var MySheet = MyBook.Sheets[className];
+                var MySheet = (Microsoft.Office.Interop.Excel.Worksheet)MyBook.Sheets[className];
 
                 MySheet.Activate();
                 UpdateMessageTextBox($"Looking at {className}");
@@ -405,11 +407,11 @@ namespace WindowsFormsApplication1
 
                     int namerow = startrow + 1;
                     int horserow = startrow + 2;
-                    if (MySheet.Cells[namerow, 4].Value2 != null)
+                    if (((Microsoft.Office.Interop.Excel.Range)MySheet.Cells[namerow, 4]).Value2 != null)
                     {
 
-                        string name = MySheet.Cells[namerow, 4].Value.ToString();
-                        string horse = MySheet.Cells[horserow, 6].Value.ToString();
+                        string name = ((Microsoft.Office.Interop.Excel.Range)MySheet.Cells[namerow, 4]).Value.ToString();
+                        string horse = ((Microsoft.Office.Interop.Excel.Range)MySheet.Cells[horserow, 6]).Value.ToString();
                         //horse = horse.Replace("_", " ");
 
                         rank = rank + 1;
@@ -635,7 +637,7 @@ namespace WindowsFormsApplication1
 			{
 				counter++;
 				string className = klass.Name;
-				var MySheet = MyBook.Sheets[className];
+				var MySheet = (Microsoft.Office.Interop.Excel.Worksheet)MyBook.Sheets[className];
 				
 				MySheet.Activate();
 			  UpdateMessageTextBox($"Sorting {className}");
