@@ -36,6 +36,13 @@ using System.Collections.Specialized;
 using System.Collections;
 using PdfSharp.UniversalAccessibility.Drawing;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Threading;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Office2016.Excel;
+
 
 namespace WindowsFormsApplication1
 {
@@ -75,8 +82,6 @@ namespace WindowsFormsApplication1
 
     public Form1()
     {
-      //ExcelPackage.License = new LicenseProvider(LicenseType.NonCommercial);
-      //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       ExcelPackage.License.SetNonCommercialOrganization("Uppsala Voltige");
       InitializeComponent();
       setPathes();
@@ -604,16 +609,73 @@ namespace WindowsFormsApplication1
       dataGridView3.AutoResizeColumns();
     }
 
+
+    public void UpdateNamedCell(string filePath, string definedName, double value)
+    {
+      using (var document = SpreadsheetDocument.Open(filePath, true))
+      {
+
+        var workbookPart = document.WorkbookPart;
+
+        var theSheets = workbookPart?.Workbook.Descendants<Sheet>().ToList();
+
+
+        var allSheets = theSheets.Where((item) => item.State is not null &&
+           item.State.HasValue &&
+           (item.State.Value == SheetStateValues.Hidden ||
+           item.State.Value == SheetStateValues.VeryHidden));
+
+        var activeSheet = theSheets.Where((item) => item.State is null || (item.State.HasValue && item.State.Value == SheetStateValues.Visible));
+
+
+        if (activeSheet.Count() == 0)
+        {
+          UpdateMessageTextBox($"No active sheets found in {filePath}");
+          throw new Exception($"No active sheets found in {filePath}");
+        }
+
+        // Check if there are any visible sheets  
+        if (activeSheet.Count() > 1)
+        {
+          UpdateMessageTextBox($"more than 1 sheet is active in {filePath}");
+          throw new Exception($"more than 1 sheet is active in {filePath}");
+        }
+
+        var theSheet = activeSheet.FirstOrDefault();
+        var sheetName = theSheet.Name;
+        var sheetId = theSheet.Id;
+
+        var definedNames = workbookPart.Workbook.DefinedNames?
+        .OfType<DefinedName>().Where(d => d.Name.Value.Equals("result", StringComparison.OrdinalIgnoreCase)).ToList();
+
+        var myDefinedName = definedNames.FirstOrDefault(d => d.Text.Contains(sheetName));
+        var sheetName2 = myDefinedName.Text.Split('!')[0].Trim('\'');
+        var reference = myDefinedName.Text.Split('!')[1].Replace("$", "");
+        var worksheetPart = (WorksheetPart)workbookPart.GetPartById(theSheet.Id);
+        Cell? theCell = worksheetPart.Worksheet?.Descendants<Cell>()?.Where(c => c.CellReference == reference).FirstOrDefault();
+        theCell.CellValue = new CellValue(value.ToString(CultureInfo.InvariantCulture));
+        worksheetPart.Worksheet.Save();
+      }
+    }
+
     /// <summary>
     /// Fake results by putting a value between 0 and 10 in the result cell of all sheets in Inbox
     /// </summary>
     private void doFake()
     {
+      UpdateMessageTextBox("Fake start - " + DateTime.Now);
       UpdateProgressBarHandler(0);
 
       UpdateProgressBarLabel("");
 
       DirectoryInfo dirinfo = new DirectoryInfo(fakeboxFolder);
+      var file = new FileInfo(fakefile);
+
+      if (file.Exists)
+      {
+        file.Delete();
+      }
+
       var files = dirinfo.EnumerateFiles("*.xls*").ToList();
       UpdateProgressBarMax(files.Count());
 
@@ -623,20 +685,10 @@ namespace WindowsFormsApplication1
         return;
       }
 
-      var file = new FileInfo(fakefile);
-
-      if (file.Exists)
-      {
-        file.Delete();
-      }
-
       UpdateProgressBarHandler(0);
       UpdateProgressBarLabel("");
       UpdateProgressBarMax(files.Count());
 
-      UpdateProgressBarHandler(0);
-      UpdateProgressBarLabel("");
-      UpdateProgressBarMax(files.Count());
 
 
 
@@ -683,66 +735,25 @@ namespace WindowsFormsApplication1
       Boolean woody = bool.Parse(ConfigurationManager.AppSettings["woody"]);
 
       rownumber = 0;
+
+
       foreach (var f1 in files)
       {
-        //Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 50 }, f1 =>
+        //  Parallel.ForEach(files, f1 =>
         //{
 
-        //Interlocked.Increment(ref rownumber);
-        rownumber++;
+      //  Interlocked.Increment(ref rownumber);
+      rownumber++;
 
-        //lock (lockObject)
-        //{
+      //lock (lockObject)
+      //{
         UpdateProgressBarLabel("Faking # " + rownumber + " " + f1.Name);
         //}
 
-
-
+        var rand = Math.Round(new Random().NextDouble() * 10, 3);
         try
         {
-
-          using (var wb = new XLWorkbook(f1.FullName))
-          {
-            // No need to put the worksheet inside a "using" block because
-            // the workbook will dispose of the sheets. The worksheet is not
-            // created inside a loop and the workbook's dispose is being
-            // called immediately after using the worksheet.
-
-            var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
-
-            var rand = Math.Round(new Random().NextDouble() * 10, 3);
-            //if (f1.FullName.Contains("_A_") && woody)
-            //{
-            //  rand = 6.5;
-            //}
-
-
-            var range = ws.NamedRange("result");
-            var refersTo = range.RefersTo;
-            var cellRange = ws.Range(refersTo);
-            var cells = cellRange.Cells();
-            cells.First().Value = rand;
-
-
-            //List<string> d = new List<string>();
-
-            //refersTo = ws.NamedRange("klass").RefersTo;
-            //var klassName = ws.Range(refersTo).Cells().First().Value.ToString();
-
-            //refersTo = ws.NamedRange("bord").RefersTo;
-            //var bord = ws.Range(refersTo).Cells().First().Value.ToString();
-
-            //refersTo = ws.NamedRange("moment").RefersTo;
-            //var moment = ws.Range(refersTo).Cells().First().Value.ToString();
-
-            //refersTo = ws.NamedRange("id").RefersTo;
-            //var id = ws.Range(refersTo).Cells().First().Value.ToString();
-
-            //d.AddRange(new List<string> { klassName, f1.Name, id, moment, bord, rand.ToString(CultureInfo.InvariantCulture) });
-            ////data.Add(rownumber, d);
-            //data.TryAdd(rownumber, d);
-            wb.Save();
-          }
+          this.UpdateNamedCell(f1.FullName, "result", 1.234);
         }
         catch (Exception e)
         {
@@ -755,13 +766,136 @@ namespace WindowsFormsApplication1
           //lock (lockObject)
           //{
           UpdateProgressBarHandler(rownumber);
-          UpdateProgressBarLabel("Faked " + f1.Name);
+        //  UpdateMessageTextBox("Faked " + f1.Name);
+        }
           //}
 
-        }
-      }
+          //}
 
-      UpdateMessageTextBox("Allt fake klart");
+
+        //using (var document = SpreadsheetDocument.Open(f1.FullName, true))
+        //{
+
+        //  var workbookPart = document.WorkbookPart;
+
+        //  var theSheets = workbookPart?.Workbook.Descendants<Sheet>().ToList();
+
+
+        //  var allSheets = theSheets.Where((item) => item.State is not null &&
+        //     item.State.HasValue &&
+        //     (item.State.Value == SheetStateValues.Hidden ||
+        //     item.State.Value == SheetStateValues.VeryHidden));
+
+        //  var activeSheet = theSheets.Where((item) => item.State is null || (item.State.HasValue && item.State.Value == SheetStateValues.Visible));
+
+
+        //  if(activeSheet.Count() == 0)
+        //  {
+        //    UpdateMessageTextBox($"No active sheets found in {f1.Name}");
+        //    continue;
+        //  }
+
+        //  // Check if there are any visible sheets  
+        //  if (activeSheet.Count() > 1)
+        //  {
+        //    UpdateMessageTextBox($"more than 1 sheet is active in {f1.Name}");
+        //    continue;
+        //  }
+
+        //  var theSheet = activeSheet.FirstOrDefault();
+        //  var sheetName = theSheet.Name;
+        //  var sheetId = theSheet.Id;
+
+        //  var definedNames = workbookPart.Workbook.DefinedNames?
+        //  .OfType<DefinedName>().Where(d => d.Name.Value.Equals("result", StringComparison.OrdinalIgnoreCase)).ToList();
+
+        //  var myDefinedName = definedNames.FirstOrDefault(d => d.Text.Contains(sheetName));
+        //  var sheetName2 = myDefinedName.Text.Split('!')[0].Trim('\'');
+        //  var reference = myDefinedName.Text.Split('!')[1].Replace("$", "");
+        //  var worksheetPart = (WorksheetPart)workbookPart.GetPartById(theSheet.Id);
+        //  Cell? theCell = worksheetPart.Worksheet?.Descendants<Cell>()?.Where(c => c.CellReference == reference).FirstOrDefault();
+        //  var value = 4.333;
+        //  theCell.CellValue = new CellValue(value.ToString(CultureInfo.InvariantCulture));
+        //  worksheetPart.Worksheet.Save();
+        //}
+      
+
+
+      //try
+      //{
+
+      //  using (var wb = new XLWorkbook(f1.FullName))
+      //  {
+      //    // No need to put the worksheet inside a "using" block because
+      //    // the workbook will dispose of the sheets. The worksheet is not
+      //    // created inside a loop and the workbook's dispose is being
+      //    // called immediately after using the worksheet.
+
+      //    //var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
+      //    var ws = wb.Worksheets.SingleOrDefault(w => w.Visibility == XLWorksheetVisibility.Visible);
+      //    //var ws = wb.Worksheets.SingleOrDefault();
+      //    var rand = Math.Round(new Random().NextDouble() * 10, 3);
+      //    //if (f1.FullName.Contains("_A_") && woody)
+      //    //{
+      //    //  rand = 6.5;
+      //    //}
+
+      //    //var r = ws.Cells("result").FirstOrDefault();
+      //    IXLCell r2 = ws.Cell("result");
+      //    r2.Value = rand;
+
+
+      //    //var range = ws.NamedRange("result");
+      //    //var refersTo = range.RefersTo;
+      //    //var cellRange = ws.Range(refersTo);
+      //    //var cells = cellRange.Cells();
+      //    //cells.First().Value = rand;
+
+
+      //    //List<string> d = new List<string>();
+
+      //    //refersTo = ws.NamedRange("klass").RefersTo;
+      //    //var klassName = ws.Range(refersTo).Cells().First().Value.ToString();
+
+      //    //refersTo = ws.NamedRange("bord").RefersTo;
+      //    //var bord = ws.Range(refersTo).Cells().First().Value.ToString();
+
+      //    //refersTo = ws.NamedRange("moment").RefersTo;
+      //    //var moment = ws.Range(refersTo).Cells().First().Value.ToString();
+
+      //    //refersTo = ws.NamedRange("id").RefersTo;
+      //    //var id = ws.Range(refersTo).Cells().First().Value.ToString();
+
+      //    //d.AddRange(new List<string> { klassName, f1.Name, id, moment, bord, rand.ToString(CultureInfo.InvariantCulture) });
+      //    ////data.Add(rownumber, d);
+      //    //data.TryAdd(rownumber, d);
+      //    DateTime now = DateTime.Now;
+      //    wb.Save();
+      //    DateTime saved = DateTime.Now;
+      //    System.Windows.Duration duration = saved - now;
+      //    //  Console.WriteLine($"{fi.Name,-40} {fi.Length / 1024,6} KB | Save: {duration.TotalMilliseconds,8:F2} ms");
+      //      UpdateMessageTextBox($"Save {f1.Name} {f1.Length / 1024,6} kB in {duration.TimeSpan.TotalMilliseconds} ms");
+
+      //  }
+      //}
+      //catch (Exception e)
+      //{
+      //  var s = e.Message;
+      //  UpdateMessageTextBox($"Exception : {f1.Name} " + s);
+      //  //showMessageBox("Exception :" + s);
+      //}
+      //finally
+      //{
+      //  //lock (lockObject)
+      //  //{
+      //  UpdateProgressBarHandler(rownumber);
+      //  UpdateProgressBarLabel("Faked " + f1.Name);
+      //  //}
+
+      //}
+    }
+
+      UpdateMessageTextBox("Allt fake klart - " + DateTime.Now);
 
 
       using (var package = new ExcelPackage(file))
@@ -2530,341 +2664,128 @@ namespace WindowsFormsApplication1
      
     }
 
-    public void CalculateHorsePoints23()
-    {
-
-      UpdateMessageTextBox($"Analyzing Horse points...");
-
-      var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
-      var horsepointclasses = ConfigurationManager.AppSettings["horsepointclasses"].Split(',').Select(s => s.Trim());
-      var horsepoints = Form1.horseresultfile;
-      var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder, "CalculatedHorsePoints.xlsx");
-      var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
-
-
-      var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
-      var removedhorsepoints = allHPs.RemoveAll(hp => !horsepointclasses.Contains(hp.Klass));
-      UpdateMessageTextBox($"Removed {removedhorsepoints} from calculation");
-
-
-      //var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));
-      //var allPointsTeam = allHPs.Where(hp => teamclasses.Contains(hp.Klass));
-
-
-
-      File.Delete(horsepointsCalculated);
-      File.Copy(horsepointsCalculatedTemplate, horsepointsCalculated, true);
-
-      var allSMNMPoints = allHPs.Where(hp => !(hp.IsSMNM && hp.IsNM));
-      var allSMNMPointsInd = allSMNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
-      var allSMNMPointsTeam = allSMNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
-
-      var allSMPoints = allHPs.Where(hp => hp.IsSM);
-      var allSMPointsInd = allSMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
-      var allSMPointsTeam = allSMPoints.Where(hp => teamclasses.Contains(hp.Klass));
-
-      var allNMPoints = allHPs.Where(hp => hp.IsNM);
-      var allNMPointsInd = allNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
-      var allNMPointsTeam = allNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
-
-
-      /*
-       * Max SM/NM (Ind+Team)	Mean SM/NM (Ind + Team)	Max SM/NM (Ind)	Mean SM/NM (Ind)	Max SM/NM (Team)	Mean SM/NM (Team)
-       */
-
-      try
-      {
-        var horsepointGroup = from so in allHPs
-                              group so by so.Name
-          into AllHorsePoints
-                              select new
-                              {
-                                HorseName = AllHorsePoints.Key,
-                                SMNMMax = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point),
-                                SMNMAverage = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point),
-                                SMNMMaxInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
-                                SMNMMeanInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
-                                SMNMMaxTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
-                                SMNMMeanTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
-
-                                SMMax = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                SMAverage = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-                                SMMaxInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                SMMeanInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-                                SMMaxTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                SMMeanTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-
-                                NMMax = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                NMAverage = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-                                NMMaxInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                NMMeanInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-                                NMMaxTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
-                                NMMeanTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
-                              };
-
-
-        var fileinfo = new FileInfo(horsepointsCalculated);
-        using (var results = new ExcelPackage(fileinfo))
-        {
-          var ws = results.Workbook.Worksheets[0];
-          var row = 2;
-          foreach (var horse in horsepointGroup)
-          {
-
-            ws.Cells[row, 1].Value = horse.HorseName;
-
-            ws.Cells[row, 2].Value = horse.SMNMMax;
-            ws.Cells[row, 3].Value = horse.SMNMAverage;
-            ws.Cells[row, 4].Value = horse.SMNMMaxInd;
-            ws.Cells[row, 5].Value = horse.SMNMMeanInd;
-            ws.Cells[row, 6].Value = horse.SMNMMaxTeam;
-            ws.Cells[row, 7].Value = horse.SMNMMeanTeam;
-
-            //ws.Cells[row, 8].Value = horse.SMMax;
-            //ws.Cells[row, 9].Value = horse.SMAverage;
-            //ws.Cells[row, 10].Value = horse.SMMaxInd;
-            //ws.Cells[row, 11].Value = horse.SMMeanInd;
-            //ws.Cells[row, 12].Value = horse.SMMaxTeam;
-            //ws.Cells[row, 13].Value = horse.SMMeanTeam;
-
-            //ws.Cells[row, 14].Value = horse.NMMax;
-            //ws.Cells[row, 15].Value = horse.NMAverage;
-            //ws.Cells[row, 16].Value = horse.NMMaxInd;
-            //ws.Cells[row, 17].Value = horse.NMMeanInd;
-            //ws.Cells[row, 18].Value = horse.NMMaxTeam;
-            //ws.Cells[row, 19].Value = horse.NMMeanTeam;
-            row++;
-          }
-
-          results.Save();
-
-        }
-        UpdateMessageTextBox($"Horse points analyzed");
-      }
-      catch (Exception e)
-      {
-        UpdateMessageTextBox($"Failed to analyze horse points : {e.Message}");
-      }
-
-    }
-
-
-
-
-    //public void CalculateHorsePoints()
+    //public void CalculateHorsePoints23()
     //{
+
+    //  UpdateMessageTextBox($"Analyzing Horse points...");
+
     //  var teamclasses = ConfigurationManager.AppSettings["teamclasses"].Split(',').Select(s => s.Trim());
+    //  var horsepointclasses = ConfigurationManager.AppSettings["horsepointclasses"].Split(',').Select(s => s.Trim());
+    //  var horsepoints = Form1.horseresultfile;
+    //  var horsepointsCalculated = Path.Combine(Form1.horseResultsFolder, "CalculatedHorsePoints.xlsx");
+    //  var horsepointsCalculatedTemplate = Path.Combine(Application.StartupPath, "CalculatedHorsePoints_template.xlsx");
 
-    //  UpdateMessageTextBox($"Starting horse point calculation");
-    //  var resultfile = Form1.sortedresultsfile;
-    //  var horsefile = horseresultfile;
 
-    //  if (!File.Exists(resultfile))
+    //  var allHPs = File.ReadAllLines(horsepoints).Distinct().Select(HPclass.Create).ToList();
+    //  var removedhorsepoints = allHPs.RemoveAll(hp => !horsepointclasses.Contains(hp.Klass));
+    //  UpdateMessageTextBox($"Removed {removedhorsepoints} from calculation");
+
+
+    //  //var allPointsInd  = allHPs.Where(hp => !teamclasses.Contains(hp.Klass));
+    //  //var allPointsTeam = allHPs.Where(hp => teamclasses.Contains(hp.Klass));
+
+
+
+    //  File.Delete(horsepointsCalculated);
+    //  File.Copy(horsepointsCalculatedTemplate, horsepointsCalculated, true);
+
+    //  var allSMNMPoints = allHPs.Where(hp => !(hp.IsSMNM && hp.IsNM));
+    //  var allSMNMPointsInd = allSMNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+    //  var allSMNMPointsTeam = allSMNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
+
+    //  var allSMPoints = allHPs.Where(hp => hp.IsSM);
+    //  var allSMPointsInd = allSMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+    //  var allSMPointsTeam = allSMPoints.Where(hp => teamclasses.Contains(hp.Klass));
+
+    //  var allNMPoints = allHPs.Where(hp => hp.IsNM);
+    //  var allNMPointsInd = allNMPoints.Where(hp => !teamclasses.Contains(hp.Klass));
+    //  var allNMPointsTeam = allNMPoints.Where(hp => teamclasses.Contains(hp.Klass));
+
+
+    //  /*
+    //   * Max SM/NM (Ind+Team)	Mean SM/NM (Ind + Team)	Max SM/NM (Ind)	Mean SM/NM (Ind)	Max SM/NM (Team)	Mean SM/NM (Team)
+    //   */
+
+    //  try
     //  {
-    //    UpdateMessageTextBox($"{resultfile} not found, aborting horse point calculation");
-    //    return;
-    //  }
+    //    var horsepointGroup = from so in allHPs
+    //                          group so by so.Name
+    //      into AllHorsePoints
+    //                          select new
+    //                          {
+    //                            HorseName = AllHorsePoints.Key,
+    //                            SMNMMax = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point),
+    //                            SMNMAverage = allSMNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point),
+    //                            SMNMMaxInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
+    //                            SMNMMeanInd = allSMNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
+    //                            SMNMMaxTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(s => s.point) : 0,
+    //                            SMNMMeanTeam = allSMNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(s => s.point) : 0,
 
-    //  FileInfo resultat = new FileInfo(resultfile);
-    //  FileInfo horsefileInfo = new FileInfo(horsefile);
+    //                            SMMax = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            SMAverage = allSMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+    //                            SMMaxInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            SMMeanInd = allSMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+    //                            SMMaxTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            SMMeanTeam = allSMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allSMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
 
-    //  List<string> horses = new List<string>();
+    //                            NMMax = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            NMAverage = allNMPoints.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPoints.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+    //                            NMMaxInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            NMMeanInd = allNMPointsInd.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsInd.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+    //                            NMMaxTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Max(hp => hp.point) : 0,
+    //                            NMMeanTeam = allNMPointsTeam.Any(hp => hp.Name == AllHorsePoints.Key) ? allNMPointsTeam.Where(hp => hp.Name == AllHorsePoints.Key).Average(hp => hp.point) : 0,
+    //                          };
 
-    //  List<Horse> definedHorses = new List<Horse>();
-    //  List<Horse> definedHorsesTeam = new List<Horse>();
-    //  List<Horse> definedHorsesInd = new List<Horse>();
 
-    //  var classes = readClasses();
-
-    //  using (ExcelPackage results = new ExcelPackage(resultat))
-    //  {
-    //    try
+    //    var fileinfo = new FileInfo(horsepointsCalculated);
+    //    using (var results = new ExcelPackage(fileinfo))
     //    {
-    //      foreach (var cl in classes)
+    //      var ws = results.Workbook.Worksheets[0];
+    //      var row = 2;
+    //      foreach (var horse in horsepointGroup)
     //      {
-    //        UpdateMessageTextBox($"Getting horse points from class {cl.Name} - {cl.Description}");
-    //        int startRow = 7;
-    //        ExcelWorksheet ws = results.Workbook.Worksheets[cl.Name];
-    //        var maxrow = ws.Dimension.End.Row;
 
-    //        int ekipages = (maxrow - startRow + 1) / 4;
+    //        ws.Cells[row, 1].Value = horse.HorseName;
 
-    //        for (int ekipage = 0; ekipage < ekipages; ekipage++)
-    //        {
-    //          var currentStartRow = startRow + (ekipage * 4);
-    //          var horsename = ws.Cells[currentStartRow + 2, 6].Value.ToString();
-    //          horses.Add(horsename);
+    //        ws.Cells[row, 2].Value = horse.SMNMMax;
+    //        ws.Cells[row, 3].Value = horse.SMNMAverage;
+    //        ws.Cells[row, 4].Value = horse.SMNMMaxInd;
+    //        ws.Cells[row, 5].Value = horse.SMNMMeanInd;
+    //        ws.Cells[row, 6].Value = horse.SMNMMaxTeam;
+    //        ws.Cells[row, 7].Value = horse.SMNMMeanTeam;
 
-    //          if (!definedHorses.Any(h => h.Name == horsename))
-    //          {
-    //            Horse h1 = new Horse();
-    //            h1.Name = horsename;
-    //            definedHorses.Add(h1);
-    //          }
+    //        //ws.Cells[row, 8].Value = horse.SMMax;
+    //        //ws.Cells[row, 9].Value = horse.SMAverage;
+    //        //ws.Cells[row, 10].Value = horse.SMMaxInd;
+    //        //ws.Cells[row, 11].Value = horse.SMMeanInd;
+    //        //ws.Cells[row, 12].Value = horse.SMMaxTeam;
+    //        //ws.Cells[row, 13].Value = horse.SMMeanTeam;
 
-
-    //          // TEAM
-    //          if (teamclasses.Contains(ws.Name))
-    //          {
-    //            if (!definedHorsesTeam.Any(h => h.Name == horsename))
-    //            {
-    //              Horse h1 = new Horse();
-    //              h1.Name = horsename;
-    //              definedHorsesTeam.Add(h1);
-    //            }
-    //          }
-    //          // IND
-    //          else
-    //          {
-    //            if (!definedHorsesInd.Any(h => h.Name == horsename))
-    //            {
-    //              Horse h1 = new Horse();
-    //              h1.Name = horsename;
-    //              definedHorsesInd.Add(h1);
-    //            }
-    //          }
-
-    //          var curhorse = definedHorses.Single(h => h.Name == horsename);
-
-    //          for (int arow = 0; arow < 4; arow++)
-    //          {
-    //            var momenttext = ws.Cells[currentStartRow + arow, 7].Value.ToString();
-    //            if (momenttext.Length > 1) // we may have points
-    //            {
-    //              var point = ws.Cells[currentStartRow + arow, 8].GetValue<float>();
-    //              if (point > 0)
-    //              {
-    //                curhorse.Points.Add(point);
-
-    //                // TEAM
-    //                if (teamclasses.Contains(ws.Name))
-    //                {
-    //                  var curhorse1 = definedHorsesTeam.Single(h => h.Name == horsename);
-    //                  curhorse1.Points.Add(point);
-
-    //                }
-    //                // IND
-    //                else
-    //                {
-    //                  var curhorse2 = definedHorsesInd.Single(h => h.Name == horsename);
-    //                  curhorse2.Points.Add(point);
-    //                }
-    //              }
-    //            }
-    //          }
-    //        }
+    //        //ws.Cells[row, 14].Value = horse.NMMax;
+    //        //ws.Cells[row, 15].Value = horse.NMAverage;
+    //        //ws.Cells[row, 16].Value = horse.NMMaxInd;
+    //        //ws.Cells[row, 17].Value = horse.NMMeanInd;
+    //        //ws.Cells[row, 18].Value = horse.NMMaxTeam;
+    //        //ws.Cells[row, 19].Value = horse.NMMeanTeam;
+    //        row++;
     //      }
 
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //      var str = ex.Message;
-    //      UpdateMessageTextBox(str);
-    //    }
-    //    finally
-    //    {
-
-    //    }
-    //  }
-
-    //  UpdateMessageTextBox($"Getting horse points from all classes done");
-    //  var all = horses.Distinct().ToList();
-    //  all.RemoveAll(s => s == "A4");
-    //  definedHorses.RemoveAll(h => h.Name == "A4");
-    //  definedHorsesTeam.RemoveAll(h => h.Name == "A4");
-    //  definedHorsesInd.RemoveAll(h => h.Name == "A4");
-
-    //  definedHorses.Sort();
-    //  definedHorsesTeam.Sort();
-    //  definedHorsesInd.Sort();
-
-    //  File.Delete(horsefileInfo.FullName);
-
-    //  using (ExcelPackage results = new ExcelPackage(horsefileInfo))
-    //  {
-    //    try
-    //    {
-    //      var sheet = results.Workbook.Worksheets.Add("Horse points team+ind");
-    //      var sheet2 = results.Workbook.Worksheets.Add("Horse points team");
-    //      var sheet3 = results.Workbook.Worksheets.Add("Horse points ind");
-    //      sheet.Cells.Style.Numberformat.Format = @"0.000";
-    //      sheet.Cells[1, 1].Value = "Häst";
-    //      sheet.Cells[1, 3].Value = "Högsta enskilda poäng";
-    //      sheet.Cells[1, 2].Value = "Medelpoäng";
-    //      sheet.Cells[1, 4].Value = "Samtliga poäng";
-
-    //      sheet2.Cells.Style.Numberformat.Format = @"0.000";
-    //      sheet2.Cells[1, 1].Value = "Häst";
-    //      sheet2.Cells[1, 3].Value = "Högsta enskilda poäng";
-    //      sheet2.Cells[1, 2].Value = "Medelpoäng";
-    //      sheet2.Cells[1, 4].Value = "Samtliga poäng";
-
-    //      sheet3.Cells.Style.Numberformat.Format = @"0.000";
-    //      sheet3.Cells[1, 1].Value = "Häst";
-    //      sheet3.Cells[1, 3].Value = "Högsta enskilda poäng";
-    //      sheet3.Cells[1, 2].Value = "Medelpoäng";
-    //      sheet3.Cells[1, 4].Value = "Samtliga poäng";
-
-    //      int row = 1;
-
-    //      foreach (Horse h in definedHorses)
-    //      {
-    //        row = row + 1;
-    //        sheet.Cells[row, 1].Value = h.Name;
-    //        sheet.Cells[row, 3].Value = h.Max;
-    //        sheet.Cells[row, 2].Value = h.Average;
-    //        for (int i = 0; i < h.Points.Count; i++)
-    //        {
-    //          sheet.Cells[row, 4 + i].Value = h.Points[i];
-    //        }
-
-    //      }
-    //      sheet.Cells.AutoFitColumns();
-
-    //      row = 1;
-    //      foreach (Horse h in definedHorsesTeam)
-    //      {
-    //        row = row + 1;
-    //        sheet2.Cells[row, 1].Value = h.Name;
-    //        sheet2.Cells[row, 3].Value = h.Max;
-    //        sheet2.Cells[row, 2].Value = h.Average;
-    //        for (int i = 0; i < h.Points.Count; i++)
-    //        {
-    //          sheet2.Cells[row, 4 + i].Value = h.Points[i];
-    //        }
-
-    //      }
-    //      sheet2.Cells.AutoFitColumns();
-
-    //      row = 1;
-    //      foreach (Horse h in definedHorsesInd)
-    //      {
-    //        row = row + 1;
-    //        sheet3.Cells[row, 1].Value = h.Name;
-    //        sheet3.Cells[row, 3].Value = h.Max;
-    //        sheet3.Cells[row, 2].Value = h.Average;
-    //        for (int i = 0; i < h.Points.Count; i++)
-    //        {
-    //          sheet3.Cells[row, 4 + i].Value = h.Points[i];
-    //        }
-
-    //      }
-    //      sheet3.Cells.AutoFitColumns();
-    //      UpdateMessageTextBox($"{horsefile} created ! ");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //      UpdateMessageTextBox($"Horse point Error! ");
-    //      UpdateMessageTextBox(ex.Message);
-    //    }
-    //    finally
-    //    {
     //      results.Save();
-    //      UpdateMessageTextBox($"{horsefile} saves ! ");
+
     //    }
+    //    UpdateMessageTextBox($"Horse points analyzed");
+    //  }
+    //  catch (Exception e)
+    //  {
+    //    UpdateMessageTextBox($"Failed to analyze horse points : {e.Message}");
     //  }
 
     //}
+
+
+
+
+   
 
     private void button3_Click(object sender, EventArgs e)
     {
@@ -3172,4 +3093,126 @@ namespace WindowsFormsApplication1
       return float.TryParse(s, out output);
     }
   }
+
+  public static class ExcelUpdater
+  {
+    //public static void UpdateNamedCell(string filePath, string definedName, double value)
+    //{
+    //  using (var doc = SpreadsheetDocument.Open(filePath, true))
+    //  {
+    //    var wbPart = doc.WorkbookPart!;
+    //    var defined = wbPart.Workbook.DefinedNames.Elements<DefinedName>()
+    //                      .FirstOrDefault(d => d.Name == definedName);
+
+    //    if (defined == null)
+    //      throw new InvalidOperationException($"Named range '{definedName}' not found.");
+
+    //    // Ex: 'Sheet1!$A$12:$A$13' → split till ark + cellreferens
+    //    var defText = defined.Text;
+    //    var parts = defText.Split('!');
+    //    if (parts.Length != 2)
+    //      throw new FormatException($"Invalid format for defined name: {defText}");
+
+    //    var sheetName = parts[0].Trim('\''); // Tar bort ev. enkla citattecken
+    //    var rangeRef = parts[1].Replace("$", ""); // Tar bort $
+
+    //    // Ta första cellen från range, ex: A12 från A12:A13
+    //    var firstCellRef = rangeRef.Split(':')[0];
+
+    //    // Hitta rätt ark
+    //    var sheet = wbPart.Workbook.Descendants<Sheet>()
+    //                    .FirstOrDefault(s => s.Name == sheetName)
+    //                ?? throw new InvalidOperationException($"Sheet '{sheetName}' not found.");
+
+    //    var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
+    //    var sheetData = wsPart.Worksheet.GetFirstChild<SheetData>()!;
+
+    //    // Dela upp t.ex. A12 till kolumn=A, rad=12
+    //    string column = new string(firstCellRef.Where(char.IsLetter).ToArray());
+    //    uint row = uint.Parse(new string(firstCellRef.Where(char.IsDigit).ToArray()));
+
+    //    // Hämta eller skapa raden
+    //    var rowElement = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == row);
+    //    if (rowElement == null)
+    //    {
+    //      rowElement = new Row() { RowIndex = row };
+    //      sheetData.Append(rowElement);
+    //    }
+
+    //    // Hämta eller skapa cellen
+    //    string cellRef = column + row;
+    //    var cell = rowElement.Elements<Cell>().FirstOrDefault(c => c.CellReference == cellRef);
+    //    if (cell == null)
+    //    {
+    //      cell = new Cell() { CellReference = cellRef };
+    //      rowElement.Append(cell);
+    //    }
+
+    //    // Uppdatera cellens värde
+    //    cell.CellValue = new CellValue(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+    //    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+
+    //    wsPart.Worksheet.Save();
+    //    doc.WorkbookPart.Workbook.Save();
+
+    //  }
+    //}
+   
+
+    public static void UpdateNamedCell2(string filePath, string definedName, double value)
+    {
+      using var doc = SpreadsheetDocument.Open(filePath, true);
+      var wbPart = doc.WorkbookPart!;
+
+      var defined = wbPart.Workbook.DefinedNames.Elements<DefinedName>()
+          .FirstOrDefault(d => d.Name == definedName);
+
+      if (defined == null)
+        throw new InvalidOperationException($"Named range '{definedName}' not found.");
+
+      var parts = defined.Text.Split('!');
+      if (parts.Length != 2)
+        throw new FormatException($"Invalid format for defined name: {defined.Text}");
+
+      var sheetName = parts[0].Trim('\'');
+      var cellRange = parts[1].Replace("$", "");
+      var firstCell = cellRange.Split(':')[0];
+
+      var sheet = wbPart.Workbook.Sheets.Elements<Sheet>()
+          .FirstOrDefault(s => s.Name == sheetName &&
+              (s.State == null || s.State == SheetStateValues.Visible));
+
+      if (sheet == null)
+        throw new InvalidOperationException($"Visible sheet '{sheetName}' not found.");
+
+      var wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id!);
+      var ws = wsPart.Worksheet;
+
+      var sheetData = ws.GetFirstChild<SheetData>()!;
+      var rowIndex = uint.Parse(new string(firstCell.Where(char.IsDigit).ToArray()));
+      var colName = new string(firstCell.Where(char.IsLetter).ToArray());
+
+      var row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex);
+      if (row == null)
+      {
+        row = new Row { RowIndex = rowIndex };
+        sheetData.Append(row);
+      }
+
+      var cell = row.Elements<Cell>().FirstOrDefault(c => c.CellReference == firstCell);
+      if (cell == null)
+      {
+        cell = new Cell { CellReference = firstCell };
+        row.Append(cell);
+      }
+
+      cell.CellValue = new CellValue(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+      cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+
+      ws.Save();
+    }
+  }
+
+
+
 }
