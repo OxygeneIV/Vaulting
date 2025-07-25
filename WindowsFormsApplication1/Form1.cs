@@ -620,10 +620,10 @@ namespace WindowsFormsApplication1
         var theSheets = workbookPart?.Workbook.Descendants<Sheet>().ToList();
 
 
-        var allSheets = theSheets.Where((item) => item.State is not null &&
-           item.State.HasValue &&
-           (item.State.Value == SheetStateValues.Hidden ||
-           item.State.Value == SheetStateValues.VeryHidden));
+        //var allSheets = theSheets.Where((item) => item.State is not null &&
+        //   item.State.HasValue &&
+        //   (item.State.Value == SheetStateValues.Hidden ||
+        //   item.State.Value == SheetStateValues.VeryHidden));
 
         var activeSheet = theSheets.Where((item) => item.State is null || (item.State.HasValue && item.State.Value == SheetStateValues.Visible));
 
@@ -753,7 +753,7 @@ namespace WindowsFormsApplication1
         var rand = Math.Round(new Random().NextDouble() * 10, 3);
         try
         {
-          this.UpdateNamedCell(f1.FullName, "result", 1.234);
+          this.UpdateNamedCell(f1.FullName, "result", rand);
         }
         catch (Exception e)
         {
