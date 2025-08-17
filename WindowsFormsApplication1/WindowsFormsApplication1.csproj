@@ -41,6 +41,7 @@ IF not exist logos (mkdir logos)
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="IronXL.Excel" Version="2025.7.15" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Select.HtmlToPdf.NetCore" Version="25.2.0" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />

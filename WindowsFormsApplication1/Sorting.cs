@@ -1,8 +1,15 @@
 ﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using IronXL;
+using IronXL.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace WindowsFormsApplication1
 {
@@ -357,84 +364,147 @@ namespace WindowsFormsApplication1
 			File.Copy(resultfile, sortedresultsfile);
       UpdateMessageTextBox("sortedresultsfile copied...");
 
-     
+
 
       // ------------------------------------------------------   MS Office
 
-   //   var MyApp = new Application();
-   //         MyApp.Visible = false;
-   //         var workbooks = MyApp.Workbooks;
-   //         Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+      //var MyApp = new Application();
+      //MyApp.Visible = false;
+      //var workbooks = MyApp.Workbooks;
+      //Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
 
-			//int counter = 0;
-     
-   //   foreach (Klass klass in classes)
-			//{
-			//	counter++;
-			//	string className = klass.Name;
-			//	var MySheet = MyBook.Sheets[className];
-				
-			//	MySheet.Activate();
-			//  UpdateMessageTextBox($"Sorting {className}");
-   // 		var lastRow = MySheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell).Row;
-			//	Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
-			//	newRng.Sort(
-			//				newRng.Columns[1, Type.Missing], Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
-			//				newRng.Columns[2, Type.Missing], Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
-			//				Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
-			//					XlYesNoGuess.xlNo, Type.Missing, Type.Missing,
-			//					XlSortOrientation.xlSortColumns,
-   //             XlSortMethod.xlPinYin,
-			//					Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal,
-			//					Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal,
-			//					Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal);
+      //int counter = 0;
 
-			//	UpdateProgressBarHandler(counter);
-			//	UpdateProgressBarLabel("Sorted class ( " + counter + " / " + max + " ) " + klass.Name + " - " + klass.Description);
-   //     Marshal.ReleaseComObject(newRng);
-   //     Marshal.ReleaseComObject(MySheet);
-   //     newRng = null;
-   //     lastRow = null;
-   //     MySheet = null;
-   //   }
-   //   MyBook.Save();
-   //   MyBook.Close();
-   //   workbooks.Close();
-   //   MyApp.Visible = true;
-   //   MyApp.Quit();
+      //foreach (Klass klass in classes)
+      //{
+      //  counter++;
+      //  string className = klass.Name;
+      //  var MySheet = MyBook.Sheets[className];
 
-			//Marshal.ReleaseComObject(MyBook);
-			//Marshal.ReleaseComObject(workbooks);
-			//Marshal.ReleaseComObject(MyApp);
-			//MyBook = null;
-			//workbooks = null;
-			//MyApp = null;
+      //  MySheet.Activate();
+      //  UpdateMessageTextBox($"Sorting {className}");
+      //  var lastRow = MySheet.Cells.SpecialCells(XlCellType.xlCellTypeLastCell).Row;
+      //  Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
+      //  newRng.Sort(
+      //        newRng.Columns[1, Type.Missing], Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
+      //        newRng.Columns[2, Type.Missing], Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
+      //        Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
+      //          XlYesNoGuess.xlNo, Type.Missing, Type.Missing,
+      //          XlSortOrientation.xlSortColumns,
+      //          XlSortMethod.xlPinYin,
+      //          Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal,
+      //          Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal,
+      //          Microsoft.Office.Interop.Excel.XlSortDataOption.xlSortNormal);
+
+      //  UpdateProgressBarHandler(counter);
+      //  UpdateProgressBarLabel("Sorted class ( " + counter + " / " + max + " ) " + klass.Name + " - " + klass.Description);
+      //  Marshal.ReleaseComObject(newRng);
+      //  Marshal.ReleaseComObject(MySheet);
+      //  newRng = null;
+      //  lastRow = null;
+      //  MySheet = null;
+      //}
+      //MyBook.Save();
+      //MyBook.Close();
+      //workbooks.Close();
+      //MyApp.Visible = true;
+      //MyApp.Quit();
+
+      //Marshal.ReleaseComObject(MyBook);
+      //Marshal.ReleaseComObject(workbooks);
+      //Marshal.ReleaseComObject(MyApp);
+      //MyBook = null;
+      //workbooks = null;
+      //MyApp = null;
 
       // ------------------------------------------------------   MS Office END
 
 
-      using (var wb = new XLWorkbook(sortedresultsfile))
+      //var wb = new XLWorkbook(sortedresultsfile);
+      //wb.CalculateMode = XLCalculateMode.Auto; // Sätter beräkningsläge till Auto
+      //int counter = 0;
+
+      //foreach (Klass klass in classes)
+      //{
+      //  counter++;
+      //  string className = klass.Name;
+      //  var ws = wb.Worksheet(className);
+
+      //  UpdateMessageTextBox($"Sorting {className}");
+
+      //  // Hitta sista raden med innehåll (för kolumn A till O, dvs. 15 kolumner)
+      //  int lastRow = ws.LastRowUsed().RowNumber();
+
+      //  // Skapa ett område från rad 7 till sista raden, kolumn 1 till 15
+      //  var range = ws.Range(7, 1, lastRow, 15);
+
+      //  // Sortera efter kolumn 1 (primär) och kolumn 2 (sekundär), båda stigande
+      //  //range.Sort("A7", XLSortOrder.Ascending, "B7", XLSortOrder.Ascending);
+      //  range.Sort("1,2");
+
+      //  ws.RecalculateAllFormulas(); // Uppdatera formler om det behövs
+
+      //  UpdateProgressBarHandler(counter);
+      //  UpdateProgressBarLabel($"Sorted class ( {counter} / {max} ) {klass.Name} - {klass.Description}");
+      //}
+
+      //wb.RecalculateAllFormulas(); // Uppdaterar alla formler i arbetsboken
+      //wb.ForceFullCalculation=true; // Tvingar en fullständig beräkning av alla formler
+      //wb.FullCalculationOnLoad = true; // Säkerställer att alla formler beräknas vid inläsning
+      //wb.Save(false,true);  // Sparar igen efter beräkningarna
+      //wb.Dispose();  // Stänger och frigör resurser
+
+
+      //using (var wb = new XLWorkbook(sortedresultsfile))
+      //{
+      //  int counter2 = 0;
+
+      //  foreach (Klass klass in classes)
+      //  {
+      //    counter2++;
+      //    string className = klass.Name;
+      //    UpdateProgressBarHandler(counter2);
+      //    UpdateProgressBarLabel("Sorted class ( " + counter2 + " / " + max + " ) " + klass.Name + " - " + klass.Description);
+
+      //    var ws2 = wb.Worksheet(className);
+      //    //ws2.Select();
+      //    //var dataRange = ws2.Range("A7:O30");
+      //    var lastCell = ws2.LastCellUsed();
+      //    int lastRowNumber = lastCell.Address.RowNumber;
+      //    var dataRange = ws2.Range(ws2.Cell(7, 1), ws2.Cell(lastRowNumber, 15));
+      //    dataRange.Sort("1 ASC, 2 ASC");
+      //  }
+      //  wb.Save(false,true);
+      //}
+
+
+      // Load the Excel file
+      WorkBook workbook = WorkBook.Load(sortedresultsfile);
+
+      foreach (Klass klass in classes)
       {
 
-        int counter2 = 0;
+        string className = klass.Name;
+        WorkSheet sheet = workbook.WorkSheets.FirstOrDefault(s => s.Name == className);
+        var rows = sheet.RowCount;
+        var rng = sheet.GetRange("A7:O" + rows);
+        rng.SortByColumn(1, SortOrder.Ascending);
 
-        foreach (Klass klass in classes)
-        {
-          counter2++;
-          string className = klass.Name;
-          UpdateProgressBarHandler(counter2);
-          UpdateProgressBarLabel("Sorted class ( " + counter2 + " / " + max + " ) " + klass.Name + " - " + klass.Description);
-
-          var ws2 = wb.Worksheet(className);
-          //ws2.Select();
-          //var dataRange = ws2.Range("A7:O30");
-          var lastCell = ws2.LastCellUsed();
-          int lastRowNumber = lastCell.Address.RowNumber;
-          var dataRange = ws2.Range(ws2.Cell(7, 1), ws2.Cell(lastRowNumber, 15));
-          dataRange.Sort("1 ASC, 2 ASC");
-        }
-        wb.Save();
       }
+
+      workbook.Save();
+
+      //  // Select the first worksheet
+      //  //WorkSheet sheet = workbook.WorkSheets.First();
+      //// To sort the entire sheet in ascending order based on the first column
+      //sheet.SortAscending(sheet["A"]);
+      //// Alternatively, sort a specific range in descending order
+      //sheet.SortDescending(sheet["A2:A10"]);
+      //// Using SortByColumn method to sort by specific column in ascending order
+      //sheet.SortByColumn("B", ExcelSortOrder.Ascending);
+      //// Save the modified workbook
+      //workbook.SaveAs("sorted_example.xlsx");
+
 
       UpdateProgressBarLabel("Sorting completed");
 			UpdateMessageTextBox($"Sorting completed");

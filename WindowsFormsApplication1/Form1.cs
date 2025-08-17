@@ -1759,6 +1759,8 @@ namespace WindowsFormsApplication1
       using (var results = new ExcelPackage(resultat))
       {
 
+        // ML results.Workbook.Calculate();
+
         String klassnamn = className;
         //foreach (Klass klass in classes)
         //{
@@ -1985,7 +1987,10 @@ namespace WindowsFormsApplication1
 
           toRange = sheet.Cells[row, 1, row + 3, 15];
 
-          String placering = toRange[row + 1, 1].GetValue<String>();// 
+
+          String placering = toRange[row + 1, 1].GetValue<string>();// 
+         // String placering = toRange[row + 1, 1].GetValue<string>();// 
+
 
           String name = toRange[row + 1, 4].GetValue<String>();// = d.Name;
           String linforare = toRange[row + 2, 4].GetValue<String>();// = d.Name;
