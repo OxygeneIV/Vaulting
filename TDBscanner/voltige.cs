@@ -123,29 +123,32 @@ namespace Tests.Voltige
             // Login
             string tdbUrl = "https://tdb.ridsport.se/login";
 
-            //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
-            // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
-            //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+      //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
+      // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
+      //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
 
-            // SM https://tdb.ridsport.se/meetings/63485
+      // SM https://tdb.ridsport.se/meetings/63485
 
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
-             string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+      string meetingUrl = "https://tdb.ridsport.se/meetings/80052";
+
+
       // Open Browser
       var driver = CreateBrowserInstance(Driver.Browser.Chrome);
 
