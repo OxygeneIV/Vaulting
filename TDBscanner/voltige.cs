@@ -145,7 +145,11 @@ namespace Tests.Voltige
             //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
             //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
-             string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+            // string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+              string meetingUrl = "https://tdb.ridsport.se/meetings/80052";
+
+
+
       // Open Browser
       var driver = CreateBrowserInstance(Driver.Browser.Chrome);
 
