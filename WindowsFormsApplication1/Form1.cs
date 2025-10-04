@@ -1834,6 +1834,43 @@ namespace WindowsFormsApplication1
         int currentRowInTable = 0;
         int numberOfVaulters = (endrow - rowbase + 1 ) / 4;
 
+
+          if (noresultsInClass && klassnamn.Equals("18"))
+          {
+            List<String> startOrder = new List<String>
+             {
+                 "id_51554_18_37520",
+                 "id_51553_18_37520",
+                 "id_51557_18_37520",
+                 "id_51548_18_37520",
+                 "id_51549_18_37534",
+                 "id_51555_18_37534",
+                 "id_51551_18_37534",
+                 "id_51556_18_37521",
+                 "id_51550_18_37521",
+                 "id_51546_18_37531",
+                 "id_51547_18_37531",
+                 "id_51552_18_37531",
+                 "id_51545_18_37531"
+            };
+
+          //var orderMap = startOrder
+          //.Select((id, idx) => new { id, idx })
+          //.ToDictionary(x => x.id, x => x.idx);
+
+          var fullRange = sheet.Cells[rowbase + 4*3, 2, endrow, 11];
+
+
+          fullRange.Sort(r =>
+            {
+              r.SortBy.Column(1).UsingCustomList(startOrder.ToArray())
+              .ThenSortBy.Column(2);
+            });
+          }
+          
+
+
+
         for (int row = rowbase; row < endrow; row += 4)
         {
           currentRowInTable++;
