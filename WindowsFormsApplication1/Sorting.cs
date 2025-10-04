@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using DocumentFormat.OpenXml.Office2013.Word;
 using ListBox = System.Windows.Forms.ListBox;
 using System.Configuration;
+using System.Threading;
 
 namespace WindowsFormsApplication1
 {
@@ -592,58 +593,133 @@ namespace WindowsFormsApplication1
 
         }
 
-        /// <summary>
-        /// Sort results. If argument sort only this class
-        /// </summary>
-        /// <param name="inklass"></param>
-        private void SortResults(string inklass = null)
-		{
-		 
-			if (File.Exists(sortedresultsfile))
-			{
-				File.Delete(sortedresultsfile);
-			}
+    /// <summary>
+    /// Sort results. If argument sort only this class
+    /// </summary>
+    /// <param name="inklass"></param>
+    private void SortResults(string inklass = null)
+    {
 
-			var classes = readClasses();
-			var max = classes.Count();
+      if (File.Exists(sortedresultsfile))
+      {
+        File.Delete(sortedresultsfile);
+      }
 
-			if (inklass != null)
-			{
-				classes = classes.Where(c => c.Name == inklass).ToList();
-			}
+      var classes = readClasses();
+      var max = classes.Count();
 
-			UpdateProgressBarHandler(0);
-			UpdateProgressBarMax(max);
-			UpdateProgressBarLabel("");
-			UpdateProgressBarLabel("Starting Sort!!");
-			UpdateMessageTextBox("Starting Sort of results...");
-			File.Copy(resultfile, sortedresultsfile);
+      if (inklass != null)
+      {
+        classes = classes.Where(c => c.Name == inklass).ToList();
+      }
+
+      UpdateProgressBarHandler(0);
+      UpdateProgressBarMax(max);
+      UpdateProgressBarLabel("");
+      UpdateProgressBarLabel("Starting Sort!!");
+      UpdateMessageTextBox("Starting Sort of results...");
+      File.Copy(resultfile, sortedresultsfile);
+      System.Threading.Thread.Sleep(400);
+      System.Windows.Forms.Application.DoEvents();
       UpdateMessageTextBox("sortedresultsfile copied...");
 
       // Sätt färger på cellerna
 
+
+
       var MyApp = new Application();
-            MyApp.Visible = false;
-            var workbooks = MyApp.Workbooks;
-            Workbook MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+      MyApp.Visible = false;
+      MyApp.DisplayAlerts = false;
 
-            //MyApp = new Application();
- 		        // workbooks = MyApp.Workbooks;
-			      // MyBook = workbooks.Open(sortedresultsfile);
-			
-			int counter = 0;
+      var workbooks = MyApp.Workbooks;
+      Workbook MyBook = null;
+
+      int retryCount = 10;
+
+      for (int i = 0; i < retryCount; i++)
+      {
+        try
+        {
+          MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+          break; // lyckades
+        }
+        catch (COMException ex)
+        {
+          UpdateMessageTextBox($"COM - {(uint)ex.ErrorCode}");
+          // Excel kan vara "busy"
+          if ((uint)ex.ErrorCode == 0x8001010A) // RPC_E_SERVERCALL_RETRYLATER
+          {
+            Thread.Sleep(400);
+            continue; // försök igen
+          }
+          throw; // annan exception → kasta vidare
+        }
+      }
+
+      if (MyBook == null)
+      { 
+        UpdateMessageTextBox($"Kunde inte öppna {sortedresultsfile} efter {retryCount} försök");
+        return;
+      }
+
+      //MyBook = workbooks.Open(sortedresultsfile, ReadOnly: false);
+
+      System.Threading.Thread.Sleep(200);
+      System.Windows.Forms.Application.DoEvents();
+
+      //while (!MyBook.Application.Ready || !MyBook.Application.Interactive)
+      //{
+      //  UpdateMessageTextBox($"Application not ready");
+      //  System.Threading.Thread.Sleep(50);
+      //}
+
+      //MyApp = new Application();
+      // workbooks = MyApp.Workbooks;
+      // MyBook = workbooks.Open(sortedresultsfile);
+
+      int counter = 0;
+      var mySheets = MyBook.Worksheets;
 
 
-			foreach (Klass klass in classes)
+      foreach (Klass klass in classes)
 			{
-				counter++;
+
+        //while (!MyBook.Application.Ready || !MyBook.Application.Interactive)
+        //{
+        //  UpdateMessageTextBox($"Application not ready inside klass-loop");
+        //  System.Threading.Thread.Sleep(50);
+        //}
+
+
+        counter++;
 				string className = klass.Name;
-				var MySheet = MyBook.Sheets[className];
-				
-				MySheet.Activate();
-			  UpdateMessageTextBox($"Sorting {className}");
+        //var MySheet = (Worksheet)mySheets.get_Item(className);
+        var MySheet = MyBook.Worksheets[className];
+        //MySheet.Select();
+        //MySheet.Activate();
+
+        //var myName = MyBook.ActiveSheet.Name; 
+
+        //if(myName != className)
+        //{
+        //  UpdateMessageTextBox($"Error: Could not find sheet for class {className} , found {myName} instead");
+        //  return;
+        //}
+        //var MySheet = MyBook.Worksheets[className];
+        // var MySheet = MyBook.Sheets[className];
+
+
+        UpdateMessageTextBox($"Sorting {className}");
 		var lastRow = MySheet.Cells.SpecialCells(Microsoft.Office.Interop.Excel.XlCellType.xlCellTypeLastCell).Row;
-				Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
+        UpdateMessageTextBox($"Sheet {MySheet.Name} - with {lastRow} rows");
+        
+        if (className != MySheet.Name)
+        {
+          UpdateMessageTextBox($"Error: Could not find sheet for class {className} , found {MySheet.Name} instead");
+          return;
+        }
+
+        Microsoft.Office.Interop.Excel.Range newRng = MySheet.Range[MySheet.Cells[7, 1], MySheet.Cells[lastRow, 15]];
 				newRng.Sort(
 							newRng.Columns[1, Type.Missing], Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
 							newRng.Columns[2, Type.Missing], Type.Missing, Microsoft.Office.Interop.Excel.XlSortOrder.xlAscending,
@@ -657,7 +733,10 @@ namespace WindowsFormsApplication1
 
 				UpdateProgressBarHandler(counter);
 				UpdateProgressBarLabel("Sorted class ( " + counter + " / " + max + " ) " + klass.Name + " - " + klass.Description);
-			}
+        UpdateMessageTextBox($"Sorted {className}");
+        System.Threading.Thread.Sleep(200);
+        System.Windows.Forms.Application.DoEvents();
+      }
 
 
 
