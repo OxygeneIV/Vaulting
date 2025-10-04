@@ -229,7 +229,7 @@ namespace WindowsFormsApplication1
 
                         ExcelHeaderFooterText t5 = classWorksheet.HeaderFooter.OddFooter;
                         
-                        t5.InsertPicture(img, PictureAlignment.Centered);
+                        //t5.InsertPicture(img, PictureAlignment.Centered);
                         // Test
                         //    t5.CenteredText = totalJudge;
 
