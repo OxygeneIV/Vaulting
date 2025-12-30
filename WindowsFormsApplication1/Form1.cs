@@ -1559,6 +1559,15 @@ namespace WindowsFormsApplication1
       dict[349212] = "Zara";
       dict[281424] = "Currior";
 
+      dict[354215] = "Crisanto S";
+      dict[321025] = "Castell(SWB)";
+      dict[328352] = "Iniesta";
+      dict[330385] = "Klondike";
+      dict[304761] = "Rondento Victoire";
+      dict[262992] = "Hembys Bellman";
+      dict[339009] = "Odinn";
+
+
 
       var classes = readClasses();
 
