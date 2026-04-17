@@ -14,47 +14,48 @@ using static System.Net.WebRequestMethods;
 
 namespace Tests.Voltige
 {
-    [Locator(How.Sizzle, "body:has(#email)")]
-    public class LoginPage : PageObject
-    {
-        [Locator("#email")] public TextField email;
+  [Locator(How.Sizzle, "body:has(#email)")]
+  public class LoginPage : PageObject
+  {
+    [Locator("#email")] public TextField email;
 
-        [Locator("#password")] public PasswordField password;
+    [Locator("#password")] public PasswordField password;
 
-        [Locator("[value='Logga in']")] public Button SubmitButton;
-    }
+    [Locator("[value='Logga in']")] public Button SubmitButton;
+  }
 
-    /// <summary>
-    /// Viedoc Details Page
-    /// </summary>
-    [Locator(How.Sizzle, "body:has(table:first)")]
-    public class CompetitionPage : PageObject
-    {
-        [Locator(How.Sizzle, "table:first")] public Table ClassesTable;
+  /// <summary>
+  /// Viedoc Details Page
+  /// </summary>
+  [Locator(How.Sizzle, "body:has(table:first)")]
+  public class CompetitionPage : PageObject
+  {
+    [Locator(How.Sizzle, "table:first")] public Table ClassesTable;
 
-        [Locator(How.Css, "table:nth-of-type(2)")] public Table ClassesTable2;
+    [Locator(How.Css, "table:nth-of-type(2)")] public Table ClassesTable2;
 
-        [Locator(".alert-dismissible .btn-close")]
-        public Button closePopup;
-    }
+    [Locator(".alert-dismissible .btn-close")]
+    public Button closePopup;
+  }
 
-    [Locator(How.Sizzle, "body:has(h4:contains(Kontakt))")]
-    public class CompetitorPage : PageObject
-    {
-        //[Locator(".row p a[href*='/clubs/']")] dd:nth-of-type(3) > a:nth-of-type(2)
-        [Locator(".row a[href*='/clubs/']:nth-of-type(2)")]
-        public Link ClubLink;
+  [Locator(How.Sizzle, "body:has(h4:contains(Kontakt))")]
+  public class CompetitorPage : PageObject
+  {
+    //[Locator(".row p a[href*='/clubs/']")] dd:nth-of-type(3) > a:nth-of-type(2)
+    [Locator(".row a[href*='/clubs/']:nth-of-type(2)")]
+    public Link ClubLink;
 
-        public string ClubLinkText => ClubLink.TrimmedText;
-    }
+    public string ClubLinkText => ClubLink.TrimmedText;
+  }
 
-    /// <summary>
-    /// Viedoc Details Page
-    /// </summary>
-    [Locator(How.Sizzle, "body:has(table:first.tablesorter)")]
+  /// <summary>
+  /// Viedoc Details Page
+  /// </summary>
+  //[Locator(How.Sizzle, "body:has(table:first.tablesorter)")]
+  [Locator(How.Sizzle, "body:has(table[data-controller='tablesorter'])")]
     public class ClassPage : PageObject
     {
-        [Locator(How.Sizzle, "table:first.tablesorter")] public Table CompetitorTable;
+        [Locator(How.Sizzle, "table[data-controller='tablesorter']")] public Table CompetitorTable;
 
         [Locator(".alert-dismissible .btn-close")]
         public Button closePopup;
@@ -123,30 +124,31 @@ namespace Tests.Voltige
             // Login
             string tdbUrl = "https://tdb.ridsport.se/login";
 
-            //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
-            // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
-            //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
+      //string compUrl = "https://tdb.ridsport.se/clubs/223/meetings/43640";
+      // SM  compUrl =    "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/45646";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/47124";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/48997";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/50705";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/52441";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/53909";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/58280";
+      //string meetingurl = "https://tdb.ridsport.se/clubs/223/meetings/60558";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/62046";
 
-            // SM https://tdb.ridsport.se/meetings/63485
+      // SM https://tdb.ridsport.se/meetings/63485
 
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
-            //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
-            // string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
-              string meetingUrl = "https://tdb.ridsport.se/meetings/80052";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/64617";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/63485";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/64904";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/68897";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/69730";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/69751";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/75534";
+      //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
+      // string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
+      //  string meetingUrl = "https://tdb.ridsport.se/meetings/80052";
+      string meetingUrl = "https://tdb.ridsport.se/clubs/223/meetings/82186";
 
 
 

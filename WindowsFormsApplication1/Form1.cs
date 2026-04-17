@@ -1847,55 +1847,38 @@ namespace WindowsFormsApplication1
 
         // Fix order by startposition -----------------
 
-        //if (noresultsInClass && klassnamn.Equals("18"))
-        //{
-        //  List<String> startOrder = new List<String>
-        //     {
-        //    "id_51834_18_37591",
-        //    "id_51833_18_37591",
-        //    "id_51837_18_37591",
-        //    "id_51828_18_37591",
-        //    "id_51829_18_37604",
-        //    "id_51835_18_37604",
-        //    "id_51831_18_37604",
-        //    "id_51836_18_37592",
-        //    "id_51830_18_37592",
-        //    "id_51826_18_37601",
-        //    "id_51827_18_37601",
-        //    "id_51832_18_37601",
-        //    "id_51825_18_37601"
-        //    };
-
-        //  var options = RangeSortOptions.Create();
-        //  var builder = options.SortBy.Column(1).UsingCustomList(startOrder.ToArray());
-        //  builder.ThenSortBy.Column(2);
-        //  sheet.Cells["A19:R58"].Sort(options);
-        //}
-
-        if (noresultsInClass && klassnamn.Equals("8"))
+        if (noresultsInClass && klassnamn.Equals("17"))
         {
           List<String> startOrder = new List<String>
              {
-                "id_53921_8_38748",
-                "id_53922_8_38748",
-                "id_53923_8_38748",
-                "id_53924_8_38748",
-                "id_53925_8_38748",
-                "id_53926_8_38748",
-                "id_53927_8_38748",
-                "id_53918_8_38747",
-                "id_53920_8_38747",
-                "id_53919_8_38747",
-                "id_53915_8_38749",
-                "id_53916_8_38749",
-                "id_53917_8_38749",
-                "id_53921_8_38750",
-                "id_53922_8_38750",
-                "id_53923_8_38750",
-                "id_53924_8_38750",
-                "id_53925_8_38750",
-                "id_53926_8_38750",
-                "id_53927_8_38750"
+            "id_54430_17_38885",
+            "id_54431_17_38885",
+            "id_54433_17_38884",
+            "id_54432_17_38884"
+            };
+
+          var options = RangeSortOptions.Create();
+          var builder = options.SortBy.Column(1).UsingCustomList(startOrder.ToArray());
+          builder.ThenSortBy.Column(2);
+          sheet.Cells["A11:R86"].Sort(options);
+        }
+
+        if (noresultsInClass && klassnamn.Equals("18"))
+        {
+          List<String> startOrder = new List<String>
+             {
+                "id_54442_18_38887",
+                "id_54443_18_38887",
+                "id_54439_18_38887",
+                "id_54437_18_38887",
+                "id_54445_18_38885",
+                "id_54444_18_38885",
+                "id_54435_18_38890",
+                "id_54438_18_38890",
+                "id_54440_18_38890",
+                "id_54441_18_38890",
+                "id_54436_18_38891",
+                "id_54434_18_38891"
             };
 
           var options = RangeSortOptions.Create();
