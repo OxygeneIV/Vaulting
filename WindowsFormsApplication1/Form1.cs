@@ -1847,38 +1847,40 @@ namespace WindowsFormsApplication1
 
         // Fix order by startposition -----------------
 
-        if (noresultsInClass && klassnamn.Equals("17"))
-        {
-          List<String> startOrder = new List<String>
-             {
-            "id_54430_17_38885",
-            "id_54431_17_38885",
-            "id_54433_17_38884",
-            "id_54432_17_38884"
-            };
+        //if (noresultsInClass && klassnamn.Equals("17"))
+        //{
+        //  List<String> startOrder = new List<String>
+        //     {
+        //    "id_54430_17_38885",
+        //    "id_54431_17_38885",
+        //    "id_54433_17_38884",
+        //    "id_54432_17_38884"
+        //    };
 
-          var options = RangeSortOptions.Create();
-          var builder = options.SortBy.Column(1).UsingCustomList(startOrder.ToArray());
-          builder.ThenSortBy.Column(2);
-          sheet.Cells["A11:R86"].Sort(options);
-        }
+        //  var options = RangeSortOptions.Create();
+        //  var builder = options.SortBy.Column(1).UsingCustomList(startOrder.ToArray());
+        //  builder.ThenSortBy.Column(2);
+        //  sheet.Cells["A11:R86"].Sort(options);
+        //}
 
         if (noresultsInClass && klassnamn.Equals("18"))
         {
           List<String> startOrder = new List<String>
              {
-                "id_54442_18_38887",
-                "id_54443_18_38887",
-                "id_54439_18_38887",
-                "id_54437_18_38887",
-                "id_54445_18_38885",
-                "id_54444_18_38885",
-                "id_54435_18_38890",
-                "id_54438_18_38890",
-                "id_54440_18_38890",
-                "id_54441_18_38890",
-                "id_54436_18_38891",
-                "id_54434_18_38891"
+              "id_54548_18_38913",
+              "id_54549_18_38913",
+              "id_54545_18_38913",
+              "id_54543_18_38913",
+              "id_54536_18_38912",
+              "id_54537_18_38912",
+              "id_54551_18_38912",
+              "id_54550_18_38912",
+              "id_54541_18_38916",
+              "id_54544_18_38916",
+              "id_54546_18_38916",
+              "id_54547_18_38916",
+              "id_54542_18_38917",
+              "id_54540_18_38917"
             };
 
           var options = RangeSortOptions.Create();
