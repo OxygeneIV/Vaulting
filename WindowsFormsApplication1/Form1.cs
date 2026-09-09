@@ -59,6 +59,8 @@ namespace WindowsFormsApplication1
     public static string horseResultsFolder;
     public static string htmlResultsFolder;
     public static string htmlNoResultsFolder;
+    public static string judgeResultsFolder;
+
 
     public static string cssFolder;
     public static string cssFolderNoResults;
@@ -278,6 +280,10 @@ namespace WindowsFormsApplication1
 
         htmlNoResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["htmlNoResultsfolder"]);
         foldersToCreate.Add(htmlNoResultsFolder);
+
+        judgeResultsFolder = Path.Combine(workingDirectory, ConfigurationManager.AppSettings["judgeResultsfolder"]);
+        foldersToCreate.Add(judgeResultsFolder);
+
 
         cssFolder = Path.Combine(htmlResultsFolder, ConfigurationManager.AppSettings["cssfolder"]);
         foldersToCreate.Add(cssFolder);
@@ -1545,7 +1551,7 @@ namespace WindowsFormsApplication1
       dict[294359] = "Monte Cassino af Wasbek";
       dict[301477] = "Normandie";
       dict[326135] = "Orlando Van´t Merodehof";
-            dict[316200] = "Quarterback Haerup";
+      dict[316200] = "Quarterback Haerup";
       dict[310234] = "Sems";
       dict[342703] = "Serenade";
       dict[334748] = "Silver";
@@ -1566,6 +1572,8 @@ namespace WindowsFormsApplication1
       dict[304761] = "Rondento Victoire";
       dict[262992] = "Hembys Bellman";
       dict[339009] = "Odinn";
+      dict[357196] = "Amica";
+      dict[347351] = "Curticap";
 
 
 
@@ -1600,7 +1608,7 @@ namespace WindowsFormsApplication1
       }
     }
 
-    private String createHtml(String className)
+    private String createHtml(String className, Boolean judgePrint = false)
     {
       String htmlFilePath = null;
       //  var deltagare = readVaulters();
@@ -1842,6 +1850,12 @@ namespace WindowsFormsApplication1
         List<String> noresultsList = noresults.Split(',').ToList();
         Boolean noresultsInClass = noresultsList.Contains(klassnamn);
 
+        if(judgePrint)
+        {
+          noresultsInClass = false;
+        }
+          
+
         int currentRowInTable = 0;
         int numberOfVaulters = (endrow - rowbase + 1 ) / 4;
 
@@ -2055,7 +2069,12 @@ namespace WindowsFormsApplication1
           htmlFilePath = Path.Combine(htmlNoResultsFolder, klass.Name + " - " + desc + ".html");
           File.WriteAllText(Path.Combine(htmlNoResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
         }
-        else 
+        else if(judgePrint)
+        {
+          htmlFilePath = Path.Combine(judgeResultsFolder, klass.Name + " - " + desc + ".html");
+          File.WriteAllText(Path.Combine(judgeResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
+        }
+        else
         {
           htmlFilePath = Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html");
           File.WriteAllText(Path.Combine(htmlResultsFolder, klass.Name + " - " + desc + ".html"), _text4);
@@ -2242,6 +2261,9 @@ namespace WindowsFormsApplication1
         UpdateMessageTextBox($"Saving class '{className}' to HTML");
         htmlPath = createHtml(className);
         UpdateMessageTextBox($"Saving class '{className}' to HTML done...");
+        UpdateMessageTextBox($"Saving class '{className}' to JUDGE HTML");
+        htmlPath = createHtml(className,true);
+        UpdateMessageTextBox($"Saving class '{className}' to JUDGE HTML done...");
       }
       catch (Exception ee)
       {
