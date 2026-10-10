@@ -1679,6 +1679,10 @@ namespace WindowsFormsApplication1
           file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare2moment.html");
           _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat3_GKM3_domare2moment.html");
         }
+        else if (klass.ResultTemplate.Equals("KM3"))
+        {
+
+        }
         else if (klass.ResultTemplate.Equals("ResultTemplate"))
         {
           if (moments == 2)
@@ -1758,9 +1762,18 @@ namespace WindowsFormsApplication1
         {
           if (moments == 1) //Kyr
           {
-            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
-            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare1moment.html");
-            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare1moment.html");
+            if (judges.Count == 3)
+            {
+              file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top3domare1moment.html");
+              file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare1moment.html");
+              _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_3-3domare1moment.html");
+            }
+            else
+            {
+              file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
+              file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header3_GKM3_domare1moment.html");
+              _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat_tra_2-3domare1moment.html");
+            }
           }
         }
         else if (klass.ResultTemplate.Equals("GTK3"))

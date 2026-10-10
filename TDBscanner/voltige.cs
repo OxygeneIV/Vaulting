@@ -148,7 +148,8 @@ namespace Tests.Voltige
       //string meetingUrl = "https://tdb.ridsport.se/meetings/75221";
       // string meetingUrl = "https://tdb.ridsport.se/meetings/77646";
       //  string meetingUrl = "https://tdb.ridsport.se/meetings/80052";
-      string meetingUrl = "https://tdb.ridsport.se/clubs/223/meetings/82186";
+      //string meetingUrl = "https://tdb.ridsport.se/clubs/223/meetings/82186";
+      string meetingUrl = "https://tdb.ridsport.se/clubs/223/meetings/84613";
 
 
 
@@ -157,6 +158,7 @@ namespace Tests.Voltige
 
             // Goto TDB
             driver.Navigate().GoToUrl(tdbUrl);
+      driver.Navigate().GoToUrl(meetingUrl);
 
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
@@ -170,7 +172,7 @@ namespace Tests.Voltige
             CompetitionPage c = PageObjectFactory.Init<CompetitionPage>(driver);
 
             // Goto Meeting
-            c.WebDriver.Navigate().GoToUrl(meetingUrl);
+            //c.WebDriver.Navigate().GoToUrl(meetingUrl);
 
             // Chec we have a table of classes
             Wait.UntilOrThrow(() => c.ClassesTable.Displayed);
@@ -203,7 +205,7 @@ namespace Tests.Voltige
 
       for (int i = 0; i < numberOfClassesTot; i++)
             {
-                c = PageObjectFactory.Init<CompetitionPage>(driver);
+        c = PageObjectFactory.Init<CompetitionPage>(driver);
 
                 //c.closePopup.Click();
 
@@ -316,7 +318,7 @@ namespace Tests.Voltige
 
 
                         var clubId = clubCell.LinkUrl;
-                        var ekipageId = curCompsrow.GetCell(6).LinkUrl;
+                        var ekipageId = curCompsrow.GetCell(7).LinkUrl;
 
                         var linfIdNum = Int32.Parse(linfId.Split('/').Last());
                         //var horseIdNum = Int32.Parse(horseId.Split('/').Last());
@@ -333,7 +335,7 @@ namespace Tests.Voltige
 
 
                         // Open tävlande
-                        curCompsrow.GetCell(6).LinkClick();
+                        curCompsrow.GetCell(7).LinkClick();
 
                         EkipagePage ekipagePage = PageObjectFactory.Init<EkipagePage>(driver);
                         Wait.UntilOrThrow(() => ekipagePage.Displayed);
