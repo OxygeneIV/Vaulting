@@ -11,6 +11,7 @@ using Tests.Base;
 using Viedoc.viedoc.pages.components.elements;
 using OpenQA.Selenium;
 using static System.Net.WebRequestMethods;
+using System.Threading;
 
 namespace Tests.Voltige
 {
@@ -158,7 +159,6 @@ namespace Tests.Voltige
 
             // Goto TDB
             driver.Navigate().GoToUrl(tdbUrl);
-      driver.Navigate().GoToUrl(meetingUrl);
 
             // Login
             LoginPage l = PageObjectFactory.Init<LoginPage>(driver);
@@ -167,9 +167,12 @@ namespace Tests.Voltige
       l.email.SetText("oxygeneiv@hotmail.com");
       l.password.SetText("xfiles67");
       l.SubmitButton.Click();
+      Thread.Sleep(2000);
+      driver.Navigate().GoToUrl(meetingUrl);
 
-            // Inistatiate the Competition page
-            CompetitionPage c = PageObjectFactory.Init<CompetitionPage>(driver);
+
+      // Inistatiate the Competition page
+      CompetitionPage c = PageObjectFactory.Init<CompetitionPage>(driver);
 
             // Goto Meeting
             //c.WebDriver.Navigate().GoToUrl(meetingUrl);

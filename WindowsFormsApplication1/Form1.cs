@@ -726,23 +726,24 @@ namespace WindowsFormsApplication1
             cells.First().Value = rand;
 
 
-            //List<string> d = new List<string>();
+            List<string> d = new List<string>();
 
-            //refersTo = ws.NamedRange("klass").RefersTo;
-            //var klassName = ws.Range(refersTo).Cells().First().Value.ToString();
+            refersTo = ws.NamedRange("klass").RefersTo;
+            var klassName = ws.Range(refersTo).Cells().First().Value.ToString();
 
-            //refersTo = ws.NamedRange("bord").RefersTo;
-            //var bord = ws.Range(refersTo).Cells().First().Value.ToString();
+            refersTo = ws.NamedRange("bord").RefersTo;
+            var bord = ws.Range(refersTo).Cells().First().Value.ToString();
 
-            //refersTo = ws.NamedRange("moment").RefersTo;
-            //var moment = ws.Range(refersTo).Cells().First().Value.ToString();
+            refersTo = ws.NamedRange("moment").RefersTo;
+            var moment = ws.Range(refersTo).Cells().First().Value.ToString();
 
-            //refersTo = ws.NamedRange("id").RefersTo;
-            //var id = ws.Range(refersTo).Cells().First().Value.ToString();
+            refersTo = ws.NamedRange("id").RefersTo;
+            var id = ws.Range(refersTo).Cells().First().Value.ToString();
 
-            //d.AddRange(new List<string> { klassName, f1.Name, id, moment, bord, rand.ToString(CultureInfo.InvariantCulture) });
-            ////data.Add(rownumber, d);
-            //data.TryAdd(rownumber, d);
+            d.AddRange(new List<string> { klassName, f1.Name, id, moment, bord, rand.ToString(CultureInfo.InvariantCulture) });
+            data.TryAdd(rownumber, d);
+            //data.Add(rownumber, d);
+            //data.TryAdd(rownumber, rand);
             wb.Save();
           }
         }
@@ -1669,9 +1670,18 @@ namespace WindowsFormsApplication1
 
         if (klass.ResultTemplate.Equals("GK2"))
         {
-          file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
-          file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
-          _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
+          if (moments == 1) //Kyr
+          {
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare1moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare1moment.html");
+            _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare1moment.html");
+          }
+          else
+          { 
+            file = Path.Combine(Environment.CurrentDirectory, "html/HTML_top2domare2moment.html");
+            file2 = Path.Combine(Environment.CurrentDirectory, "html/HTML_header2domare2moment.html");
+           _file3 = Path.Combine(Environment.CurrentDirectory, "html/HTML_resultat2domare2moment.html");
+          }
         }
         else if (klass.ResultTemplate.Equals("GKM3"))
         {
@@ -1890,24 +1900,50 @@ namespace WindowsFormsApplication1
         //  sheet.Cells["A11:R86"].Sort(options);
         //}
 
+        if (noresultsInClass && klassnamn.Equals("17"))
+        {
+          List<String> startOrder = new List<String>
+             {
+              "id_55395_17_39201",
+              "id_55394_17_39198",
+              "id_55401_17_39196",
+              "id_55400_17_39196",
+              "id_55402_17_39196",
+              "id_55401_17_39209",
+              "id_55400_17_39209",
+              "id_55395_17_39200",
+              "id_55396_17_39200",
+              "id_55397_17_39200",
+              "id_55398_17_39200",
+              "id_55402_17_39203",
+              "id_55403_17_39203",
+              "id_55399_17_39202"
+            };
+
+          var options = RangeSortOptions.Create();
+          var builder = options.SortBy.Column(1).UsingCustomList(startOrder.ToArray());
+          builder.ThenSortBy.Column(2);
+          sheet.Cells["A19:R86"].Sort(options);
+        }
+
+
         if (noresultsInClass && klassnamn.Equals("18"))
         {
           List<String> startOrder = new List<String>
              {
-              "id_54548_18_38913",
-              "id_54549_18_38913",
-              "id_54545_18_38913",
-              "id_54543_18_38913",
-              "id_54536_18_38912",
-              "id_54537_18_38912",
-              "id_54551_18_38912",
-              "id_54550_18_38912",
-              "id_54541_18_38916",
-              "id_54544_18_38916",
-              "id_54546_18_38916",
-              "id_54547_18_38916",
-              "id_54542_18_38917",
-              "id_54540_18_38917"
+              "id_55411_18_39193",
+              "id_55416_18_39193",
+              "id_55409_18_39204",
+              "id_55406_18_39204",
+              "id_55414_18_39207",
+              "id_55415_18_39207",
+              "id_55417_18_39205",
+              "id_55407_18_39205",
+              "id_55404_18_39205",
+              "id_55405_18_39205",
+              "id_55408_18_39205",
+              "id_55412_18_39206",
+              "id_55413_18_39206"
             };
 
           var options = RangeSortOptions.Create();

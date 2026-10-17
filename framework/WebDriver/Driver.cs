@@ -218,15 +218,15 @@ namespace Framework.WebDriver
         {
             get
             {
-                var t = Capabilities.Platform.PlatformType;
+                //var t = Capabilities.Platform.PlatformType;
 
-                if (((string)WebDriver.Capabilities.GetCapability("platformName")).ToLower() == "darwin")
-                {
-                    return OS.OSX;
-                }
+                //if (((string)WebDriver.Capabilities.GetCapability("platformName")).ToLower() == "darwin")
+                //{
+                //    return OS.OSX;
+                //}
 
-                if (t == PlatformType.Android)
-                    return OS.Android;
+                //if (t == PlatformType.Android)
+                //    return OS.Android;
 
                 return OS.Windows;
             }
