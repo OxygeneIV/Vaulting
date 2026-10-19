@@ -1,38 +1,39 @@
-﻿using OfficeOpenXml;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.Globalization;
-using ClosedXML.Excel;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Vml.Office;
 using DocumentFormat.OpenXml.Wordprocessing;
+using FluentFTP;
+using OfficeOpenXml;
+using OfficeOpenXml.Sorting;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
-using Color = System.Drawing.Color;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using System.Threading;
 using SelectPdf;
-using FluentFTP;
-using System.Net;
-using static WindowsFormsApplication1.Form1.Horse;
-using System.Collections.Specialized;
+using System;
 using System.Collections;
-using System.Web.UI;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Vml.Office;
-using System.Web.Caching;
-using DocumentFormat.OpenXml.Bibliography;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Caching;
+using System.Web.UI;
+using System.Windows.Forms;
 using System.Windows.Input;
-using OfficeOpenXml.Sorting;
+using static Microsoft.IO.RecyclableMemoryStreamManager;
+using static WindowsFormsApplication1.Form1.Horse;
+using Color = System.Drawing.Color;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WindowsFormsApplication1
 {
@@ -1535,17 +1536,17 @@ namespace WindowsFormsApplication1
       dict[342728] = "Elversöes Galantic";
       dict[347476] = "Emzids";
       dict[308238] = "Egelunds Safie";
-            dict[247454] = "Escamilo SW";
+      dict[247454] = "Escamilo SW";
       dict[316201] = "Farrakech";
       dict[293760] = "Freilene";
       dict[308300] = "Gladiator VDH";
-            dict[308904]             = "Havhöjs Bello Nero";
+      dict[308904]             = "Havhöjs Bello Nero";
       dict[262992] = "Hembys Bellman";
       dict[279357] = "Halving";
       dict[306606] = "Kanon";
       dict[313507] = "Klintholms Ramstein";
       dict[296063] = "Langaller on your marks";
-            dict[336734] = "La Normann";
+      dict[336734] = "La Normann";
       dict[301468] = "Lucky Lover";
       dict[265065] = "Luco Rae";
       dict[265064] = "Lyra Rae";
@@ -1567,7 +1568,7 @@ namespace WindowsFormsApplication1
       dict[281424] = "Currior";
 
       dict[354215] = "Crisanto S";
-      dict[321025] = "Castell(SWB)";
+      dict[321025] = "Castell";
       dict[328352] = "Iniesta";
       dict[330385] = "Klondike";
       dict[304761] = "Rondento Victoire";
@@ -1575,6 +1576,10 @@ namespace WindowsFormsApplication1
       dict[339009] = "Odinn";
       dict[357196] = "Amica";
       dict[347351] = "Curticap";
+      dict[334663] = "Orions";
+      dict[280838] = "Elton";
+      dict[305717] = "My Wonderboy";
+      dict[343480] = "Kilmore Jasper";
 
 
 
@@ -2106,12 +2111,13 @@ namespace WindowsFormsApplication1
         // Skapa fil
         _text4 = _text4.Replace("{HEAD}", head);
         _text4 = _text4.Replace("{COMPETITION}", textCompetition);
-        _text4 = _text4.Replace("{TOP}", text);
+
+        _text4 = _text4.Replace("{TOP}", text.Replace("Öppen även för prova på licens",""));                      // ML
         _text4 = _text4.Replace("{HEADER}", resultatheadertext);
         _text4 = _text4.Replace("{DATA}", textrows);
         String desc = klass.Description.Replace("*", "_star_");
 
-        
+        desc = desc.Replace("Öppen även för prova på licens", "");  //  MLML
 
         if (nopublishList.Contains(klass.Name.Trim()))
         {
